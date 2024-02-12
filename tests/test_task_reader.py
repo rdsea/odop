@@ -1,16 +1,15 @@
-""" Tests for the task_reader module. """
+""" Tests for the task_manager module. """
 
 import os
-from .. import task_reader
+import odop
 
-current_dir = os.path.dirname(os.path.abspath(__file__))
-module_dir = os.path.dirname(current_dir)
+module_dir = os.path.dirname(os.path.abspath(odop.__file__))
 examples_dir = os.path.join(module_dir, 'example_tasks')
 
-def test_task_reader():
+def test_task_manager():
     """ Read the example task and check variables are defined """
 
     file_path = os.path.join(examples_dir, "example_task_with_decorator")
-    task_reader.read(file_path)
+    odop.task_manager.read(file_path)
 
-    assert task_reader.tasks[0].name == "example_task"
+    assert odop.task_manager.tasks[0].name == "example_task"

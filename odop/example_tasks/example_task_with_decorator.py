@@ -5,9 +5,9 @@
 # implement the task reading functionality.
 
 import time
-from .. import task_reader
+from odop import task_manager
 
-@task_reader.odop_task(name="example_task", time="2h")
+@task_manager.odop_task(name="example_task", time="2h")
 def example_task_function():
     # The task can be an arbitrary Python function
     print("Starting the task")
