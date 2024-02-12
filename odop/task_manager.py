@@ -1,6 +1,5 @@
 # An implementation of the task reader with using a decorator. 
 
-import time
 import functools
 import inspect
 import importlib.util
@@ -15,6 +14,7 @@ def odop_task(**kwargs):
 
     def decorator(func):
         """ Set task parameters and return the task """
+        print(f"found task function {func.__name__}")
         
         @functools.wraps(func)
         def wrapper(*args, **kwargs):
@@ -25,13 +25,19 @@ def odop_task(**kwargs):
             func(args, **kwargs)
             print(f"Completed task {func}")
 
+        # Check required parameters
+        if "name" not in kwargs:
+            raise ValueError(f"No name provided for task {func.__name__}. Task name is required")
+        wrapper.name = kwargs["name"]
+
+        for arg in ["time", "cpu", "memory"]:
+            if arg not in kwargs:
+                raise ValueError(f"No {arg} provided for {wrapper.name}. Task {arg} is required.")
+
+        for arg in kwargs:
+            wrapper.__setattr__(arg, kwargs[arg])
+
         wrapper.is_task = True
-        wrapper.task_params = kwargs
-        if "name" in wrapper.task_params:
-            wrapper.name = wrapper.task_params["name"]
-        else:
-            wrapper.name = func.__name__
-        print(f"found task function {wrapper.name}")
         return wrapper
 
     return decorator
