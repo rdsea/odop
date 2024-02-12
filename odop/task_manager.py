@@ -40,8 +40,9 @@ def odop_task(**kwargs):
             after the call
             """
             print(f"Running task {func}")
-            func(args, **kwargs)
+            return_value = func(*args, **kwargs)
             print(f"Completed task {func}")
+            return return_value
 
         # Check required parameters
         if "name" not in kwargs:

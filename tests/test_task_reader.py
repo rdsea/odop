@@ -1,6 +1,8 @@
 """ Tests for the task_manager module. """
 
 import os
+import time
+import pytest
 import odop
 
 module_dir = os.path.dirname(os.path.abspath(odop.__file__))
@@ -20,3 +22,50 @@ def test_task_manager():
     assert odop.task_manager.tasks[0].cpu == "2"
     assert odop.task_manager.tasks[0].memory == "2G"
     assert odop.task_manager.tasks[0].is_task == True
+
+# Try creating a task without a required parameter
+def test_task_manager_missing_parameter():
+    """ Test that a task without a required parameter raises a ValueError """
+    with pytest.raises(ValueError):
+        @odop.task_manager.odop_task(time="2h", cpu="2", memory="2G")
+        def test_task_function():
+            time.sleep(1)
+
+    with pytest.raises(ValueError):
+        @odop.task_manager.odop_task(name="test_task", cpu="2", memory="2G")
+        def test_task_function():
+            time.sleep(1)
+    
+    with pytest.raises(ValueError):
+        @odop.task_manager.odop_task(name="test_task", time="2h", memory="2G")
+        def test_task_function():
+            time.sleep(1)
+    
+    with pytest.raises(ValueError):
+        @odop.task_manager.odop_task(name="test_task", time="2h", cpu="2")
+        def test_task_function():
+            time.sleep(1)
+
+
+def test_task_manager_decorator():
+    """ Test the decorator directly """
+
+    @odop.task_manager.odop_task(
+        name="test_task", time="2h", cpu="2", memory="2G",
+        other_parameter="other_value"
+    )
+    def test_task_function():
+        """ docstring """
+        return 1
+
+    assert test_task_function.name == "test_task"
+    assert test_task_function.time == "2h"
+    assert test_task_function.cpu == "2"
+    assert test_task_function.memory == "2G"
+    assert test_task_function.is_task == True
+    assert test_task_function.__name__ == "test_task_function"
+    assert test_task_function.other_parameter == "other_value"
+    assert test_task_function.__doc__ == " docstring "
+
+    # Check that the function is called
+    assert test_task_function() == 1
