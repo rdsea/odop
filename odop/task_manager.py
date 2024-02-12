@@ -9,7 +9,25 @@ tasks = []
 
 def odop_task(**kwargs):
     """ The odop task decorator. Records each task in an imported
-    python file. 
+    python file.
+
+    Only accepts keyword arguments. Name, time, cpu, and memory are
+    required. Other arguments can be provided, keeping in mind that
+    the scheduler must be aware of them.
+
+    Parameters:
+    name: str
+        The name of the task
+    time: str
+        The time required to complete the task
+    cpu: str
+        The number of CPUs required to complete the task
+    memory: str
+        The amount of memory required to complete the task
+    
+    Returns:
+    function
+        The task function with the parameters set
     """
 
     def decorator(func):
@@ -34,6 +52,7 @@ def odop_task(**kwargs):
             if arg not in kwargs:
                 raise ValueError(f"No {arg} provided for {wrapper.name}. Task {arg} is required.")
 
+        # Copy the parameters into the task function object
         for arg in kwargs:
             wrapper.__setattr__(arg, kwargs[arg])
 
@@ -51,7 +70,7 @@ def read(module_name):
     else:
         module_file = f"{module_name}.py"
 
-    #import the module
+    # import the module
     spec = importlib.util.spec_from_file_location(module_name, module_file)
     module = importlib.util.module_from_spec(spec)
     spec.loader.exec_module(module)
