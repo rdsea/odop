@@ -37,7 +37,7 @@ def odop_task(**kwargs):
     return decorator
 
 
-def find_tasks(module_name):
+def read(module_name):
     # If file name is provided, figure out the module name
     if module_name.endswith(".py"):
         module_file = module_name
@@ -57,6 +57,6 @@ def find_tasks(module_name):
 
 if __name__ == '__main__':
     # For a quick test, find the tasks in the example_task_with_decorator.py
-    find_tasks("example_task_with_decorator")
+    read("example_tasks/example_task_with_decorator")
 
     print([task.task_params for task in tasks])
