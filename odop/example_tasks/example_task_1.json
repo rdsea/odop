@@ -1,6 +1,6 @@
 {
     "comment": "This is an example task for the opportunistic scheduler. This .json file contains information for the scheduler and for running the task. The python code is in a corresponding .py file.",
-    "task_name": "task 1",
+    "name": "task 1",
     "module": "example_task_1.py",
     "function": "example_task_function",
     "cpu": 1,
