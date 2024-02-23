@@ -86,6 +86,9 @@ def test_run_from_script():
     # Run the task
     os.system(f"python {odop.task_manager.tasks[0].name}.py")
 
+    # Run using the task_runner
+    odop.task_runner.engine_run_task_from_script(odop.task_manager.tasks[0].name)
+
 
 def test_run_from_serialized():
     """ Test running a task from a serialized file """
@@ -99,4 +102,4 @@ def test_run_from_serialized():
     odop.task_manager.create_runner_serialized(odop.task_manager.tasks[0])
 
     # Run the task
-    odop.task_manager.engine_run_task_from_serialized(odop.task_manager.tasks[0].name)
+    odop.task_runner.engine_run_task_from_serialized(odop.task_manager.tasks[0].name)

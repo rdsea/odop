@@ -89,17 +89,6 @@ def create_runner_serialized(task):
     return file_name
 
 
-def engine_run_task_from_serialized(task_name):
-    """ Run a task from a serialized file. This is a function that the engine would use
-    to run a task on a node.
-
-    Example 1: Running the function from a serialized file
-    """
-    with open(f"{task_name}.pickle", "rb") as file:
-        task = cloudpickle.load(file)
-    task()
-
-
 def create_runner_script(task):
     """ Create a runner for the task. This is saved to disk, so that the engine can
     run the task on any node.
@@ -144,17 +133,6 @@ def create_runner_script(task):
     with open(params_file, "w") as file:
         json.dump(task.task_params, file)
     return file_name
-
-
-def engine_run_task_from_script(task_name):
-    """ Run a task from a script. This is a function that the engine would use
-    to run a task on a node.
-
-    Example 2: Running the function from a script
-    """
-    import subprocess
-    subprocess.run(["python", f"{task_name}_runner.py"])
-
 
 
 def read(module_name):
