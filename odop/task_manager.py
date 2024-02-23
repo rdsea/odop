@@ -4,7 +4,7 @@ import functools
 import inspect
 import importlib.util
 import json
-import pickle
+import cloudpickle
 
 tasks = []
 
@@ -77,9 +77,6 @@ def create_runner_serialized(task):
     Example 1: Serializing the function and saving to a file for another Python
     process to run.
     """
-    # Serialize the function
-    serialized_task = pickle.dumps(task)
-
     # Define a function to run the task with parameters
     def run_task():
         task(**task.task_params)
@@ -87,9 +84,20 @@ def create_runner_serialized(task):
     # Save the serialized function to a file
     file_name = f"{task.name}.pickle"
     with open(file_name, "wb") as file:
-        file.write(run_task)
+        cloudpickle.dump(run_task, file)
 
     return file_name
+
+
+def engine_run_task_from_serialized(task_name):
+    """ Run a task from a serialized file. This is a function that the engine would use
+    to run a task on a node.
+
+    Example 1: Running the function from a serialized file
+    """
+    with open(f"{task_name}.pickle", "rb") as file:
+        task = cloudpickle.load(file)
+    task()
 
 
 def create_runner_script(task):
@@ -136,19 +144,6 @@ def create_runner_script(task):
     with open(params_file, "w") as file:
         json.dump(task.task_params, file)
     return file_name
-
-
-def engine_run_task_from_serialized(task_name):
-    """ Run a task from a serialized file. This is a function that the engine would use
-    to run a task on a node.
-
-    Example 1: Running the function from a serialized file
-    """
-    import pickle
-    with open(f"{task_name}.pickle", "rb") as file:
-        task = pickle.load(file)
-    task()
-
 
 
 def engine_run_task_from_script(task_name):
