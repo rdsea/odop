@@ -10,5 +10,5 @@ from odop import task_manager
 @task_manager.odop_task(name="example_task", time="2h", cpu="2", memory="2G")
 def example_task_function():
     # The task can be an arbitrary Python function
-    time.sleep(60*4)
+    time.sleep(5)
 
