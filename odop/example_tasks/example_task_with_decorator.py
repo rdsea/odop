@@ -6,8 +6,8 @@
 
 from odop import task_manager
 
-@task_manager.odop_task(name="example_task", time="2h", cpu="2", memory="2G")
-def example_task_function():
+@task_manager.odop_task(name="example_task", time="2h", cpu="2", memory="2G", parameter1=1)
+def example_task_function(parameter1):
     # The task can be an arbitrary Python function
-    print("Running example task")
+    print("Running example task, got parameter:", parameter1)
 

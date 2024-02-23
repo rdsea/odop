@@ -63,8 +63,16 @@ def odop_task(**kwargs):
         wrapper.module_file = inspect.getfile(func)
         wrapper.function_name = func.__name__
 
-        # TODO: Find function parameters from the function signature
+        # Extract parameter names from the function signature
+        signature = inspect.signature(func)
+        parameters = list(signature.parameters.keys())
         wrapper.task_params = {}
+        for parameter in parameters:
+            if parameter in kwargs:
+                wrapper.task_params[parameter] = kwargs[parameter]
+            else:
+                raise ValueError(f"Parameter {parameter} not provided for task {wrapper.name}")
+
         return wrapper
 
     return decorator
