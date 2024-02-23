@@ -3,6 +3,8 @@
 import functools
 import inspect
 import importlib.util
+import json
+import pickle
 
 tasks = []
 
@@ -39,9 +41,9 @@ def odop_task(**kwargs):
             """ Calls the function and prints the function name before and
             after the call
             """
-            print(f"Running task {func}")
+            print(f"Running {func}")
             return_value = func(*args, **kwargs)
-            print(f"Completed task {func}")
+            print(f"Completed {func}")
             return return_value
 
         # Check required parameters
@@ -53,14 +55,111 @@ def odop_task(**kwargs):
             if arg not in kwargs:
                 raise ValueError(f"No {arg} provided for {wrapper.name}. Task {arg} is required.")
 
-        # Copy the parameters into the task function object
+        # Copy the parameters into the task object
         for arg in kwargs:
             wrapper.__setattr__(arg, kwargs[arg])
 
         wrapper.is_task = True
+        wrapper.module_file = inspect.getfile(func)
+        wrapper.function_name = func.__name__
+
+        # TODO: Find function parameters from the function signature
+        wrapper.task_params = {}
         return wrapper
 
     return decorator
+
+
+def create_runner_serialized(task):
+    """ Create a runer for the task. This is saved to disk, so that the engine can
+    run the task on any node.
+
+    Example 1: Serializing the function and saving to a file for another Python
+    process to run.
+    """
+    # Serialize the function
+    serialized_task = pickle.dumps(task)
+
+    # Define a function to run the task with parameters
+    def run_task():
+        task(**task.task_params)
+
+    # Save the serialized function to a file
+    file_name = f"{task.name}.pickle"
+    with open(file_name, "wb") as file:
+        file.write(run_task)
+
+    return file_name
+
+
+def create_runner_script(task):
+    """ Create a runner for the task. This is saved to disk, so that the engine can
+    run the task on any node.
+
+    Example 2: Writing the function to a file as a script for another Python
+    process to run.
+
+    We need to import everything the task function needs to run. The easiest way
+    to do this is to make a copy of the module, import the task function from
+    the module and run.
+    
+    Any parameters for the function itself are written into a json file. Later,
+    this could be written by the engine before starting the task.
+    """
+
+    file_name = f"{task.name}_runner.py"
+    module_file_name = f"{task.name}_module.py"
+    params_file = f"{task.name}_params.json"
+
+    # Copy the module
+    with open(task.module_file, "r") as file:
+        with open(module_file_name, "w") as new_file:
+            new_file.write(file.read())
+
+    # Write the script
+    with open(file_name, "w") as file:
+        # Write the imports to the file
+        file.write(f"from {module_file_name.replace('.py', '')} import {task.function_name}\n")
+        file.write(f"import json\n")
+
+        # Write the function to the file
+        file.write(f"def run_task():\n")
+        file.write(f"    task = {task.function_name}\n")
+        file.write(f"    task_params = json.load(open('{params_file}'))\n")
+        file.write(f"    task(**task_params)\n")
+        file.write(f"\n")
+        file.write(f"print(f'Running {task.name}')\n")
+        file.write(f"run_task()\n")
+        file.write(f"print(f'Completed {task.name}')\n")
+
+    # Write the parameters to a file
+    with open(params_file, "w") as file:
+        json.dump(task.task_params, file)
+    return file_name
+
+
+def engine_run_task_from_serialized(task_name):
+    """ Run a task from a serialized file. This is a function that the engine would use
+    to run a task on a node.
+
+    Example 1: Running the function from a serialized file
+    """
+    import pickle
+    with open(f"{task_name}.pickle", "rb") as file:
+        task = pickle.load(file)
+    task()
+
+
+
+def engine_run_task_from_script(task_name):
+    """ Run a task from a script. This is a function that the engine would use
+    to run a task on a node.
+
+    Example 2: Running the function from a script
+    """
+    import subprocess
+    subprocess.run(["python", f"{task_name}_runner.py"])
+
 
 
 def read(module_name):
@@ -79,10 +178,15 @@ def read(module_name):
     for name, obj in inspect.getmembers(module):
         if inspect.isfunction(obj) and getattr(obj, 'is_task', False):
             tasks.append(obj)
+            create_runner_script(obj)
 
 
 if __name__ == '__main__':
     # For a quick test, find the tasks in the example_task_with_decorator.py
-    read("example_tasks/example_task_with_decorator")
+    path = __file__.replace("task_manager.py", "example_tasks/example_task_with_decorator.py")
+    read(path)
 
     print([task.task_params for task in tasks])
+
+    print(open("example_task_runner.py").read())
+    print(open("example_task_params.json").read())
