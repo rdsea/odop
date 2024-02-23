@@ -69,3 +69,34 @@ def test_task_manager_decorator():
 
     # Check that the function is called
     assert test_task_function() == 1
+
+
+def test_run_from_script():
+    """ Test running a task from a script """
+
+    file_path = os.path.join(examples_dir, "example_task_with_decorator")
+    odop.task_manager.read(file_path)
+
+    assert odop.task_manager.tasks[0].name == "example_task"
+
+    # Write the task script (this is currently called when the task is read),
+    # but we call it again to allow changing that
+    odop.task_manager.create_runner_script(odop.task_manager.tasks[0])
+
+    # Run the task
+    os.system(f"python {odop.task_manager.tasks[0].name}.py")
+
+
+def test_run_from_serialized():
+    """ Test running a task from a serialized file """
+
+    file_path = os.path.join(examples_dir, "example_task_with_decorator")
+    odop.task_manager.read(file_path)
+
+    assert odop.task_manager.tasks[0].name == "example_task"
+
+    # Serialize the task
+    odop.task_manager.create_runner_serialized(odop.task_manager.tasks[0])
+
+    # Run the task
+    odop.task_manager.engine_run_task_from_serialized(odop.task_manager.tasks[0].name)
