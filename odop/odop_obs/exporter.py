@@ -9,14 +9,8 @@ class Exporter:
         self.app = FastAPI()
         self.node_aggregator = NodeAggregator({}, unit_conversion_config)
         self.app.include_router(self.node_aggregator.router)
-        self.server_process = Process(target=self.run_server, args=[self.app])
 
     def start(self):
         self.node_aggregator.start()
-        self.server_process.start()
+        uvicorn.run(self.app, host="127.0.0.1", port=8000)
 
-    def run_server(self, app):
-        uvicorn.run(app, host="127.0.0.1", port=8000)
-
-    def stop(self):
-        self.server_process.terminate()

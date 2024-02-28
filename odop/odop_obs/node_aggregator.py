@@ -134,7 +134,6 @@ class NodeAggregator:
         timestamp = datetime.fromtimestamp(math.floor(time.time()))
         data = self.db.search(
             time_query >= timestamp) 
-        print(data)
         return [
             unflatten({**datapoint.tags, **datapoint.fields}, "dot")
             for datapoint in data

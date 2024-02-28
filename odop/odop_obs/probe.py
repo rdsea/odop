@@ -80,7 +80,6 @@ class Probe:
 
     def stop_reporting(self):
         self.started = False
-        self.report_thread.join()
 
     def send_report(self, report: dict):
         start = time.time()

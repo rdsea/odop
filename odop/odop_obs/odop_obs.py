@@ -13,7 +13,12 @@ class OdopObs:
         self.system_probe = SystemMonitoringProbe(self.system_config)
         self.exporter = Exporter(self.exporter_config["unit_conversion"])
 
+
     def start(self):
+        self.monitoring_process = multiprocessing.Process(target=self.start_monitoring)
+        self.monitoring_process.start()
+
+    def start_monitoring(self):
         self.system_probe.start_reporting()
         self.process_probe.start_reporting()
         self.exporter.start()
@@ -21,4 +26,5 @@ class OdopObs:
     def stop(self):
         self.process_probe.stop_reporting()
         self.system_probe.stop_reporting()
-        self.exporter.stop()
+        self.monitoring_process.terminate()
+
