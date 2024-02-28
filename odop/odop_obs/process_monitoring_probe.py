@@ -21,10 +21,9 @@ class ProcessMonitoringProbe(Probe):
             self.obs_service_url = self.config["obsServiceUrl"]
 
     def get_cpu_usage(self):
-        #process_usage = report_proc_child_cpu(self.process)
-        #del process_usage["unit"]
-
-        return {"child_1": 10}
+        process_usage = report_proc_child_cpu(self.process)
+        del process_usage["unit"]
+        return process_usage
 
     def get_mem_usage(self):
         data = report_proc_mem(self.process)

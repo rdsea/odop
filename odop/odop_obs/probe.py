@@ -26,7 +26,7 @@ class Probe:
         "report_url",
         "monitoring_interval",
         "logging_path",
-        "max_latency"
+        "max_latency",
     ]
 
     def __init__(self, config: dict) -> None:
@@ -62,13 +62,15 @@ class Probe:
 
     def reporting(self):
         current_time = time.time()
-        time.sleep(math.ceil(current_time) - current_time )
+        time.sleep(math.ceil(current_time) - current_time)
         while self.started:
             start = time.time()
             self.create_report()
             self.send_report_socket(self.current_report)
             self.max_latency = max(time.time() - start, self.max_latency)
-            time.sleep(round(time.time()) + self.monitoring_interval - 0.02 - time.time())
+            time.sleep(
+                round(time.time()) + self.monitoring_interval - 0.02 - time.time()
+            )
 
     def start_reporting(self):
         self.started = True
@@ -96,7 +98,7 @@ class Probe:
         except ConnectionRefusedError:
             print("connection refuse")
         self.write_log(
-           (time.time() - start) * 1000, self.logging_path + "report_latency.txt"
+            (time.time() - start) * 1000, self.logging_path + "report_latency.txt"
         )
 
     def write_log(self, latency, filepath: str):

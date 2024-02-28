@@ -7,12 +7,12 @@ interval = 1
 json_filename = "latest_timestamp.json"
 
 while True:
-    response = requests.get(url, json={"timestamp": time.time()})
+    response = requests.get(url)
 
     if response.status_code == 200:
         data = response.json()
         print(data)
-        #with open(json_filename, 'w') as json_file:
+        # with open(json_filename, 'w') as json_file:
         #    json.dump(data, json_file)
         #    print("Data written to", json_filename)
     else:

@@ -1,26 +1,24 @@
 import multiprocessing, subprocess, os
 from process_monitoring_probe import ProcessMonitoringProbe
 from system_monitoring_probe import SystemMonitoringProbe
+from exporter import Exporter
 
 
 class OdopObs:
     def __init__(self, config: dict) -> None:
         self.process_config = config["process"]
         self.system_config = config["system"]
+        self.exporter_config = config["exporter"]
         self.process_probe = ProcessMonitoringProbe(self.process_config)
         self.system_probe = SystemMonitoringProbe(self.system_config)
+        self.exporter = Exporter(self.exporter_config["unit_conversion"])
 
     def start(self):
-        self.exporter_process = multiprocessing.Process(target=self.start_exporter)
-        self.exporter_process.start()
         self.system_probe.start_reporting()
         self.process_probe.start_reporting()
-
-    def start_exporter(self):
-        module_path = os.path.dirname(os.path.abspath(__file__))
-        subprocess.run(["uvicorn", "exporter:app", "--port", "8000"], cwd=module_path)
+        self.exporter.start()
 
     def stop(self):
         self.process_probe.stop_reporting()
         self.system_probe.stop_reporting()
-        self.exporter_process.terminate()
+        self.exporter.stop()
