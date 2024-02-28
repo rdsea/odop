@@ -6,7 +6,7 @@ process:
   frequency: 1
   requireRegister: false
   request_url: "http://127.0.0.1:8000/metrics/process"
-  logging_path: "/home/nguu0123/git/research/odop/odop/odop_obs/logs/"
+  logging_path: "/home/nguu0123/git/research/odop/odop_obs/logs/"
 system:
   metrics:
     - cpu_usage
@@ -15,7 +15,7 @@ system:
   frequency: 1
   requireRegister: false
   request_url: "http://127.0.0.1:8000/metrics/system"
-  logging_path: "/home/nguu0123/git/research/odop/odop/odop_obs/logs/"
+  logging_path: "/home/nguu0123/git/research/odop/odop_obs/logs/"
 exporter:
   unit_conversion:
     cpu: 

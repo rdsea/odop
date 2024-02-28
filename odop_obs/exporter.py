@@ -1,7 +1,7 @@
 from multiprocessing import Process
 from fastapi import FastAPI
 import uvicorn
-from node_aggregator import NodeAggregator
+from .node_aggregator import NodeAggregator
 
 
 class Exporter:

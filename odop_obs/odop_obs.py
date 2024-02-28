@@ -1,7 +1,7 @@
 import multiprocessing, subprocess, os
-from process_monitoring_probe import ProcessMonitoringProbe
-from system_monitoring_probe import SystemMonitoringProbe
-from exporter import Exporter
+from .process_monitoring_probe import ProcessMonitoringProbe
+from .system_monitoring_probe import SystemMonitoringProbe
+from .exporter import Exporter
 
 
 class OdopObs:

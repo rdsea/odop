@@ -4,7 +4,7 @@ import yaml
 from qoa4ml.qoaUtils import convert_to_mbyte, report_proc_child_cpu, report_proc_mem
 import json
 import time, os
-from probe import Probe
+from .probe import Probe
 
 
 class ProcessMonitoringProbe(Probe):

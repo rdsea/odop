@@ -12,7 +12,7 @@ from qoa4ml.gpuUtils import (
 )
 import yaml
 import time
-from probe import Probe
+from .probe import Probe
 
 
 class SystemMonitoringProbe(Probe):

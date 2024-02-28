@@ -19,6 +19,7 @@ while True:
 
     if response.status_code == 200:
         data = response.json()
+        print(data)
         for item in data:
             if item["type"] == "node":
                 cpu_data = item["cpu"]["usage"]
