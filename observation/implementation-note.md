@@ -42,3 +42,6 @@
 - Process probe:
 - System probe:
 - Exporter:
+
+# Probe, Aggregator, Exporter 
+- When I test with the probe in the same process as the main process, the latency can goes higher than the reporting frequency when the cpu is too full => everything run in a differen process from the main process
