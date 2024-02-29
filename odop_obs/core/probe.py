@@ -24,7 +24,6 @@ class Probe:
         "report_thread",
         "monitoring_service_url",
         "metrics",
-        "report_url",
         "monitoring_interval",
         "logging_path",
         "max_latency",
@@ -36,7 +35,6 @@ class Probe:
         self.monitoring_interval = 1.0 / self.frequency
         self.execution_flag = False
         self.report_thread = None
-        self.report_url = config["request_url"]
         self.logging_path = ODOP_PATH + config["logging_path"]
         self.current_report = {}
         self.max_latency = 0.0
@@ -79,11 +77,6 @@ class Probe:
 
     def stop_reporting(self):
         self.execution_flag = False
-
-    def send_report(self, report: dict):
-        start = time.time()
-        response = requests.post(self.report_url, json=report)
-        print(f"Sending data latency {(time.time() - start)*1000}ms")
 
     def send_report_socket(self, report: dict):
         start = time.time()

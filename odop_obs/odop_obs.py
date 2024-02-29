@@ -1,10 +1,12 @@
 import multiprocessing, subprocess, os
 
-import yaml, argparse
+import yaml, argparse,sys
+
+from .core.common import ODOP_PATH
+sys.path.append(ODOP_PATH)
 from process_monitoring_probe import ProcessMonitoringProbe
 from system_monitoring_probe import SystemMonitoringProbe
 from exporter import Exporter
-from core.common import ODOP_PATH
 
 class OdopObs:
     def __init__(self, config: dict) -> None:

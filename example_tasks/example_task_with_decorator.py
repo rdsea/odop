@@ -3,7 +3,7 @@
 # The implementation of the odop parameter is trivial here and only meant
 # to get around the syntax error. Although I think we can expand it to
 # implement the task reading functionality.
-import sys, yaml,os
+import sys, yaml,os, argparse
 current_dir = os.path.dirname(os.path.abspath(__file__))# Get the parent directory by going one level up
 parent_dir = os.path.dirname(current_dir)# Add the parent directory to sys.path
 sys.path.append(parent_dir)
@@ -38,11 +38,17 @@ def heavy_work_thread():
 #    torch.cuda.empty_cache()
 
 if __name__ == "__main__":
-   config = yaml.safe_load(open("../odop_obs/odop_obs_conf.yaml"))
+   parser = argparse.ArgumentParser()
+   parser.add_argument(
+       "-c", "--config", help="config path", default="./odop_obs_conf.yaml"
+   )
+   args = parser.parse_args()
+   config_file = args.config
+   config = yaml.safe_load(open(config_file))
    odop_obs = OdopObs(config)
    odop_obs.start()
    i = 0
-   for i in range(0,20):
+   for i in range(0,2):
         processes = []
         for i in range(5):
             p = multiprocessing.Process(target=heavy_work_process)
@@ -60,6 +66,5 @@ if __name__ == "__main__":
 
         for t in threads:
             t.join()
-        time.sleep(10)
    print("Done!!!")
    odop_obs.stop()
