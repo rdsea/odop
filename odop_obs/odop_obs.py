@@ -1,10 +1,10 @@
 import multiprocessing, subprocess, os
 
-import yaml
+import yaml, argparse
 from process_monitoring_probe import ProcessMonitoringProbe
 from system_monitoring_probe import SystemMonitoringProbe
 from exporter import Exporter
-
+from core.common import ODOP_PATH
 
 class OdopObs:
     def __init__(self, config: dict) -> None:
@@ -13,8 +13,7 @@ class OdopObs:
         self.exporter_config = config["exporter"]
         self.process_probe = ProcessMonitoringProbe(self.process_config)
         self.system_probe = SystemMonitoringProbe(self.system_config)
-        self.exporter = Exporter(self.exporter_config["unit_conversion"])
-
+        self.exporter = Exporter(self.exporter_config)
 
     def start(self):
         self.monitoring_process = multiprocessing.Process(target=self.start_monitoring)
@@ -30,7 +29,17 @@ class OdopObs:
         self.system_probe.stop_reporting()
         self.monitoring_process.terminate()
 
+
 if __name__ == "__main__":
-    config = yaml.safe_load(open("./config/odop_obs_conf.yaml"))
+    parser = argparse.ArgumentParser()
+    parser.add_argument(
+        "-c", "--config", help="config path", default="config/odop_obs_conf.yaml"
+    )
+    args = parser.parse_args()
+    config_file = args.config
+    config = yaml.safe_load(open(ODOP_PATH + config_file))
     odop_obs = OdopObs(config)
-    odop_obs.start()
+    try: 
+        odop_obs.start()
+    except KeyboardInterrupt:
+        odop_obs.stop()

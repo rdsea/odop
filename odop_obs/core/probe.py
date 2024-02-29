@@ -1,13 +1,15 @@
-import math
+import math, logging
 import time, json
 from threading import Thread
 from urllib.parse import urlencode
 from urllib.request import Request, urlopen
 import requests, pickle, socket
 
-HOST = "127.0.0.1"
-PORT = 12345
+from core.common import ODOP_PATH
 
+logging.basicConfig(
+    format="%(asctime)s:%(levelname)s -- %(message)s", level=logging.INFO
+)
 class Probe:
     __slots__ = [
         "config",
@@ -35,7 +37,7 @@ class Probe:
         self.execution_flag = False
         self.report_thread = None
         self.report_url = config["request_url"]
-        self.logging_path = config["logging_path"]
+        self.logging_path = ODOP_PATH + config["logging_path"]
         self.current_report = {}
         self.max_latency = 0.0
 
@@ -67,8 +69,7 @@ class Probe:
             self.create_report()
             self.send_report_socket(self.current_report)
             self.max_latency = max(time.time() - start, self.max_latency)
-            #TODO: check git
-            time.sleep(round(time.time()) + self.monitoring_interval - 0.02 - time.time())
+            time.sleep(round(time.time()) + self.monitoring_interval - self.max_latency - time.time())
 
     def start_reporting(self):
         self.execution_flag = True
@@ -88,12 +89,12 @@ class Probe:
         start = time.time()
         try:
             client_socket = socket.socket(socket.AF_INET, socket.SOCK_STREAM)
-            client_socket.connect((HOST, PORT))
+            client_socket.connect((self.config["aggregator_host"], self.config["aggregator_port"]))
             serialized_dict = pickle.dumps(report)
             client_socket.sendall(serialized_dict)
             client_socket.close()
         except ConnectionRefusedError:
-            print("connection refuse")
+            logging.error("Connection to aggregator refused")
         self.write_log(
             (time.time() - start) * 1000, self.logging_path + "report_latency.txt"
         )

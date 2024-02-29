@@ -1,4 +1,4 @@
-import os
+import os, argparse
 from qoa4ml.qoaUtils import (
     get_sys_cpu_util,
     get_sys_mem,
@@ -12,11 +12,12 @@ from qoa4ml.gpuUtils import (
 )
 import yaml
 import time
-from probe import Probe
+from core.probe import Probe
 
-NODE_NAME =  os.getenv("NODE_NAME")
-if not NODE_NAME: 
+NODE_NAME = os.getenv("NODE_NAME")
+if not NODE_NAME:
     NODE_NAME = "node_default"
+
 
 class SystemMonitoringProbe(Probe):
     def __init__(self, config: dict) -> None:
@@ -80,10 +81,16 @@ class SystemMonitoringProbe(Probe):
 
 
 if __name__ == "__main__":
-    conf = yaml.safe_load(open("./config/system_probe_conf.yaml"))
+    parser = argparse.ArgumentParser()
+    parser.add_argument(
+        "-c", "--config", help="config path", default="config/process_probe_conf.yaml"
+    )
+    args = parser.parse_args()
+    config_file = args.config
+    config = yaml.safe_load(open(config_file))
 
-    sys_monitoring_probe = SystemMonitoringProbe(conf)
-    del conf
+    sys_monitoring_probe = SystemMonitoringProbe(config)
+    del config
     sys_monitoring_probe.start_reporting()
     while True:
         time.sleep(1)

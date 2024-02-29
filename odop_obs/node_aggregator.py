@@ -3,30 +3,35 @@ import socket
 import pickle
 import argparse
 from threading import Thread
-import time, logging
+import time, logging, traceback
 import sys, os
 import odop_utils
 import yaml
-from pydantic import  ValidationError
+from pydantic import ValidationError
 from tinyflux.storages import MemoryStorage
 from tinyflux import TinyFlux, Point, TimeQuery
 from datetime import datetime
 from fastapi import APIRouter, FastAPI
 from flatten_dict import flatten, unflatten
+from core.common import SystemReport, ProcessReport
 
-logging.basicConfig(format='%(asctime)s:%(levelname)s -- %(message)s', level=logging.INFO)
+logging.basicConfig(
+    format="%(asctime)s:%(levelname)s -- %(message)s", level=logging.INFO
+)
 
-ODOP_PATH = os.getenv("ODOP_PATH")
+from core.common import ODOP_PATH
 sys.path.append(ODOP_PATH)
 DEFAULT_DATABASE_FOLDER = ODOP_PATH + "/tinyflux/"
 odop_utils.make_folder(DEFAULT_DATABASE_FOLDER)
 METRICS_URL_PATH = "/metrics"
 
+
 class NodeAggregator:
-    def __init__(self, config, unit_conversion):
+    def __init__(self, config ):
         self.config = config
-        self.unit_conversion = unit_conversion
+        self.unit_conversion = self.config["unit_conversion"]
         # self.db = TinyFlux(storage=MemoryStorage)
+        print(DEFAULT_DATABASE_FOLDER)
         self.db = TinyFlux(DEFAULT_DATABASE_FOLDER + str(self.config["database_path"]))
         self.server_thread = Thread(
             target=self.start_handling, args=(self.config["host"], self.config["port"])
@@ -35,14 +40,14 @@ class NodeAggregator:
         self.execution_flag = False
         self.router = APIRouter()
         self.router.add_api_route(
-            METRICS_URL_PATH, self.get_lastest_timestamp, methods=[self.config["query_method"]]
+            METRICS_URL_PATH,
+            self.get_lastest_timestamp,
+            methods=[self.config["query_method"]],
         )
 
     def insert_metric(self, timestamp: float, tags: dict, fields: dict):
         timestamp_datetime = datetime.fromtimestamp(timestamp)
-        datapoint = Point(
-            time=timestamp_datetime, tags=tags, fields=fields
-        )
+        datapoint = Point(time=timestamp_datetime, tags=tags, fields=fields)
         self.db.insert(datapoint, compact_key_prefixes=True)
 
     def start_handling(self, host, port):
@@ -69,9 +74,11 @@ class NodeAggregator:
                 report = ProcessReport(**report_dict)
             self.process_report(report)
         except ValidationError as e:
-            print("Validation error:", e)
+            logging.error("ValidationError: ", e)
         except Exception as e:
-            print("Error processing report:", e)
+            logging.error(
+                msg="Can't parse metric report", exc_info=traceback.print_exc()
+            )
 
         client_socket.close()
 
@@ -81,7 +88,9 @@ class NodeAggregator:
                 node_name = report.node_name
                 timestamp = report.timestamp
                 del report.node_name, report.timestamp
-                fields = self.convert_unit(flatten(report.__dict__, self.config["data_separator"]))
+                fields = self.convert_unit(
+                    flatten(report.__dict__, self.config["data_separator"])
+                )
                 self.insert_metric(
                     timestamp,
                     {
@@ -91,10 +100,14 @@ class NodeAggregator:
                     fields,
                 )
             else:
-                metadata = flatten({"metadata": report.metadata}, self.config["data_separator"])
+                metadata = flatten(
+                    {"metadata": report.metadata}, self.config["data_separator"]
+                )
                 timestamp = report.timestamp
                 del report.metadata, report.timestamp
-                fields = self.convert_unit(flatten(report.__dict__, self.config["data_separator"]))
+                fields = self.convert_unit(
+                    flatten(report.__dict__, self.config["data_separator"])
+                )
                 self.insert_metric(timestamp, {"type": "process", **metadata}, fields)
         except Exception as e:
             print("Error processing report:", e)
@@ -102,7 +115,7 @@ class NodeAggregator:
     def convert_unit(self, report: dict):
         converted_report = report
         for key, value in report.items():
-            #TODO: for instead of hard coded
+            # TODO: for instead of hard coded
             if isinstance(value, str):
                 if "frequency" in key:
                     converted_report[key] = self.unit_conversion["frequency"][value]
@@ -123,29 +136,34 @@ class NodeAggregator:
     def get_lastest_timestamp(self):
         time_query = TimeQuery()
         timestamp = datetime.fromtimestamp(math.floor(time.time()))
-        data = self.db.search(
-            time_query >= timestamp) 
+        data = self.db.search(time_query >= timestamp)
         return [
-            unflatten({**datapoint.tags, **datapoint.fields}, self.config["data_separator"])
+            unflatten(
+                {**datapoint.tags, **datapoint.fields}, self.config["data_separator"]
+            )
             for datapoint in data
         ]
 
     def start(self):
         self.execution_flag = True
         self.server_thread.start()
+        logging.info("node aggregator started")
 
     def stop(self):
         self.execution_flag = False
         self.server_thread.join()
+        logging.info("node aggregator stopped")
+
 
 if __name__ == "__main__":
-    
     parser = argparse.ArgumentParser()
-    parser.add_argument('-c', '--config', help='config path',default="/node_aggregator_config.yaml")
+    parser.add_argument(
+        "-c", "--config", help="config path", default="config/node_aggregator_config.yaml"
+    )
     args = parser.parse_args()
     config_file = args.config
-    unit_conversion = yaml.safe_load(open(ODOP_PATH+ config_file))
-    node_aggregator = NodeAggregator(u)
+    config = yaml.safe_load(open(ODOP_PATH + config_file))
+    node_aggregator = NodeAggregator(config)
     node_aggregator.start()
     while True:
         time.sleep(1)
