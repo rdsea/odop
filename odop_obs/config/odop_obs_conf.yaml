@@ -33,5 +33,12 @@ exporter:
     frequency:
       GHz: 1
       MHz: 2
-    
-
+node_aggregator:
+  host: "127.0.0.1"
+  port: 12345
+  database_path: "/db.csv"
+  thread_daemon: True
+  query_method: "GET"
+  backlog_number: 5
+  socket_package_size: 4096
+  data_separator: "dot"

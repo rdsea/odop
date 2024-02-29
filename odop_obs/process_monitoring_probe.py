@@ -4,7 +4,7 @@ import yaml
 from qoa4ml.qoaUtils import convert_to_mbyte, report_proc_child_cpu, report_proc_mem
 import json
 import time, os
-from .probe import Probe
+from probe import Probe
 
 
 class ProcessMonitoringProbe(Probe):
@@ -48,9 +48,8 @@ class ProcessMonitoringProbe(Probe):
             self.logging_path + "calculating_process_metric_latency.txt",
         )
 
-
 if __name__ == "__main__":
-    conf = yaml.safe_load(open("./process_probe_conf.yaml"))
+    conf = yaml.safe_load(open("./config/process_probe_conf.yaml"))
 
     process_monitoring_probe = ProcessMonitoringProbe(conf)
     del conf

@@ -8,7 +8,6 @@ import requests, pickle, socket
 HOST = "127.0.0.1"
 PORT = 12345
 
-
 class Probe:
     __slots__ = [
         "config",
@@ -19,7 +18,7 @@ class Probe:
         "gpu_metadata",
         "mem_metadata",
         "current_report",
-        "started",
+        "execution_flag",
         "report_thread",
         "monitoring_service_url",
         "metrics",
@@ -33,7 +32,7 @@ class Probe:
         self.config = config
         self.frequency = self.config["frequency"]
         self.monitoring_interval = 1.0 / self.frequency
-        self.started = False
+        self.execution_flag = False
         self.report_thread = None
         self.report_url = config["request_url"]
         self.logging_path = config["logging_path"]
@@ -63,23 +62,22 @@ class Probe:
     def reporting(self):
         current_time = time.time()
         time.sleep(math.ceil(current_time) - current_time)
-        while self.started:
+        while self.execution_flag:
             start = time.time()
             self.create_report()
             self.send_report_socket(self.current_report)
             self.max_latency = max(time.time() - start, self.max_latency)
-            time.sleep(
-                round(time.time()) + self.monitoring_interval - 0.02 - time.time()
-            )
+            #TODO: check git
+            time.sleep(round(time.time()) + self.monitoring_interval - 0.02 - time.time())
 
     def start_reporting(self):
-        self.started = True
+        self.execution_flag = True
         self.report_thread = Thread(target=self.reporting)
-        self.report_thread.daemon = True
+        self.report_thread.daemon = self.config["thread_daemon"]
         self.report_thread.start()
 
     def stop_reporting(self):
-        self.started = False
+        self.execution_flag = False
 
     def send_report(self, report: dict):
         start = time.time()

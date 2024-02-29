@@ -1,7 +1,9 @@
 import multiprocessing, subprocess, os
-from .process_monitoring_probe import ProcessMonitoringProbe
-from .system_monitoring_probe import SystemMonitoringProbe
-from .exporter import Exporter
+
+import yaml
+from process_monitoring_probe import ProcessMonitoringProbe
+from system_monitoring_probe import SystemMonitoringProbe
+from exporter import Exporter
 
 
 class OdopObs:
@@ -28,3 +30,7 @@ class OdopObs:
         self.system_probe.stop_reporting()
         self.monitoring_process.terminate()
 
+if __name__ == "__main__":
+    config = yaml.safe_load(open("./config/odop_obs_conf.yaml"))
+    odop_obs = OdopObs(config)
+    odop_obs.start()

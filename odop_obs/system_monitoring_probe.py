@@ -1,4 +1,4 @@
-import math
+import os
 from qoa4ml.qoaUtils import (
     get_sys_cpu_util,
     get_sys_mem,
@@ -12,13 +12,16 @@ from qoa4ml.gpuUtils import (
 )
 import yaml
 import time
-from .probe import Probe
+from probe import Probe
 
+NODE_NAME =  os.getenv("NODE_NAME")
+if not NODE_NAME: 
+    NODE_NAME = "node_default"
 
 class SystemMonitoringProbe(Probe):
     def __init__(self, config: dict) -> None:
         super().__init__(config)
-        self.node_name = "aaltosea_test"  # TODO: find somehow to get node name
+        self.node_name = NODE_NAME  # TODO: find somehow to get node name
         if self.config["requireRegister"]:
             self.obs_service_url = self.config["obsServiceUrl"]
         self.cpu_metadata = self.get_cpu_metadata()
@@ -77,7 +80,7 @@ class SystemMonitoringProbe(Probe):
 
 
 if __name__ == "__main__":
-    conf = yaml.safe_load(open("./system_probe_conf.yaml"))
+    conf = yaml.safe_load(open("./config/system_probe_conf.yaml"))
 
     sys_monitoring_probe = SystemMonitoringProbe(conf)
     del conf
