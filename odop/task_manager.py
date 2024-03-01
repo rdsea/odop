@@ -38,13 +38,8 @@ def odop_task(**kwargs):
         
         @functools.wraps(func)
         def wrapper(*args, **kwargs):
-            """ Calls the function and prints the function name before and
-            after the call
-            """
-            print(f"Running {func}")
-            return_value = func(*args, **kwargs)
-            print(f"Completed {func}")
-            return return_value
+            """ Thin wrapper we can assign attributes to """
+            return func(*args, **kwargs)
 
         # Check required parameters
         if "name" not in kwargs:
@@ -59,20 +54,23 @@ def odop_task(**kwargs):
         for arg in kwargs:
             wrapper.__setattr__(arg, kwargs[arg])
 
-        # Check for the interupt_allowed parameter and default to True
-        if not "interupt_allowed" in kwargs:
-            wrapper.interupt_allowed = True
-
-        wrapper.is_task = True
-        wrapper.module_file = inspect.getfile(func)
-        wrapper.function_name = func.__name__
-
-        # The arguments variable contains keyword arguments provided to the task function
+        # The arguments variable contains keyword arguments provided to
+        # the task function. Check that a value is provided for each
+        # parameter.
         signature = inspect.signature(func)
         parameters = list(signature.parameters.keys())
         for parameter in parameters:
             if not parameter in wrapper.arguments:
                 raise ValueError(f"Parameter {parameter} not provided for task {wrapper.name}")
+
+        # Check for the inteyrupt_allowed parameter and default to True
+        if not "interrupt_allowed" in kwargs:
+            wrapper.interrupt_allowed = True
+
+        # Set other parameters not provided by the user
+        wrapper.is_task = True
+        wrapper.module_file = inspect.getfile(func)
+        wrapper.function_name = func.__name__
 
         return wrapper
 
