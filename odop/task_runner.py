@@ -19,4 +19,4 @@ def engine_run_task_from_script(task_name):
     Example 2: Running the function from a script
     """
     import subprocess
-    subprocess.run(["python", f"{task_name}_runner.py"])
+    process = subprocess.run(["python", f"{task_name}_runner.py"])
