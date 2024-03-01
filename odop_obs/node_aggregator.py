@@ -20,6 +20,7 @@ logging.basicConfig(
 )
 
 from core.common import ODOP_PATH
+
 sys.path.append(ODOP_PATH)
 DEFAULT_DATABASE_FOLDER = ODOP_PATH + "tinyflux/"
 odop_utils.make_folder(DEFAULT_DATABASE_FOLDER)
@@ -27,7 +28,7 @@ METRICS_URL_PATH = "/metrics"
 
 
 class NodeAggregator:
-    def __init__(self, config ):
+    def __init__(self, config):
         self.config = config
         self.unit_conversion = self.config["unit_conversion"]
         # self.db = TinyFlux(storage=MemoryStorage)
@@ -158,7 +159,10 @@ class NodeAggregator:
 if __name__ == "__main__":
     parser = argparse.ArgumentParser()
     parser.add_argument(
-        "-c", "--config", help="config path", default="config/node_aggregator_config.yaml"
+        "-c",
+        "--config",
+        help="config path",
+        default="config/node_aggregator_config.yaml",
     )
     args = parser.parse_args()
     config_file = args.config

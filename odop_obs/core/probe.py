@@ -10,6 +10,8 @@ from core.common import ODOP_PATH
 logging.basicConfig(
     format="%(asctime)s:%(levelname)s -- %(message)s", level=logging.INFO
 )
+
+
 class Probe:
     __slots__ = [
         "config",
@@ -27,7 +29,7 @@ class Probe:
         "monitoring_interval",
         "latency_logging_path",
         "max_latency",
-        "log_latency_flag"
+        "log_latency_flag",
     ]
 
     def __init__(self, config: dict) -> None:
@@ -70,7 +72,12 @@ class Probe:
             self.create_report()
             self.send_report_socket(self.current_report)
             self.max_latency = max(time.time() - start, self.max_latency)
-            time.sleep(round(time.time()) + self.monitoring_interval - self.max_latency - time.time())
+            time.sleep(
+                round(time.time())
+                + self.monitoring_interval
+                - self.max_latency
+                - time.time()
+            )
 
     def start_reporting(self):
         self.execution_flag = True
@@ -85,7 +92,9 @@ class Probe:
         start = time.time()
         try:
             client_socket = socket.socket(socket.AF_INET, socket.SOCK_STREAM)
-            client_socket.connect((self.config["aggregator_host"], self.config["aggregator_port"]))
+            client_socket.connect(
+                (self.config["aggregator_host"], self.config["aggregator_port"])
+            )
             serialized_dict = pickle.dumps(report)
             client_socket.sendall(serialized_dict)
             client_socket.close()
@@ -93,7 +102,8 @@ class Probe:
             logging.error("Connection to aggregator refused")
         if self.log_latency_flag:
             self.write_log(
-                (time.time() - start) * 1000, self.latency_logging_path + "report_latency.txt"
+                (time.time() - start) * 1000,
+                self.latency_logging_path + "report_latency.txt",
             )
 
     def write_log(self, latency, filepath: str):

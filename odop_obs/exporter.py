@@ -6,6 +6,7 @@ logging.basicConfig(
     format="%(asctime)s:%(levelname)s -- %(message)s", level=logging.INFO
 )
 
+
 class Exporter:
     def __init__(self, config: dict) -> None:
         self.app = FastAPI()
@@ -16,6 +17,7 @@ class Exporter:
     def start(self):
         self.node_aggregator.start()
         uvicorn.run(self.app, host=self.config["host"], port=self.config["port"])
+
 
 if __name__ == "__main__":
     parser = argparse.ArgumentParser()

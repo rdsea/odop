@@ -1,12 +1,14 @@
 import multiprocessing, subprocess, os
 
-import yaml, argparse,sys
+import yaml, argparse, sys
 
 from .core.common import ODOP_PATH
+
 sys.path.append(ODOP_PATH)
 from process_monitoring_probe import ProcessMonitoringProbe
 from system_monitoring_probe import SystemMonitoringProbe
 from exporter import Exporter
+
 
 class OdopObs:
     def __init__(self, config: dict) -> None:
@@ -41,7 +43,7 @@ if __name__ == "__main__":
     config_file = args.config
     config = yaml.safe_load(open(ODOP_PATH + config_file))
     odop_obs = OdopObs(config)
-    try: 
+    try:
         odop_obs.start()
     except KeyboardInterrupt:
         odop_obs.stop()

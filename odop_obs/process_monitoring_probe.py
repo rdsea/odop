@@ -1,5 +1,5 @@
 import math
-import psutil,logging
+import psutil, logging
 import yaml, argparse
 from qoa4ml.qoaUtils import convert_to_mbyte, report_proc_child_cpu, report_proc_mem
 import json
@@ -9,6 +9,7 @@ from core.probe import Probe
 logging.basicConfig(
     format="%(asctime)s:%(levelname)s -- %(message)s", level=logging.INFO
 )
+
 
 class ProcessMonitoringProbe(Probe):
     def __init__(self, config: dict) -> None:
