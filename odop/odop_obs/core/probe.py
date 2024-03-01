@@ -1,11 +1,13 @@
-import math, logging
-import time, json
-from threading import Thread
-from urllib.parse import urlencode
-from urllib.request import Request, urlopen
-import requests, pickle, socket
+import math
+import logging
+import time
+import json
+import requests
+import pickle
+import socket
 
-from core.common import ODOP_PATH
+from threading import Thread
+from .common import ODOP_PATH
 
 logging.basicConfig(
     format="%(asctime)s:%(levelname)s -- %(message)s", level=logging.INFO
@@ -44,15 +46,20 @@ class Probe:
         self.current_report = {}
         self.max_latency = 0.0
 
-    def register(self, cpu_metadata: dict, gpu_metadata: dict, mem_metadata: dict):
-        cpu_metadata = cpu_metadata
-        gpu_metadata = gpu_metadata
-        mem_metadata = mem_metadata
+    def register(
+        self,
+        probe_metadata: dict,
+        cpu_metadata: dict,
+        gpu_metadata: dict,
+        mem_metadata: dict,
+    ):
         data = {
-            "node_name": self.node_name,
-            "metadata": {"cpu": cpu_metadata, "gpu": gpu_metadata, "mem": mem_metadata},
+            "metadata": probe_metadata,
+            "cpu": cpu_metadata,
+            "gpu": gpu_metadata,
+            "mem": mem_metadata,
         }
-        response = requests.post(self.obs_service_url, json=data)
+        response = requests.post(self.obs_service_url, json=data, timeout=1.0)
         if response.status_code == 200:
             register_info = json.loads(response.text)
             self.monitoring_service_url = register_info["reportUrl"]

@@ -5,7 +5,6 @@ import argparse
 from threading import Thread
 import time, logging, traceback
 import sys, os
-import odop_utils
 import yaml
 from pydantic import ValidationError
 from tinyflux.storages import MemoryStorage
@@ -13,13 +12,13 @@ from tinyflux import TinyFlux, Point, TimeQuery
 from datetime import datetime
 from fastapi import APIRouter, FastAPI
 from flatten_dict import flatten, unflatten
-from core.common import SystemReport, ProcessReport
-
+from .core.common import SystemReport, ProcessReport
+from . import odop_utils
 logging.basicConfig(
     format="%(asctime)s:%(levelname)s -- %(message)s", level=logging.INFO
 )
 
-from core.common import ODOP_PATH
+from .core.common import ODOP_PATH
 
 sys.path.append(ODOP_PATH)
 DEFAULT_DATABASE_FOLDER = ODOP_PATH + "tinyflux/"

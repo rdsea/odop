@@ -1,6 +1,6 @@
 from fastapi import FastAPI
 import uvicorn, argparse, yaml, time, os, logging, sys
-from node_aggregator import NodeAggregator
+from .node_aggregator import NodeAggregator
 
 logging.basicConfig(
     format="%(asctime)s:%(levelname)s -- %(message)s", level=logging.INFO

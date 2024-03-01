@@ -4,7 +4,7 @@ import yaml, argparse
 from qoa4ml.qoaUtils import convert_to_mbyte, report_proc_child_cpu, report_proc_mem
 import json
 import time, os
-from core.probe import Probe
+from .core.probe import Probe
 
 logging.basicConfig(
     format="%(asctime)s:%(levelname)s -- %(message)s", level=logging.INFO

@@ -12,7 +12,7 @@ from qoa4ml.gpuUtils import (
 )
 import yaml
 import time
-from core.probe import Probe
+from .core.probe import Probe
 
 NODE_NAME = os.getenv("NODE_NAME")
 if not NODE_NAME:

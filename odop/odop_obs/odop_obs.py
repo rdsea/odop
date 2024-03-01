@@ -5,16 +5,21 @@ import yaml, argparse, sys
 from .core.common import ODOP_PATH
 
 sys.path.append(ODOP_PATH)
-from process_monitoring_probe import ProcessMonitoringProbe
-from system_monitoring_probe import SystemMonitoringProbe
-from exporter import Exporter
+from .process_monitoring_probe import ProcessMonitoringProbe
+from .system_monitoring_probe import SystemMonitoringProbe
+from .exporter import Exporter
 
 
 class OdopObs:
-    def __init__(self, config: dict) -> None:
-        self.process_config = config["process"]
-        self.system_config = config["system"]
-        self.exporter_config = config["exporter"]
+    def __init__(self, config: dict | None) -> None:
+        if not config:
+            self.config = yaml.safe_load(open("./odop_obs_conf.yaml"))
+        else:
+            self.config = config
+        print(self.config)
+        self.process_config = self.config["process"]
+        self.system_config = self.config["system"]
+        self.exporter_config = self.config["exporter"]
         self.process_probe = ProcessMonitoringProbe(self.process_config)
         self.system_probe = SystemMonitoringProbe(self.system_config)
         self.exporter = Exporter(self.exporter_config)
