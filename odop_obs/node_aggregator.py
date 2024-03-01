@@ -21,7 +21,7 @@ logging.basicConfig(
 
 from core.common import ODOP_PATH
 sys.path.append(ODOP_PATH)
-DEFAULT_DATABASE_FOLDER = ODOP_PATH + "/tinyflux/"
+DEFAULT_DATABASE_FOLDER = ODOP_PATH + "tinyflux/"
 odop_utils.make_folder(DEFAULT_DATABASE_FOLDER)
 METRICS_URL_PATH = "/metrics"
 
@@ -36,7 +36,7 @@ class NodeAggregator:
         self.server_thread = Thread(
             target=self.start_handling, args=(self.config["host"], self.config["port"])
         )
-        self.server_thread.daemon = self.config["thread_daemon"]
+        self.server_thread.daemon = True
         self.execution_flag = False
         self.router = APIRouter()
         self.router.add_api_route(

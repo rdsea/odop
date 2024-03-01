@@ -4,13 +4,12 @@
 # to get around the syntax error. Although I think we can expand it to
 # implement the task reading functionality.
 import sys, yaml,os, argparse
-current_dir = os.path.dirname(os.path.abspath(__file__))# Get the parent directory by going one level up
-parent_dir = os.path.dirname(current_dir)# Add the parent directory to sys.path
+current_dir = os.path.dirname(os.path.abspath(__file__))
+parent_dir = os.path.dirname(current_dir)
 sys.path.append(parent_dir)
 from odop import task_manager
 import time, multiprocessing, threading
 from odop_obs.odop_obs import OdopObs
-#import torch
 
 @task_manager.odop_task(name="example_task", time="2h", cpu="2", memory="2G", parameter1=1)
 def example_task_function(parameter1):
@@ -25,17 +24,6 @@ def heavy_work_process():
 @task_manager.odop_task(name="heavy_work_thread", time="5s", cpu="1", memory="1G", parameter1=1)
 def heavy_work_thread():
     result = sum(x*x for x in range(10**7))
-
-#def gpu_computation():
-#    start = time.time()
-#    ndim = 20000
-#    random1 = torch.randn([ndim, ndim]).to("cuda")
-#    random2 = torch.randn([ndim, ndim]).to("cuda")
-#    while time.time() - start < 0.5 * 60:
-#        random1 = random1 * random2
-#        random2 = random2 * random1
-#    del random1, random2
-#    torch.cuda.empty_cache()
 
 if __name__ == "__main__":
    parser = argparse.ArgumentParser()

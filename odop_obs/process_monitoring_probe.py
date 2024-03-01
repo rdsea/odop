@@ -46,10 +46,11 @@ class ProcessMonitoringProbe(Probe):
         }
 
         self.current_report = report
-        self.write_log(
-            (time.time() - timestamp) * 1000,
-            self.logging_path + "calculating_process_metric_latency.txt",
-        )
+        if self.log_latency_flag:
+            self.write_log(
+                (time.time() - timestamp) * 1000,
+                self.latency_logging_path + "calculating_process_metric_latency.txt",
+            )
 
 
 if __name__ == "__main__":

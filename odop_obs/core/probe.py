@@ -25,8 +25,9 @@ class Probe:
         "monitoring_service_url",
         "metrics",
         "monitoring_interval",
-        "logging_path",
+        "latency_logging_path",
         "max_latency",
+        "log_latency_flag"
     ]
 
     def __init__(self, config: dict) -> None:
@@ -35,7 +36,9 @@ class Probe:
         self.monitoring_interval = 1.0 / self.frequency
         self.execution_flag = False
         self.report_thread = None
-        self.logging_path = ODOP_PATH + config["logging_path"]
+        self.log_latency_flag = self.config["log_latency_flag"]
+        if self.log_latency_flag:
+            self.latency_logging_path = ODOP_PATH + config["latency_logging_path"]
         self.current_report = {}
         self.max_latency = 0.0
 
@@ -72,7 +75,7 @@ class Probe:
     def start_reporting(self):
         self.execution_flag = True
         self.report_thread = Thread(target=self.reporting)
-        self.report_thread.daemon = self.config["thread_daemon"]
+        self.report_thread.daemon = True
         self.report_thread.start()
 
     def stop_reporting(self):
@@ -88,9 +91,10 @@ class Probe:
             client_socket.close()
         except ConnectionRefusedError:
             logging.error("Connection to aggregator refused")
-        self.write_log(
-            (time.time() - start) * 1000, self.logging_path + "report_latency.txt"
-        )
+        if self.log_latency_flag:
+            self.write_log(
+                (time.time() - start) * 1000, self.latency_logging_path + "report_latency.txt"
+            )
 
     def write_log(self, latency, filepath: str):
         with open(filepath, "a") as file:
