@@ -7,7 +7,8 @@
 from odop import task_manager
 
 @task_manager.odop_task(
-    name="example_task", time="2h", cpu="2", memory="2G",
+    name="example_task", time="2h", cpu="2-4", memory="2G",
+    filenames = ["input_data_1", "input_data_2"],
     arguments={"parameter1": "str"}
 )
 def example_task_function(parameter1):

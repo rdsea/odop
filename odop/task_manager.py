@@ -111,7 +111,7 @@ def create_runner_script(task):
 
     file_name = f"{task.name}_runner.py"
     module_file_name = f"{task.name}_module.py"
-    params_file = f"{task.name}_params.json"
+    params_file = f"{task.name}_arguments.json"
 
     # Copy the module
     with open(task.module_file, "r") as file:
@@ -167,4 +167,4 @@ if __name__ == '__main__':
     print([task.arguments for task in tasks])
 
     print(open("example_task_runner.py").read())
-    print(open("example_arguments.json").read())
+    print(open("example_task_arguments.json").read())
