@@ -59,6 +59,10 @@ def odop_task(**kwargs):
         for arg in kwargs:
             wrapper.__setattr__(arg, kwargs[arg])
 
+        # Check for the interupt_allowed parameter and default to True
+        if not "interupt_allowed" in kwargs:
+            wrapper.interupt_allowed = True
+
         wrapper.is_task = True
         wrapper.module_file = inspect.getfile(func)
         wrapper.function_name = func.__name__
