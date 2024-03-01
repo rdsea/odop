@@ -8,10 +8,14 @@
         - cpu
         - time
         - memory
+    - optional:
+        - interrupt allowed (default to True)
     - other resources: the resource tracker needs to know about these or the job does not execute
-        - filename
-        - network bandwith
+        - network bandwidth
         - gpu
+        - list of filenames
+        - files in directory, minimum number
+        - files in shared memory
     -  dependencies:
         - depends on (executes only after task)
 
