@@ -5,6 +5,7 @@ import argparse
 from threading import Thread
 import time, logging, traceback
 import sys, os
+from typing import Union
 import yaml
 from pydantic import ValidationError
 from tinyflux.storages import MemoryStorage
@@ -14,6 +15,7 @@ from fastapi import APIRouter, FastAPI
 from flatten_dict import flatten, unflatten
 from .core.common import SystemReport, ProcessReport
 from . import odop_utils
+
 logging.basicConfig(
     format="%(asctime)s:%(levelname)s -- %(message)s", level=logging.INFO
 )
@@ -31,7 +33,6 @@ class NodeAggregator:
         self.config = config
         self.unit_conversion = self.config["unit_conversion"]
         # self.db = TinyFlux(storage=MemoryStorage)
-        print(DEFAULT_DATABASE_FOLDER)
         self.db = TinyFlux(DEFAULT_DATABASE_FOLDER + str(self.config["database_path"]))
         self.server_thread = Thread(
             target=self.start_handling, args=(self.config["host"], self.config["port"])
@@ -66,12 +67,8 @@ class NodeAggregator:
                 break
             data += packet
 
-        report_dict = pickle.loads(data)
+        report = pickle.loads(data)
         try:
-            if "node_name" in report_dict:
-                report = SystemReport(**report_dict)
-            else:
-                report = ProcessReport(**report_dict)
             self.process_report(report)
         except ValidationError as e:
             logging.error("ValidationError: ", e)
@@ -82,14 +79,16 @@ class NodeAggregator:
 
         client_socket.close()
 
-    def process_report(self, report):
+    def process_report(self, report: Union[SystemReport, ProcessReport]):
         try:
             if isinstance(report, SystemReport):
-                node_name = report.node_name
+                node_name = report.metadata.node_name
                 timestamp = report.timestamp
-                del report.node_name, report.timestamp
+                del report.metadata, report.timestamp
                 fields = self.convert_unit(
-                    flatten(report.__dict__, self.config["data_separator"])
+                    flatten(
+                        report.dict(exclude_none=True), self.config["data_separator"]
+                    )
                 )
                 self.insert_metric(
                     timestamp,
@@ -101,12 +100,14 @@ class NodeAggregator:
                 )
             else:
                 metadata = flatten(
-                    {"metadata": report.metadata}, self.config["data_separator"]
+                    {"metadata": report.metadata.dict()}, self.config["data_separator"]
                 )
                 timestamp = report.timestamp
                 del report.metadata, report.timestamp
                 fields = self.convert_unit(
-                    flatten(report.__dict__, self.config["data_separator"])
+                    flatten(
+                        report.dict(exclude_none=True), self.config["data_separator"]
+                    )
                 )
                 self.insert_metric(timestamp, {"type": "process", **metadata}, fields)
         except Exception as e:

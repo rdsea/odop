@@ -1,20 +1,40 @@
+import os
+import logging
+import json
+from typing import Optional
 from pydantic import BaseModel
-import os, logging
 
 ODOP_PATH = os.getenv("ODOP_PATH")
 if not ODOP_PATH:
     logging.error("No ODOP_PATH environment variable")
 
 
-class ProcessReport(BaseModel):
-    metadata: dict
-    timestamp: float
+class ProcessMetadata(BaseModel):
+    pid: str
+    user: str
+
+
+class SystemMetadata(BaseModel):
+    node_name: str
+
+
+class ResourceReport(BaseModel):
+    metadata: Optional[dict] = None
     usage: dict
 
 
-class SystemReport(BaseModel):
-    node_name: str
+class ProcessReport(BaseModel):
+    metadata: ProcessMetadata
     timestamp: float
-    cpu: dict
-    gpu: dict
-    mem: dict
+    cpu: ResourceReport
+    gpu: Optional[ResourceReport] = None
+    mem: ResourceReport
+
+
+class SystemReport(BaseModel):
+    metadata: SystemMetadata
+    timestamp: float
+    cpu: ResourceReport
+    gpu: Optional[ResourceReport] = None
+    mem: ResourceReport
+

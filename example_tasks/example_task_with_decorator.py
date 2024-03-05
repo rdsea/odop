@@ -9,7 +9,7 @@ parent_dir = os.path.dirname(current_dir)
 sys.path.append(parent_dir)
 from odop import task_manager
 import time, multiprocessing, threading
-from odop_obs.odop_obs import OdopObs
+from odop.odop_obs.odop_obs import OdopObs
 
 @task_manager.odop_task(name="example_task", time="2h", cpu="2", memory="2G", parameter1=1)
 def example_task_function(parameter1):
@@ -37,22 +37,23 @@ if __name__ == "__main__":
    odop_obs.start()
    i = 0
    for i in range(0,2):
-        processes = []
-        for i in range(5):
-            p = multiprocessing.Process(target=heavy_work_process)
-            processes.append(p)
-            p.start()
+        time.sleep(3)
+        #processes = []
+        #for i in range(5):
+        #    p = multiprocessing.Process(target=heavy_work_process)
+        #    processes.append(p)
+        #    p.start()
 
-        threads = []
-        for i in range(3):
-            t = threading.Thread(target=heavy_work_thread)
-            threads.append(t)
-            t.start()
+        #threads = []
+        #for i in range(3):
+        #    t = threading.Thread(target=heavy_work_thread)
+        #    threads.append(t)
+        #    t.start()
 
-        for p in processes:
-            p.join()
+        #for p in processes:
+        #    p.join()
 
-        for t in threads:
-            t.join()
+        #for t in threads:
+        #    t.join()
    print("Done!!!")
    odop_obs.stop()

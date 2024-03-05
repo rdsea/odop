@@ -5,9 +5,9 @@ import json
 import requests
 import pickle
 import socket
-
+from typing import Union
 from threading import Thread
-from .common import ODOP_PATH
+from .common import ODOP_PATH, ProcessReport, SystemReport
 
 logging.basicConfig(
     format="%(asctime)s:%(levelname)s -- %(message)s", level=logging.INFO
@@ -43,7 +43,7 @@ class Probe:
         self.log_latency_flag = self.config["log_latency_flag"]
         if self.log_latency_flag:
             self.latency_logging_path = ODOP_PATH + config["latency_logging_path"]
-        self.current_report = {}
+        self.current_report: Union[SystemReport, ProcessReport]
         self.max_latency = 0.0
 
     def register(
@@ -95,7 +95,7 @@ class Probe:
     def stop_reporting(self):
         self.execution_flag = False
 
-    def send_report_socket(self, report: dict):
+    def send_report_socket(self, report):
         start = time.time()
         try:
             client_socket = socket.socket(socket.AF_INET, socket.SOCK_STREAM)

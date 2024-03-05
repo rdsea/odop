@@ -16,7 +16,6 @@ class OdopObs:
             self.config = yaml.safe_load(open("./odop_obs_conf.yaml"))
         else:
             self.config = config
-        print(self.config)
         self.process_config = self.config["process"]
         self.system_config = self.config["system"]
         self.exporter_config = self.config["exporter"]

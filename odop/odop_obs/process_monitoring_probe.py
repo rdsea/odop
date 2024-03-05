@@ -5,6 +5,7 @@ from qoa4ml.qoaUtils import convert_to_mbyte, report_proc_child_cpu, report_proc
 import json
 import time, os
 from .core.probe import Probe
+from .core.common import ProcessReport, ProcessMetadata, ResourceReport
 
 logging.basicConfig(
     format="%(asctime)s:%(levelname)s -- %(message)s", level=logging.INFO
@@ -23,29 +24,32 @@ class ProcessMonitoringProbe(Probe):
         self.process = psutil.Process(self.pid)
         if self.config["requireRegister"]:
             self.obs_service_url = self.config["obsServiceUrl"]
+        self.metadata = ProcessMetadata(pid=str(self.pid), user=self.process.username())
 
     def get_cpu_usage(self):
         process_usage = report_proc_child_cpu(self.process)
         del process_usage["unit"]
-        return process_usage
+        return ResourceReport(usage=process_usage)
 
     def get_mem_usage(self):
         data = report_proc_mem(self.process)
-        return {
-            "rss": {"value": convert_to_mbyte(data["rss"]), "unit": "Mb"},
-            "vms": {"value": convert_to_mbyte(data["vms"]), "unit": "Mb"},
-        }
+        return ResourceReport(
+            usage={
+                "rss": {"value": convert_to_mbyte(data["rss"]), "unit": "Mb"},
+                "vms": {"value": convert_to_mbyte(data["vms"]), "unit": "Mb"},
+            }
+        )
 
     def create_report(self):
         timestamp = time.time()
-        cpu_usage = self.get_cpu_usage()
-        mem_usage = self.get_mem_usage()
-        report = {
-            "metadata": {"pid": str(self.pid), "user": self.process.username()},
-            "timestamp": round(timestamp),
-            "usage": {"cpu": cpu_usage, "mem": mem_usage},
-        }
-
+        cpu_report = self.get_cpu_usage()
+        mem_report = self.get_mem_usage()
+        report = ProcessReport(
+            metadata=self.metadata,
+            timestamp=round(timestamp),
+            cpu=cpu_report,
+            mem=mem_report,
+        )
         self.current_report = report
         if self.log_latency_flag:
             self.write_log(
