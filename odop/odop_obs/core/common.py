@@ -1,6 +1,5 @@
 import os
 import logging
-import json
 from typing import Optional
 from pydantic import BaseModel
 
@@ -38,3 +37,40 @@ class SystemReport(BaseModel):
     gpu: Optional[ResourceReport] = None
     mem: ResourceReport
 
+class NodeAggregator(BaseModel):
+    host: str
+    port: int
+    database_path: str
+    query_method: str
+    backlog_number: int
+    socket_package_size: int
+    data_separator: str
+    unit_conversion: dict
+
+
+class ProcessConfig(BaseModel):
+    frequency: int
+    require_register: bool
+    logging_path: str
+    aggregator_host: str
+    aggregator_port: int
+
+
+class SystemConfig(BaseModel):
+    frequency: int
+    require_register: bool
+    logging_path: str
+    aggregator_host: str
+    aggregator_port: int
+
+
+class ExporterConfig(BaseModel):
+    host: str
+    port: int
+    node_aggregator: NodeAggregator
+
+
+class OdopObsConfig(BaseModel):
+    process: ProcessConfig
+    system: SystemConfig
+    exporter: ExporterConfig

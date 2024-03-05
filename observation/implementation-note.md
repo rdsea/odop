@@ -36,12 +36,23 @@
 - Sending report from probe to exporter: 0.22
 - Process metric: 12.244
 - System metric: 0.82
+After pydantic:
++------------------------------------------+-----------+----------+-----------+----------+
+| File                                     |   Average |      P99 |       Min |      Max |
++==========================================+===========+==========+===========+==========+
+| ./report_latency.txt                     |  0.354276 |  1.01577 | 0.0607967 |  1.43266 |
++------------------------------------------+-----------+----------+-----------+----------+
+| ./calculating_process_metric_latency.txt |  9.05714  | 12.6678  | 4.12917   | 14.339   |
++------------------------------------------+-----------+----------+-----------+----------+
+| ./calculating_system_metric_latency.txt  |  0.545169 |  1.33612 | 0.23675   |  1.82867 |
++------------------------------------------+-----------+----------+-----------+----------+
 
 2. Memory usage:
-
+- Total: after pydantic:56mb
 - Process probe:
 - System probe:
 - Exporter:
 
 # Probe, Aggregator, Exporter 
 - When I test with the probe in the same process as the main process, the latency can goes higher than the reporting frequency when the cpu is too full => everything run in a differen process from the main process
+
