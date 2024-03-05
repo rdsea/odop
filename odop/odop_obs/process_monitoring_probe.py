@@ -1,9 +1,10 @@
-import math
-import psutil, logging
-import yaml, argparse
+import logging
+import argparse
+import time
+import os
+import psutil
+import yaml
 from qoa4ml.qoaUtils import convert_to_mbyte, report_proc_child_cpu, report_proc_mem
-import json
-import time, os
 from .core.probe import Probe
 from .core.common import ProcessReport, ProcessMetadata, ResourceReport
 
@@ -20,7 +21,7 @@ class ProcessMonitoringProbe(Probe):
         else:
             self.pid = config["pid"]
             if not psutil.pid_exists(self.pid):
-                raise Exception(f"No process with pid {self.pid}")
+                raise RuntimeError(f"No process with pid {self.pid}")
         self.process = psutil.Process(self.pid)
         if self.config["requireRegister"]:
             self.obs_service_url = self.config["obsServiceUrl"]
@@ -65,9 +66,10 @@ if __name__ == "__main__":
     )
     args = parser.parse_args()
     config_file = args.config
-    config = yaml.safe_load(open(config_file))
-    process_monitoring_probe = ProcessMonitoringProbe(config)
-    del config
+    with open(config_file, encoding="utf-8") as file:
+        proces_config = yaml.safe_load(file)
+    process_monitoring_probe = ProcessMonitoringProbe(proces_config)
+    del proces_config
     process_monitoring_probe.start_reporting()
     while True:
         time.sleep(10)

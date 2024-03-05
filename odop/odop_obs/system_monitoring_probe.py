@@ -1,5 +1,7 @@
-import os, argparse
-from odop.odop_obs.core.common import ResourceReport, SystemMetadata, SystemReport
+import os
+import time
+import argparse
+import yaml
 from qoa4ml.qoaUtils import (
     get_sys_cpu_util,
     get_sys_mem,
@@ -11,8 +13,7 @@ from qoa4ml.gpuUtils import (
     get_sys_gpu_metadata,
     get_sys_gpu_usage,
 )
-import yaml
-import time
+from odop.odop_obs.core.common import ResourceReport, SystemMetadata, SystemReport
 from .core.probe import Probe
 
 NODE_NAME = os.getenv("NODE_NAME")
@@ -76,14 +77,15 @@ class SystemMonitoringProbe(Probe):
 if __name__ == "__main__":
     parser = argparse.ArgumentParser()
     parser.add_argument(
-        "-c", "--config", help="config path", default="config/process_probe_conf.yaml"
+        "-c", "--config", help="config path", default="config/system_probe_config.yaml"
     )
     args = parser.parse_args()
     config_file = args.config
-    config = yaml.safe_load(open(config_file))
+    with open(config_file, encoding="utf-8") as file:
+        system_probe_config = yaml.safe_load(file)
 
-    sys_monitoring_probe = SystemMonitoringProbe(config)
-    del config
+    sys_monitoring_probe = SystemMonitoringProbe(system_probe_config)
+    del system_probe_config
     sys_monitoring_probe.start_reporting()
     while True:
         time.sleep(1)

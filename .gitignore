@@ -3,5 +3,6 @@
 *.pyo
 *.swp
 /odop/odop_obs/tinyflux/*.csv
+/odop/odop_obs/logs/*.txt
 venv
 __pycache__/

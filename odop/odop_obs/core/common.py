@@ -37,6 +37,7 @@ class SystemReport(BaseModel):
     gpu: Optional[ResourceReport] = None
     mem: ResourceReport
 
+
 class NodeAggregator(BaseModel):
     host: str
     port: int

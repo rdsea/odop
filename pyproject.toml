@@ -24,7 +24,9 @@ test = [
 [project.urls]
 Repository = "https://github.com/rdsea/odop"
 
-
+[tool.pylint.'MESSAGES CONTROL']
+extension-pkg-whitelist = "pydantic"
+disable="missing-function-docstring, missing-class-docstring, missing-module-docstring"
 # https://flit.pypa.io/en/latest/upload.html
 # flit build
 # flit publish --repository testpypi

@@ -37,7 +37,13 @@
 - Process metric: 12.244
 - System metric: 0.82
 - Before pydantic:
-- After pydantic:
+
+    | File                                     |   Average |       P99 |       Min |      Max |
+    |------------------------------------------|-----------|-----------|-----------|----------|
+    | ./report_latency.txt                     |  0.282406 |  0.941594 | 0.0486374 |  1.08504 |
+    | ./calculating_process_metric_latency.txt | 10.5623   | 14.0485   | 4.30012   | 14.462   |
+    | ./calculating_system_metric_latency.txt  |  0.567949 |  1.47648  | 0.203371  |  1.65439 |
+- After pydantic: sending raw pydantic object seems to hurt the performance
     | File                                     |   Average |      P99 |       Min |      Max |
     |------------------------------------------|-----------|----------|-----------|----------|
     | ./report_latency.txt                     |  0.354276 |  1.01577 | 0.0607967 |  1.43266 |

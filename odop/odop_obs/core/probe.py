@@ -1,12 +1,10 @@
 import math
-import logging
-import time
-import json
-import requests
 import pickle
 import socket
 from typing import Union
 from threading import Thread
+import logging
+import time
 from .common import ODOP_PATH, ProcessReport, SystemReport
 
 logging.basicConfig(
@@ -45,28 +43,6 @@ class Probe:
             self.latency_logging_path = ODOP_PATH + config["latency_logging_path"]
         self.current_report: Union[SystemReport, ProcessReport]
         self.max_latency = 0.0
-
-    def register(
-        self,
-        probe_metadata: dict,
-        cpu_metadata: dict,
-        gpu_metadata: dict,
-        mem_metadata: dict,
-    ):
-        data = {
-            "metadata": probe_metadata,
-            "cpu": cpu_metadata,
-            "gpu": gpu_metadata,
-            "mem": mem_metadata,
-        }
-        response = requests.post(self.obs_service_url, json=data, timeout=1.0)
-        if response.status_code == 200:
-            register_info = json.loads(response.text)
-            self.monitoring_service_url = register_info["reportUrl"]
-            self.metrics = register_info["metrics"]
-            self.frequency = register_info["frequency"]
-        else:
-            raise Exception(f"Can't register probe {self.node_name}")
 
     def create_report(self):
         pass
@@ -114,6 +90,5 @@ class Probe:
             )
 
     def write_log(self, latency, filepath: str):
-        with open(filepath, "a") as file:
-            # Append the number to the file
+        with open(filepath, "a", encoding="utf-8") as file:
             file.write(str(latency) + "\n")
