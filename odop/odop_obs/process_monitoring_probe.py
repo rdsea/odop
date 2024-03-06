@@ -29,7 +29,6 @@ class ProcessMonitoringProbe(Probe):
 
     def get_cpu_usage(self):
         process_usage = report_proc_child_cpu(self.process)
-        del process_usage["unit"]
         return ResourceReport(usage=process_usage)
 
     def get_mem_usage(self):

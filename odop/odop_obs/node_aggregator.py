@@ -98,7 +98,8 @@ class NodeAggregator:
             fields = self.convert_unit(
                 flatten(report.dict(exclude_none=True), self.config["data_separator"])
             )
-            self.insert_metric(timestamp, {"type": 1, **metadata}, fields)
+            print(fields)
+            self.insert_metric(timestamp, {"type": "process", **metadata}, fields)
 
     def convert_unit(self, report: dict):
         converted_report = report
@@ -120,6 +121,38 @@ class NodeAggregator:
                             value
                         ]
         return converted_report
+
+    def revert_unit(self, converted_report: dict):
+        original_report = converted_report.copy()
+        for key, value in converted_report.items():
+            if "unit" in key:
+                if "frequency" in key:
+                    for original_unit, converted_unit in self.unit_conversion["frequency"].items():
+                        if converted_unit == value:
+                            original_report[key] = original_unit
+                            break
+                elif "mem" in key:
+                    for original_unit, converted_unit in self.unit_conversion["mem"].items():
+                        if converted_unit == value:
+                            original_report[key] = original_unit
+                            break
+                elif "cpu" in key:
+                    if "usage" in key:
+                        for original_unit, converted_unit in self.unit_conversion["cpu"][
+                            "usage"
+                        ].items():
+                            if converted_unit == value:
+                                original_report[key] = original_unit
+                                break
+                elif "gpu" in key:
+                    if "usage" in key:
+                        for original_unit, converted_unit in self.unit_conversion["gpu"][
+                            "usage"
+                        ].items():
+                            if converted_unit == value:
+                                original_report[key] = original_unit
+                                break
+        return original_report
 
     def get_lastest_timestamp(self):
         time_query = TimeQuery()
