@@ -38,24 +38,35 @@
 - System metric: 0.82
 - Before pydantic:
 
-    | File                                     |   Average |       P99 |       Min |      Max |
-    |------------------------------------------|-----------|-----------|-----------|----------|
-    | ./report_latency.txt                     |  0.282406 |  0.941594 | 0.0486374 |  1.08504 |
-    | ./calculating_process_metric_latency.txt | 10.5623   | 14.0485   | 4.30012   | 14.462   |
-    | ./calculating_system_metric_latency.txt  |  0.567949 |  1.47648  | 0.203371  |  1.65439 |
+    | Operation                          |   Average |       P99 |       Min |      Max |
+    |------------------------------------|-----------|-----------|-----------|----------|
+    | report_latency                     |  0.282406 |  0.941594 | 0.0486374 |  1.08504 |
+    | calculating_process_metric_latency | 10.5623   | 14.0485   | 4.30012   | 14.462   |
+    | calculating_system_metric_latency  |  0.567949 |  1.47648  | 0.203371  |  1.65439 |
 - After pydantic: sending raw pydantic object seems to hurt the performance
-    | File                                     |   Average |      P99 |       Min |      Max |
-    |------------------------------------------|-----------|----------|-----------|----------|
-    | ./report_latency.txt                     |  0.354276 |  1.01577 | 0.0607967 |  1.43266 |
-    | ./calculating_process_metric_latency.txt |  9.05714  | 12.6678  | 4.12917   | 14.339   |
-    | ./calculating_system_metric_latency.txt  |  0.545169 |  1.33612 | 0.23675   |  1.82867 |
-
+    | Operation                          |   Average |      P99 |       Min |      Max |
+    |------------------------------------|-----------|----------|-----------|----------|
+    | report_latency                     |  0.354276 |  1.01577 | 0.0607967 |  1.43266 |
+    | calculating_process_metric_latency |  9.05714  | 12.6678  | 4.12917   | 14.339   |
+    | calculating_system_metric_latency  |  0.545169 |  1.33612 | 0.23675   |  1.82867 |
+- Test on mahti:
+    | Operation                          |   Average |      P99 |       Min |      Max |
+    |------------------------------------|-----------|----------|-----------|----------|
+    | report_latency                     |  0.273594 | 2.22106  | 0.056982 |  2.23613 |
+    | calculating_process_metric_latency |  69.2098  | 86.9995  | 54.2936   | 87.4531   |
+    | calculating_system_metric_latency  |  2.88274  |  4.48537 | 2.58803    |  4.53019 |
 2. Memory usage:
 - Total: after pydantic:56mb
 - Process probe:
 - System probe:
 - Exporter:
 
+3. Pydantic 
+
+|                               | Process report size(bytes) | System report size(bytes) |   |
+|-------------------------------|----------------------------|---------------------------|---|
+| Directly dumps pydantic model | 600                        | 800                       |   |
+| Convert to dict               | 300                        | 500                       |   |
 # Probe, Aggregator, Exporter 
 - When I test with the probe in the same process as the main process, the latency can goes higher than the reporting frequency when the cpu is too full => everything run in a differen process from the main process
 
