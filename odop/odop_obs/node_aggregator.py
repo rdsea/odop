@@ -98,7 +98,10 @@ class NodeAggregator:
             fields = self.convert_unit(
                 flatten(report.dict(exclude_none=True), self.config["data_separator"])
             )
+<<<<<<< HEAD
             print(fields)
+=======
+>>>>>>> 039b5c8 (fix small config error)
             self.insert_metric(timestamp, {"type": "process", **metadata}, fields)
 
     def convert_unit(self, report: dict):

@@ -38,6 +38,24 @@ class SystemReport(BaseModel):
     mem: ResourceReport
 
 
+class ProcessProbeConfig(BaseModel):
+    frequency: int
+    requireRegister: bool
+    log_latency_flag: bool
+    latency_logging_path: str
+    aggregator_host: str
+    aggregator_port: int
+
+
+class SystemProbeConfig(BaseModel):
+    frequency: int
+    requireRegister: bool
+    latency_logging_path: str
+    log_latency_flag: bool
+    aggregator_host: str
+    aggregator_port: int
+
+
 class NodeAggregator(BaseModel):
     host: str
     port: int
@@ -49,22 +67,6 @@ class NodeAggregator(BaseModel):
     unit_conversion: dict
 
 
-class ProcessConfig(BaseModel):
-    frequency: int
-    require_register: bool
-    logging_path: str
-    aggregator_host: str
-    aggregator_port: int
-
-
-class SystemConfig(BaseModel):
-    frequency: int
-    require_register: bool
-    logging_path: str
-    aggregator_host: str
-    aggregator_port: int
-
-
 class ExporterConfig(BaseModel):
     host: str
     port: int
@@ -72,6 +74,6 @@ class ExporterConfig(BaseModel):
 
 
 class OdopObsConfig(BaseModel):
-    process: ProcessConfig
-    system: SystemConfig
+    process: ProcessProbeConfig
+    system: SystemProbeConfig
     exporter: ExporterConfig
