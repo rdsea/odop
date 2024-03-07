@@ -1,4 +1,4 @@
-# An implementation of the task reader with using a decorator. 
+# An implementation of the task reader with using a decorator.
 
 import functools
 import inspect
@@ -10,7 +10,7 @@ tasks = []
 
 
 def odop_task(**kwargs):
-    """ The odop task decorator. Records each task in an imported
+    """The odop task decorator. Records each task in an imported
     python file.
 
     Only accepts keyword arguments. Name, time, cpu, and memory are
@@ -26,19 +26,19 @@ def odop_task(**kwargs):
         The number of CPUs required to complete the task
     memory: str
         The amount of memory required to complete the task
-    
+
     Returns:
     function
         The task function with the parameters set
     """
 
     def decorator(func):
-        """ Set task parameters and return the task """
+        """Set task parameters and return the task"""
         print(f"found task function {func.__name__}")
-        
+
         @functools.wraps(func)
         def wrapper(*args, **kwargs):
-            """ Calls the function and prints the function name before and
+            """Calls the function and prints the function name before and
             after the call
             """
             print(f"Running {func}")
@@ -48,12 +48,16 @@ def odop_task(**kwargs):
 
         # Check required parameters
         if "name" not in kwargs:
-            raise ValueError(f"No name provided for task {func.__name__}. Task name is required")
+            raise ValueError(
+                f"No name provided for task {func.__name__}. Task name is required"
+            )
         wrapper.name = kwargs["name"]
 
         for arg in ["time", "cpu", "memory"]:
             if arg not in kwargs:
-                raise ValueError(f"No {arg} provided for {wrapper.name}. Task {arg} is required.")
+                raise ValueError(
+                    f"No {arg} provided for {wrapper.name}. Task {arg} is required."
+                )
 
         # Copy the parameters into the task object
         for arg in kwargs:
@@ -71,7 +75,9 @@ def odop_task(**kwargs):
             if parameter in kwargs:
                 wrapper.task_params[parameter] = kwargs[parameter]
             else:
-                raise ValueError(f"Parameter {parameter} not provided for task {wrapper.name}")
+                raise ValueError(
+                    f"Parameter {parameter} not provided for task {wrapper.name}"
+                )
 
         return wrapper
 
@@ -79,12 +85,13 @@ def odop_task(**kwargs):
 
 
 def create_runner_serialized(task):
-    """ Create a runer for the task. This is saved to disk, so that the engine can
+    """Create a runer for the task. This is saved to disk, so that the engine can
     run the task on any node.
 
     Example 1: Serializing the function and saving to a file for another Python
     process to run.
     """
+
     # Define a function to run the task with parameters
     def run_task():
         task(**task.task_params)
@@ -98,7 +105,7 @@ def create_runner_serialized(task):
 
 
 def create_runner_script(task):
-    """ Create a runner for the task. This is saved to disk, so that the engine can
+    """Create a runner for the task. This is saved to disk, so that the engine can
     run the task on any node.
 
     Example 2: Writing the function to a file as a script for another Python
@@ -107,7 +114,7 @@ def create_runner_script(task):
     We need to import everything the task function needs to run. The easiest way
     to do this is to make a copy of the module, import the task function from
     the module and run.
-    
+
     Any parameters for the function itself are written into a json file. Later,
     this could be written by the engine before starting the task.
     """
@@ -124,7 +131,9 @@ def create_runner_script(task):
     # Write the script
     with open(file_name, "w") as file:
         # Write the imports to the file
-        file.write(f"from {module_file_name.replace('.py', '')} import {task.function_name}\n")
+        file.write(
+            f"from {module_file_name.replace('.py', '')} import {task.function_name}\n"
+        )
         file.write(f"import json\n")
 
         # Write the function to the file
@@ -157,14 +166,16 @@ def read(module_name):
     spec.loader.exec_module(module)
 
     for name, obj in inspect.getmembers(module):
-        if inspect.isfunction(obj) and getattr(obj, 'is_task', False):
+        if inspect.isfunction(obj) and getattr(obj, "is_task", False):
             tasks.append(obj)
             create_runner_script(obj)
 
 
-if __name__ == '__main__':
+if __name__ == "__main__":
     # For a quick test, find the tasks in the example_task_with_decorator.py
-    path = __file__.replace("task_manager.py", "example_tasks/example_task_with_decorator.py")
+    path = __file__.replace(
+        "task_manager.py", "example_tasks/example_task_with_decorator.py"
+    )
     read(path)
 
     print([task.task_params for task in tasks])

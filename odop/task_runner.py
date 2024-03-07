@@ -1,8 +1,9 @@
 import json
 import cloudpickle
 
+
 def engine_run_task_from_serialized(task_name):
-    """ Run a task from a serialized file. This is a function that the engine would use
+    """Run a task from a serialized file. This is a function that the engine would use
     to run a task on a node.
 
     Example 1: Running the function from a serialized file
@@ -13,10 +14,11 @@ def engine_run_task_from_serialized(task_name):
 
 
 def engine_run_task_from_script(task_name):
-    """ Run a task from a script. This is a function that the engine would use
+    """Run a task from a script. This is a function that the engine would use
     to run a task on a node.
 
     Example 2: Running the function from a script
     """
     import subprocess
+
     subprocess.run(["python", f"{task_name}_runner.py"])

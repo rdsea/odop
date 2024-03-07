@@ -57,8 +57,12 @@
     | calculating_system_metric_latency  |  2.88274  |  4.48537 | 2.58803    |  4.53019 |
 2. Memory usage:
 - Total: after pydantic:56mb
-- Process probe:
-- System probe:
+- Process probe: applying dynamic loading 
+  - HPC env: 15M Res, 106M Virt
+  - Other: 24M Res, 116M Virt
+- System probe: applying dynamic loading 
+  - HPC env: 19M Res, 113M Virt
+  - Other: 28M Res, 124M Virt
 - Exporter:
 
 3. Pydantic 

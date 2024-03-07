@@ -4,9 +4,9 @@
 
 import time
 
+
 def example_task_function():
     # The task can be an arbitrary Python function
     print("Starting the task")
-    time.sleep(60*4)
+    time.sleep(60 * 4)
     print("Done with the task")
-

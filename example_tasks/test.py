@@ -1,7 +1,8 @@
 import argparse
-import yaml 
+import yaml
 from odop.odop_obs.odop_obs import OdopObs
 from odop.odop_obs.core.common import ODOP_PATH
+
 if __name__ == "__main__":
     parser = argparse.ArgumentParser()
     parser.add_argument(
