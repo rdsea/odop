@@ -1,6 +1,7 @@
 from tinyflux import TinyFlux, Point, TimeQuery
 import time
 import json
+import numpy as np
 from datetime import datetime, timedelta
 import matplotlib.pyplot as plt
 import yaml
@@ -43,7 +44,7 @@ def revert_unit(unit_conversion, converted_report: dict):
 
 
 unit_conversion = yaml.safe_load(open("../config/unit_conversion.yaml"))
-db = TinyFlux("./db.csv")
+db = TinyFlux("./db_mahti.csv")
 time_query = TimeQuery()
 now = datetime.now()
 timestamp = now - timedelta(hours=10)
@@ -60,37 +61,27 @@ for datapoint in data:
             revert_unit(unit_conversion, converted_datapoint), "dot"
         )
         converted_data.append(converted_datapoint)
-with open("./mahti.json", "w", encoding="utf-8") as file:
-    json.dump(converted_data, file)
+# with open("./mahti.json", "w", encoding="utf-8") as file:
+#    json.dump(converted_data, file)
 timestamps = []
 cpu_values = []
 mem_rss_values = []
 mem_vms_values = []
 
 for entry in converted_data:
-    timestamps.append(
-        entry["timestamp"]
-    )  # Assuming there's a "timestamp" field in each entry
+    timestamps.append(entry["timestamp"])
     cpu_values.append(entry["cpu"]["usage"]["total"])
     mem_rss_values.append(entry["mem"]["usage"]["rss"]["value"])
     mem_vms_values.append(entry["mem"]["usage"]["vms"]["value"])
 
-plt.figure(figsize=(10, 5))
-plt.plot(timestamps, cpu_values, marker="o", color="b", label="CPU Usage")
-plt.xlabel("Timestamp")
-plt.ylabel("CPU Usage (%)")
-plt.title("CPU Usage Over Time")
-plt.grid(True)
-plt.legend()
-plt.show()
+# Calculate the differences
+cpu_diff = np.diff(cpu_values)
 
-# Plotting Memory Usage
 plt.figure(figsize=(10, 5))
-plt.plot(timestamps, mem_rss_values, marker="o", color="r", label="RSS Memory Usage")
-plt.plot(timestamps, mem_vms_values, marker="o", color="g", label="VMS Memory Usage")
+plt.plot(timestamps[1:], cpu_diff, marker="o", color="r", label="CPU Usage Diff")
 plt.xlabel("Timestamp")
-plt.ylabel("Memory Usage (MB)")
-plt.title("Memory Usage Over Time")
+plt.ylabel("Difference in CPU Usage")
+plt.title("Difference in CPU Usage Over Time")
 plt.grid(True)
 plt.legend()
 plt.show()

@@ -198,7 +198,12 @@ class NodeAggregator:
         data = self.db.search(time_query >= timestamp)
         return [
             unflatten(
-                {**datapoint.tags, **datapoint.fields}, self.config["data_separator"]
+                {
+                    "timestamp": datetime.timestamp(datapoint.time),
+                    **datapoint.tags,
+                    **datapoint.fields,
+                },
+                self.config["data_separator"],
             )
             for datapoint in data
         ]
