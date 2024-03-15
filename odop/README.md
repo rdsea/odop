@@ -39,6 +39,7 @@ JSON formattable. Information specified by the developer.
     - checkpointing specification
         - is interruptable: bool = False
             - Whether the task can be interrupted and resumed
+        - what to do in case of failure
 
 
 ### Time_unit
