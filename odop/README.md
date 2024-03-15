@@ -69,6 +69,9 @@ Multiple options:
     - Task id : str
     - execution parameter : str
     - is interruptable: bool
+    - cpu time
+    - memory limit
+    - is interruptable
 - optional:
-    - input file path: file_name
+    - input file path: file_name, multiple
     - input folder path: folder
