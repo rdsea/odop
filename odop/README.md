@@ -36,7 +36,7 @@ JSON formattable. Information specified by the developer.
 
 
 ### Time_unit
- - datetime formattable string
+ - timediff formattable string
 
 
 ### Memory_unit
