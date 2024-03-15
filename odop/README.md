@@ -33,6 +33,7 @@ JSON formattable. Information specified by the developer.
         - folder for output files and logs
     - disk space limit: integer or memory units
         - Amount of free disk space required to run the task
+    - checkpointing specification 
 
 
 ### Time_unit
