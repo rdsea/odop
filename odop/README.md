@@ -40,6 +40,12 @@ JSON formattable. Information specified by the developer.
         - is interruptable: bool = False
             - Whether the task can be interrupted and resumed
         - what to do in case of failure
+    - priority: integer, default 0
+        - Task priority. Higher priority tasks are executed first.
+    - niceness: integer, default 0
+        - negated priority 
+    - dependecy: list of task ids, default []
+        - tasks that need to be run first.
 
 
 ### Time_unit
