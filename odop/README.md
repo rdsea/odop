@@ -7,18 +7,14 @@ JSON formattable. Information specified by the developer.
 - required:
     - task id: string
         - An identifier for the task, used to store and retrieve information and for dependencies.
-    - time limit: integer or time_units
-        - Upper limit for the tasks runtime in seconds or provided unit
-    - memory limit: integer or memory_units
-        - Upper limit of memory the task can use in megabytes or provided unit
     - execution parameter:  execution_parameter
         - Specifies how the task is executed
-    - is interruptable: bool
-        - Whether the task can be interrupted and resumed
-    - parameters: dict
-        - A dictionary of parameter names and values
 
 - optional:
+    - time limit: integer or time_units, default = 1min
+        - Upper limit for the tasks runtime in seconds or provided unit
+    - memory limit: integer or memory_units, default = 1M
+        - Upper limit of memory the task can use in megabytes or provided unit
     - input path: string, multiple
         - list of files required for the task
         - standard protocol specifications (ftp://, http://, ...). File system is default.
@@ -36,7 +32,11 @@ JSON formattable. Information specified by the developer.
         - Amount of free disk space required to run the task
     - number of threads: integer, default=1
         - Maximum number of threads the task will use
+    - parameters: dict, default = {}
+        - A dictionary of parameter names and values
     - checkpointing specification
+        - is interruptable: bool = False
+            - Whether the task can be interrupted and resumed
 
 
 ### Time_unit
