@@ -19,7 +19,7 @@ def test_task_manager():
     # Check the task parameters
     assert odop.task_manager.tasks[0].name == "example_task"
     assert odop.task_manager.tasks[0].time == "2h"
-    assert odop.task_manager.tasks[0].cpu == "2"
+    assert odop.task_manager.tasks[0].cpu == "2-4"
     assert odop.task_manager.tasks[0].memory == "2G"
     assert odop.task_manager.tasks[0].is_task == True
 

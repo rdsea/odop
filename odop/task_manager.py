@@ -38,13 +38,8 @@ def odop_task(**kwargs):
         
         @functools.wraps(func)
         def wrapper(*args, **kwargs):
-            """ Calls the function and prints the function name before and
-            after the call
-            """
-            print(f"Running {func}")
-            return_value = func(*args, **kwargs)
-            print(f"Completed {func}")
-            return return_value
+            """ Thin wrapper we can assign attributes to """
+            return func(*args, **kwargs)
 
         # Check required parameters
         if "name" not in kwargs:
@@ -59,19 +54,23 @@ def odop_task(**kwargs):
         for arg in kwargs:
             wrapper.__setattr__(arg, kwargs[arg])
 
+        # The arguments variable contains keyword arguments provided to
+        # the task function. Check that a value is provided for each
+        # parameter.
+        signature = inspect.signature(func)
+        parameters = list(signature.parameters.keys())
+        for parameter in parameters:
+            if not parameter in wrapper.arguments:
+                raise ValueError(f"Parameter {parameter} not provided for task {wrapper.name}")
+
+        # Check for the inteyrupt_allowed parameter and default to True
+        if not "interrupt_allowed" in kwargs:
+            wrapper.interrupt_allowed = True
+
+        # Set other parameters not provided by the user
         wrapper.is_task = True
         wrapper.module_file = inspect.getfile(func)
         wrapper.function_name = func.__name__
-
-        # Extract parameter names from the function signature
-        signature = inspect.signature(func)
-        parameters = list(signature.parameters.keys())
-        wrapper.task_params = {}
-        for parameter in parameters:
-            if parameter in kwargs:
-                wrapper.task_params[parameter] = kwargs[parameter]
-            else:
-                raise ValueError(f"Parameter {parameter} not provided for task {wrapper.name}")
 
         return wrapper
 
@@ -87,7 +86,7 @@ def create_runner_serialized(task):
     """
     # Define a function to run the task with parameters
     def run_task():
-        task(**task.task_params)
+        task(**task.arguments)
 
     # Save the serialized function to a file
     file_name = f"{task.name}.pickle"
@@ -114,7 +113,7 @@ def create_runner_script(task):
 
     file_name = f"{task.name}_runner.py"
     module_file_name = f"{task.name}_module.py"
-    params_file = f"{task.name}_params.json"
+    params_file = f"{task.name}_arguments.json"
 
     # Copy the module
     with open(task.module_file, "r") as file:
@@ -130,8 +129,8 @@ def create_runner_script(task):
         # Write the function to the file
         file.write(f"def run_task():\n")
         file.write(f"    task = {task.function_name}\n")
-        file.write(f"    task_params = json.load(open('{params_file}'))\n")
-        file.write(f"    task(**task_params)\n")
+        file.write(f"    arguments = json.load(open('{params_file}'))\n")
+        file.write(f"    task(**arguments)\n")
         file.write(f"\n")
         file.write(f"print(f'Running {task.name}')\n")
         file.write(f"run_task()\n")
@@ -139,7 +138,7 @@ def create_runner_script(task):
 
     # Write the parameters to a file
     with open(params_file, "w") as file:
-        json.dump(task.task_params, file)
+        json.dump(task.arguments, file)
     return file_name
 
 
@@ -167,7 +166,7 @@ if __name__ == '__main__':
     path = __file__.replace("task_manager.py", "example_tasks/example_task_with_decorator.py")
     read(path)
 
-    print([task.task_params for task in tasks])
+    print([task.arguments for task in tasks])
 
     print(open("example_task_runner.py").read())
-    print(open("example_task_params.json").read())
+    print(open("example_task_arguments.json").read())
