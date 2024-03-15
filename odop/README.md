@@ -26,6 +26,8 @@ JSON formattable. Information specified by the developer.
         - Run a separate task for each file in required_folder or matching required_file_expression
     - filepath parameter: string, multiple
         - parameter name for passing a dynamically determined file name to the task
+    - ready signal: string, multiple
+        - A signal from the main process that the task can be run. (Initial implementation through the files system).
     - output folder: string
         - folder for output files and logs
     - disk space limit: integer or memory units
