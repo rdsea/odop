@@ -79,6 +79,7 @@
         "metadata":{
             "pid": 105,
             "user": "aaltosea",
+            "allowed_cpu_list": [0,1,2,3,...],
             ...
         }, 
         "usage":{
@@ -101,6 +102,7 @@
         "metadata":{
             "pid": 105,
             "user": "aaltosea",
+            "allowed_mem": "500Mb"
             ...
         }, 
         "usage":{
