@@ -16,6 +16,19 @@ How cgroups plugin can be used in Slurm:
 Slurm cgroup hierarchy:
 ![images](../img/cg_hierarchy.jpg)
 
+Memory constraints:
+
+- The min memory is 30M
+- Slurm set the memory constraints in steps folder, not set in task. When checking memory.limit_in_bytes, it's 9223372036854771712 (PAGE_COUNTER_MAX)
+- Mahti and Puhti seems to be diffent as I can't find the memory constraints in Puhti. I tried to create a big variable that should takes more memory than requested but it's not killed
+- Weird Slurm cpuset config which may need more investigation:
+  ```
+  b'Cpus_allowed_list:\t64-67\n'
+  cpu set 0-3,64-67,128-131,192-195
+  b'Cpus_allowed_list:\t0-3\n'
+  cpu set 0-3,64-67,128-131,192-195
+  ```
+
 Useful command:
 
 - scontrol show job -d $SLURM_JOBID
@@ -24,7 +37,9 @@ Useful command:
 
 - In v1, the resources contraints is implememeted by multiple cgroup or it can have multiple hierarchy while v2 only has one. Then, the resouces in v1 can be constrainted quite flexbible as each resources use a different hierarchy and process can belongs to multipleone. On the other hand, the resouces in v2 are constrainted top-down or the child process can only use the constrained resources that its parents has.
 - Example code to set cpu constraints:
+
   - v1:
+
   ```bash
   mount -t tmpfs cgroup_root /sys/fs/cgroup
   mkdir /sys/fs/cgroup/cpuset
@@ -36,7 +51,9 @@ Useful command:
   /bin/echo 1 > cpuset.mems
   /bin/echo $$ > tasks
   ```
+
   - v2:
+
   ```bash
 
   ```
