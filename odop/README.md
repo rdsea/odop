@@ -39,6 +39,23 @@ Here the first task is run when there are files in the `data` folder. The second
 requires files matching the regular expression `processed_data/*.data`.
 
 
+## Python decorators
+
+Tasks can be specified as Python functions using the odop task decorators. Here is an example
+of a task
+
+```python
+import odop
+
+@odop.task("task 0")
+@odop.time_limit("10min")
+@odop.memory_limit("1G")
+@odop.single_file
+@odop.input_folder("data")
+def step_a():
+    print("Rinning task 0")
+```
+
 
 
 ## Task Spec
