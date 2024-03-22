@@ -28,8 +28,8 @@ Here is an example of a task specification list in the json format:
 
         "input_file_expression": "processed_data/*.data",
 
-        "module": "example_task.py",
-        "function": "step_b",
+        "executable": "executable_name",
+        "parameter_mapping": "--{key} {value} ",
         "dependencies": ["task 0"]
     }
 ]
