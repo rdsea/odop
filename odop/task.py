@@ -1,7 +1,3 @@
-# Implements the odop task decorators. These are used
-# to mark tasks in written as Python functions
-# Replaces task_manager.py
-
 """
 Implements the odop task decorators. These are used
 to mark tasks in written as Python functions
@@ -15,7 +11,7 @@ in each decorator it the task has been constructed yet.
 
 Once the tasks
 are read, they need to be processed to serialize the 
-function. 
+function.
 """
 
 
