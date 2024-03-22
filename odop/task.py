@@ -8,7 +8,12 @@ to mark tasks in written as Python functions
 Replaces task_manager.py
 
 Each decorator modifies the task specification dictionary
-and saves the changes into the task list. Once the tasks
+and saves the changes into the task list.
+
+Since decorator run order is "reversed", we need to check
+in each decorator it the task has been constructed yet.
+
+Once the tasks
 are read, they need to be processed to serialize the 
 function. 
 """
@@ -38,6 +43,7 @@ def task(name=None, **kwargs):
         A dictionary of task parameters and
         the task function
     """
+    print("task decorator")
     if name is None:
         name = str(uuid.uuid4())
 
@@ -60,6 +66,16 @@ def task(name=None, **kwargs):
     return decorator
     
 
+def time(time):
+    """ Set the time required to complete the task """
+    print("time decorator")
+    assert time is not None
+    
+    def decorator(task):
+        print(task)
+        return task
+    
+    return decorator
 
 
 

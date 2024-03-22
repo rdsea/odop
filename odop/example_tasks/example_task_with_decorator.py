@@ -4,15 +4,12 @@
 # to get around the syntax error. Although I think we can expand it to
 # implement the task reading functionality.
 
+import odop
 from odop import task_manager
 
 
-@task_manager.odop_task(
-    name="example_task", time="2h", cpu="2-4", memory="2G",
-    filename=["input_data_1", "input_data_2"],
-    directory="input_data_folder",
-    arguments={"parameter1": "str"}
-)
+@odop.task.task(name="example_task")
+@odop.task.time("15min")
 def example_task_function(parameter1):
     # The task can be an arbitrary Python function
     print("Running example task, got parameter:", parameter1)
