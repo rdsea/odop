@@ -19,38 +19,52 @@ import inspect
 import importlib.util
 import json
 import cloudpickle
+import pandas as pd
 import uuid
 
 tasks = []
 
 
+class Task:
+    def __init__(self, func):
+        self.func = func
+        self.name = None
+        self.time_limit = None
+
+    def to_dict(self):
+        # create a dictionary of all attributes except the function
+        task_dict = {
+            key: val for key, val in self.__dict__.items() if key != "func"
+        }
+        return task_dict
+        
+
 def task(name=None, **kwargs):
-    """ Marks a function as an ODOP task. The task
-    name must be provided as a parameter. Other
-    parameters can be provided with different
-    decorators.
+    """ Marks a function as an ODOP task and sets the name parameter.
+    This is the primary decorator used to mark odop tasks. While other
+    decorators actually do construct a task object, this adds it to
+    the list of found tasks. It must be the last decorator to run,
+    meaning it must be first in the users code.
     
     Parameters:
-    name: str
+    name: str, optional
         The name of the task
+        By default, a random string ID is used
 
     Returns:
     dict
         A dictionary of task parameters and
         the task function
     """
-    print("task decorator")
     if name is None:
         name = str(uuid.uuid4())
 
-    def decorator(func):
+    def decorator(task):
         """ Set task parameters and return the task """
-        print(f"found task function {func.__name__}")
+        if type(task) is not Task:
+            task = Task(task)
 
-        task = {
-            "name": name,
-            "func": func
-        }
+        task.name = name
 
         for key, val in kwargs.items():
             task[key] = val
@@ -60,18 +74,29 @@ def task(name=None, **kwargs):
         return task
 
     return decorator
-    
 
-def time(time):
-    """ Set the time required to complete the task """
-    print("time decorator")
-    assert time is not None
-    
+
+def time_limit(time_limit):
+    """ Set the maximum time required to complete the task """
+    assert time_limit is not None
+
     def decorator(task):
-        print(task)
+        if type(task) is not Task:
+            task = Task(task)
+        task.time_limit = pd.to_timedelta(time_limit)
         return task
-    
+
     return decorator
 
 
+def memory_limit(memory_limit):
+    """ Set the memory required to complete the task """
+    assert memory_limit is not None
 
+    def decorator(task):
+        if type(task) is not Task:
+            task = Task(task)
+        task.memory_limit = memory_limit
+        return task
+
+    return decorator

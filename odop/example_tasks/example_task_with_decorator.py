@@ -5,11 +5,11 @@
 # implement the task reading functionality.
 
 import odop
-from odop import task_manager
 
 
 @odop.task.task(name="example_task")
-@odop.task.time("15min")
+@odop.task.time_limit("15min")
+@odop.task.memory_limit("1G")
 def example_task_function(parameter1):
     # The task can be an arbitrary Python function
     print("Running example task, got parameter:", parameter1)
