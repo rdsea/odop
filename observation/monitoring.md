@@ -102,7 +102,7 @@
         "metadata":{
             "pid": 105,
             "user": "aaltosea",
-            "allowed_mem": "500Mb"
+            "allowed_memory_size": "31457280"
             ...
         }, 
         "usage":{
