@@ -1,7 +1,7 @@
 process:
   frequency: 1
   requireRegister: false
-  log_latency_flag: true
+  log_latency_flag: false
   latency_logging_path: "logs/"
   aggregator_host: "127.0.0.1"
   aggregator_port: 12345
@@ -10,7 +10,7 @@ system:
   frequency: 1
   requireRegister: false
   latency_logging_path: "logs/"
-  log_latency_flag: true
+  log_latency_flag: false
   aggregator_host: "127.0.0.1"
   aggregator_port: 12345
   environment: "HPC"

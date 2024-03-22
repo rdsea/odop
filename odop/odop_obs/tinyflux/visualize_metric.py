@@ -47,7 +47,6 @@ unit_conversion = yaml.safe_load(open("../config/unit_conversion.yaml"))
 db = TinyFlux("./db_mahti.csv")
 time_query = TimeQuery()
 now = datetime.now()
-timestamp = now - timedelta(hours=10)
 data = db.all()
 converted_data = []
 for datapoint in data:

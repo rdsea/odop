@@ -3,7 +3,13 @@ import time
 import os
 import psutil
 import importlib
-from qoa4ml.qoaUtils import convert_to_mbyte, report_proc_child_cpu, report_proc_mem
+from qoa4ml.qoaUtils import (
+    convert_to_mbyte,
+    report_proc_child_cpu,
+    report_proc_mem,
+    get_process_allowed_cpus,
+    get_process_allowed_memory,
+)
 from .core.probe import Probe
 
 logging.basicConfig(
@@ -58,13 +64,24 @@ class ProcessMonitoringProbe(Probe):
         timestamp = time.time()
         cpu_usage = self.get_cpu_usage()
         mem_usage = self.get_mem_usage()
+        allowed_cpu_list = get_process_allowed_cpus()
+        allowed_memory_size = get_process_allowed_memory()
         if self.environment == "HPC":
             report = {
                 "type": "process",
-                "metadata": {"pid": str(self.pid), "user": self.process.username()},
+                "metadata": {
+                    "pid": str(self.pid),
+                    "user": self.process.username(),
+                    "allowed_cpu_list": str(allowed_cpu_list),
+                    "allowed_memory_size": str(allowed_memory_size),
+                },
                 "timestamp": round(timestamp),
-                "cpu": {"usage": cpu_usage},
-                "mem": {"usage": mem_usage},
+                "cpu": {
+                    "usage": cpu_usage,
+                },
+                "mem": {
+                    "usage": mem_usage,
+                },
             }
         else:
             report = self.custom_model.ProcessReport(
