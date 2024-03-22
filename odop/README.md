@@ -1,5 +1,46 @@
 # Task specifications
 
+
+Opportunistic tasks are executable or functions that are run when the scheduler expects sufficient resources
+to be available for the duration of the task. A task consists of the actual executable or code to be run
+and and scheduling and runtime parameters.
+
+Here is an example of a task specification list in the json format:
+
+```json
+[
+    {
+        "task_id": "task 0",
+        "time_limit": "10min",
+        "memory_limit": "1G",
+        "threads": 1,
+    
+        "input_folder": "data",
+    
+        "module": "example_task.py",
+        "function": "step_a",
+    },
+    {
+        "task_id": "task 1",
+        "time_limit": "5min",
+        "memory_limit": "1G",
+        "threads": 1,
+
+        "input_file_expression": "processed_data/*.data",
+
+        "module": "example_task.py",
+        "function": "step_b",
+        "dependencies": ["task 0"]
+    }
+]
+```
+
+Here the first task is run when there are files in the `data` folder. The second task is run after the first task
+requires files matching the regular expression `processed_data/*.data`.
+
+
+
+
 ## Task Spec
 
 Task specification is created by the developer. Most arguments are optional. Can be formatted as
@@ -58,14 +99,18 @@ The parameters are stored as a dictionary, but may be communicated a JSON file.
 
 
 ### Time_unit
+
  - timedelta formattable string
  - We only support [pandas.to_timedelta](https://pandas.pydata.org/docs/reference/api/pandas.to_timedelta.html)
 
 
 ### Memory_unit
+
  - integer followed by "M" or "G"
 
+
 ### Execution parameter
+
 Multiple options:
 1. Executable
     - required:
@@ -81,7 +126,11 @@ Multiple options:
 
 
 ### Checkpointing Spec
-Specifies whether the task can be interrupted and if it can, when
+
+Specifies whether the task can be interrupted and if it can, when.
+
+A task that runs over its tile limit will be cancelled, but by default we assume it did not complete
+any useful work. The task would need to be rerun later with more time.
 
 Options:
 1. None
