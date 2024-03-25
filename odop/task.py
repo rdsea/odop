@@ -53,8 +53,7 @@ def task(name=None, **kwargs):
 
     Returns:
     dict
-        A dictionary of task parameters and
-        the task function
+        A task object
     """
     if name is None:
         name = str(uuid.uuid4())
@@ -77,7 +76,18 @@ def task(name=None, **kwargs):
 
 
 def time_limit(time_limit):
-    """ Set the maximum time required to complete the task """
+    """ Set the maximum time required to complete the task.
+    
+    Parameters:
+    time_limit: str or pandas.Timedelta
+        The maximum time allowed to complete the task.
+        Must be either pandas.Timedelta or a string that
+        can be converted to a pandas.Timedelta.
+    
+    Returns:
+    dict
+        A task object
+    """
     assert time_limit is not None
 
     def decorator(task):
@@ -90,7 +100,19 @@ def time_limit(time_limit):
 
 
 def memory_limit(memory_limit):
-    """ Set the memory required to complete the task """
+    """ Set the memory required to complete the task.
+    
+    Parameters:
+    memory_limit: integer or str
+        The maximum memory allowed to complete the task.
+        Must be either an integer or a string formatted as
+        a number followed by a unit. Supported units are
+        'M' and 'G' for megabytes and gigabytes respectively.
+
+    Returns:
+    dict
+        A task object
+    """
     assert memory_limit is not None
 
     def decorator(task):
@@ -100,3 +122,4 @@ def memory_limit(memory_limit):
         return task
 
     return decorator
+    
