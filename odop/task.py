@@ -30,6 +30,7 @@ class Task:
         self.func = func
         self.name = None
         self.time_limit = None
+        self.is_task = True
 
     def to_dict(self):
         # create a dictionary of all attributes except the function
@@ -37,7 +38,7 @@ class Task:
             key: val for key, val in self.__dict__.items() if key != "func"
         }
         return task_dict
-        
+
 
 def task(name=None, **kwargs):
     """ Marks a function as an ODOP task and sets the name parameter.
@@ -45,13 +46,15 @@ def task(name=None, **kwargs):
     decorators actually do construct a task object, this adds it to
     the list of found tasks. It must be the last decorator to run,
     meaning it must be first in the users code.
-    
+
     Parameters:
+
     name: str, optional
         The name of the task
         By default, a random string ID is used
 
     Returns:
+
     dict
         A task object
     """
@@ -77,14 +80,16 @@ def task(name=None, **kwargs):
 
 def time_limit(time_limit):
     """ Set the maximum time required to complete the task.
-    
+
     Parameters:
+
     time_limit: str or pandas.Timedelta
         The maximum time allowed to complete the task.
         Must be either pandas.Timedelta or a string that
         can be converted to a pandas.Timedelta.
-    
+
     Returns:
+
     dict
         A task object
     """
@@ -101,8 +106,9 @@ def time_limit(time_limit):
 
 def memory_limit(memory_limit):
     """ Set the memory required to complete the task.
-    
+
     Parameters:
+
     memory_limit: integer or str
         The maximum memory allowed to complete the task.
         Must be either an integer or a string formatted as
@@ -110,6 +116,7 @@ def memory_limit(memory_limit):
         'M' and 'G' for megabytes and gigabytes respectively.
 
     Returns:
+
     dict
         A task object
     """
@@ -122,4 +129,3 @@ def memory_limit(memory_limit):
         return task
 
     return decorator
-    

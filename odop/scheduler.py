@@ -1,15 +1,17 @@
 # An implementation of the task reader with using a decorator. 
 
+import os
 import functools
 import inspect
 import importlib.util
 import json
 import cloudpickle
+from odop.task import Task
 
 tasks = []
 
 
-def odop_task(**kwargs):
+def _odop_task(**kwargs):
     """ The odop task decorator. Records each task in an imported
     python file.
 
@@ -78,11 +80,21 @@ def odop_task(**kwargs):
 
 
 def create_runner_serialized(task):
-    """ Create a runer for the task. This is saved to disk, so that the engine can
-    run the task on any node.
+    """ Create a runner for the task. This is saved to disk, so that
+    the engine can run the task on any node.
 
-    Example 1: Serializing the function and saving to a file for another Python
-    process to run.
+    The task function and other parameters are serialized saved into a
+    .pickle file.
+
+
+    Parameters:
+
+    task: An odop.task.Task object
+
+    returns:
+
+    filename: str
+        Path to the file containing the serialized task information
     """
     # Define a function to run the task with parameters
     def run_task():
@@ -97,18 +109,22 @@ def create_runner_serialized(task):
 
 
 def create_runner_script(task):
-    """ Create a runner for the task. This is saved to disk, so that the engine can
-    run the task on any node.
+    """ Create a runner for the task. This is saved to disk, so that the
+    engine can run the task on any node.
 
-    Example 2: Writing the function to a file as a script for another Python
-    process to run.
+    The module containing the task function is copied to the output folder
+    and a script is generated to import and run the function. The parameters,
+    including the module file name and function name are written to a json file.
 
-    We need to import everything the task function needs to run. The easiest way
-    to do this is to make a copy of the module, import the task function from
-    the module and run.
-    
-    Any parameters for the function itself are written into a json file. Later,
-    this could be written by the engine before starting the task.
+
+    Parameters:
+
+    task: An odop.task.Task object
+
+    returns:
+
+    filename: str
+        Path to the file containing the runner script
     """
 
     file_name = f"{task.name}_runner.py"
@@ -142,7 +158,16 @@ def create_runner_script(task):
     return file_name
 
 
-def read(module_name):
+def read_module(module_name):
+    """ Find odop tasks in a Python module. Tasks are saved to an output
+    folder with the information necessary to run them.
+
+    Parameters:
+
+    module_name: str
+        A Python module containing odop tasks
+    """
+
     # If file name is provided, figure out the module name
     if module_name.endswith(".py"):
         module_file = module_name
@@ -156,17 +181,30 @@ def read(module_name):
     spec.loader.exec_module(module)
 
     for name, obj in inspect.getmembers(module):
-        if inspect.isfunction(obj) and getattr(obj, 'is_task', False):
+        if type(obj) == Task:
             tasks.append(obj)
-            create_runner_script(obj)
+            create_runner_serialized(obj)
+
+
+def read_folder(folder):
+    """ Find odop tasks in all Python modules in a folder. Tasks are saved
+    to an output folder with the information necessary to run them.
+
+    Parameters:
+
+    folder: str
+        A folder containing Python modules with odop tasks
+    """
+
+    files = os.listdir(folder)
+    for file in files:
+        if file.endswith(".py"):
+            read_module(file)
 
 
 if __name__ == '__main__':
     # For a quick test, find the tasks in the example_task_with_decorator.py
-    path = __file__.replace("task_manager.py", "example_tasks/example_task_with_decorator.py")
-    read(path)
+    path = __file__.replace("scheduler.py", "example_tasks/example_task_with_decorator.py")
+    read_module(path)
 
-    print([task.arguments for task in tasks])
-
-    print(open("example_task_runner.py").read())
-    print(open("example_task_arguments.json").read())
+    print([task.name for task in tasks])

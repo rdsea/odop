@@ -13,5 +13,3 @@ import odop
 def example_task_function(parameter1):
     # The task can be an arbitrary Python function
     print("Running example task, got parameter:", parameter1)
-
-
