@@ -1,17 +1,10 @@
 """
-Implements the odop task decorators. These are used
-to mark tasks in written as Python functions
-Replaces task_manager.py
-
-Each decorator modifies the task specification dictionary
+The odop task decorators are used to mark tasks in written as
+Python functions. Each decorator modifies the task specification
 and saves the changes into the task list.
 
-Since decorator run order is "reversed", we need to check
-in each decorator it the task has been constructed yet.
-
-Once the tasks
-are read, they need to be processed to serialize the 
-function.
+Once the tasks are read, they need to be processed to serialize
+the function.
 """
 
 
@@ -47,11 +40,13 @@ def task(name=None, **kwargs):
     meaning it must be first in the users code.
     
     Parameters:
+
     name: str, optional
         The name of the task
         By default, a random string ID is used
 
     Returns:
+
     dict
         A task object
     """
@@ -79,12 +74,14 @@ def time_limit(time_limit):
     """ Set the maximum time required to complete the task.
     
     Parameters:
+
     time_limit: str or pandas.Timedelta
         The maximum time allowed to complete the task.
         Must be either pandas.Timedelta or a string that
         can be converted to a pandas.Timedelta.
     
     Returns:
+
     dict
         A task object
     """
@@ -103,6 +100,7 @@ def memory_limit(memory_limit):
     """ Set the memory required to complete the task.
     
     Parameters:
+
     memory_limit: integer or str
         The maximum memory allowed to complete the task.
         Must be either an integer or a string formatted as
@@ -110,6 +108,7 @@ def memory_limit(memory_limit):
         'M' and 'G' for megabytes and gigabytes respectively.
 
     Returns:
+
     dict
         A task object
     """
@@ -122,4 +121,3 @@ def memory_limit(memory_limit):
         return task
 
     return decorator
-    
