@@ -25,7 +25,6 @@ class Task:
         self.time_limit = None
 
     def to_dict(self):
-        # create a dictionary of all attributes except the function
         task_dict = {
             key: val for key, val in self.__dict__.items() if key != "func"
         }
