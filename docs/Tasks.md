@@ -6,6 +6,8 @@
 from odop import task
 
 @task.task("name")
+@odop.memory_limit("1G")
+@odop.single_file
 def my_task():
     print("Hello, world!")
 ```
@@ -21,4 +23,16 @@ pickled and stored as files for the engine.
 from odop import scheduler
 
 scheduler.read_folder("odop/example_tasks")
+```
+
+## Running a task
+
+The engine can run a pickled task given the file name. Json files containing
+a dictionary of task parameters, including execution parameters, are also
+supported.
+
+```python
+from odop import engine
+
+engine.run("example_task.pickle")
 ```
