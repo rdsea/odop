@@ -1,6 +1,4 @@
 from tinyflux import TinyFlux, Point, TimeQuery
-import time
-import json
 import numpy as np
 from datetime import datetime, timedelta
 import matplotlib.pyplot as plt
@@ -44,7 +42,7 @@ def revert_unit(unit_conversion, converted_report: dict):
 
 
 unit_conversion = yaml.safe_load(open("../config/unit_conversion.yaml"))
-db = TinyFlux("./db_mahti.csv")
+db = TinyFlux("./db.csv")
 time_query = TimeQuery()
 now = datetime.now()
 data = db.all()
@@ -60,8 +58,6 @@ for datapoint in data:
             revert_unit(unit_conversion, converted_datapoint), "dot"
         )
         converted_data.append(converted_datapoint)
-# with open("./mahti.json", "w", encoding="utf-8") as file:
-#    json.dump(converted_data, file)
 timestamps = []
 cpu_values = []
 mem_rss_values = []
@@ -75,12 +71,19 @@ for entry in converted_data:
 
 # Calculate the differences
 cpu_diff = np.diff(cpu_values)
+timestamps = np.array(timestamps)
+timestamps = timestamps - timestamps[0]
 
 plt.figure(figsize=(10, 5))
-plt.plot(timestamps[1:], cpu_diff, marker="o", color="r", label="CPU Usage Diff")
+plt.plot(
+    timestamps[1:],
+    cpu_diff,
+    marker="o",
+    color="r",
+)
 plt.xlabel("Timestamp")
-plt.ylabel("Difference in CPU Usage")
-plt.title("Difference in CPU Usage Over Time")
+plt.ylabel("Cputime over 1 second")
+plt.title("Cputime of process over time")
 plt.grid(True)
 plt.legend()
 plt.show()

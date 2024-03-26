@@ -19,7 +19,7 @@ logging.basicConfig(
 
 
 sys.path.append(ODOP_PATH)
-DEFAULT_DATABASE_FOLDER = ODOP_PATH + "tinyflux/"
+DEFAULT_DATABASE_FOLDER = ODOP_PATH + "metric_database/"
 odop_utils.make_folder(DEFAULT_DATABASE_FOLDER)
 METRICS_URL_PATH = "/metrics"
 

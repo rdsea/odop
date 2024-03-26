@@ -39,5 +39,4 @@ Useful command:
 
 # Problems:
 
-- The number and layout of logical CPUs known to Slurm is described in the node definitions in slurm.conf. This may differ from the physical CPU layout on the actual hardware. For this reason, Slurm generates its own internal, or "abstract", CPU numbers. These numbers may not match the physical, or "machine", CPU numbers known to Linux.
 - Cgroupv2 can use namespace, hiding the path to process cgroup, haven't tested on Slurm as it's using v1

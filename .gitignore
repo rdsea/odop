@@ -2,8 +2,8 @@
 *.pyc
 *.pyo
 *.swp
-/odop/odop_obs/tinyflux/*.csv
-/odop/odop_obs/tinyflux/*.json
+/odop/odop_obs/metric_database/*.csv
+/odop/odop_obs/metric_database/*.json
 /odop/odop_obs/logs/*.txt
 venv
 __pycache__/
