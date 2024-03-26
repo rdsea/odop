@@ -16,7 +16,7 @@ system:
   environment: "HPC"
 exporter:
   host: "127.0.0.1"
-  port: 8000
+  port: 8001
   environment: "HPC"
   node_aggregator:
     host: "127.0.0.1"
