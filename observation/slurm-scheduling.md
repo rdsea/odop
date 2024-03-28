@@ -31,11 +31,16 @@ Memory constraints:
 
 Useful command:
 
-- scontrol show job -d $SLURM_JOBID
+- scontrol show job -d $SLURM_JOBID: get information about a job
+- cat /proc/cgroups: find which controller is used
 
 # Cgroup v1 vs v2
 
 - In v1, the resources contraints is implememeted by multiple cgroup or it can have multiple hierarchy while v2 only has one. Then, the resouces in v1 can be constrainted quite flexbible as each resources use a different hierarchy and process can belongs to multipleone. On the other hand, the resouces in v2 are constrainted top-down or the child process can only use the constrained resources that its parents has.
+<<<<<<< HEAD
+=======
+- Cpu controller is different from Cpuset controller where the first one control the distribution of cpu cycles and the second one constraints the CPU and memory node placement of tasks to only specified resources.
+>>>>>>> 82d3bf8 (small update to slurm finding)
 
 # Problems:
 
