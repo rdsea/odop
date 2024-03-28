@@ -1,0 +1,26 @@
+repos:
+  - repo: https://github.com/pre-commit/pre-commit-hooks
+    rev: v4.5.0
+    hooks:
+      - id: trailing-whitespace
+        files: ^odop/.*\.(py|yaml|json)$
+      - id: end-of-file-fixer
+        files: ^odop/.*\.(py|yaml|json)$
+      - id: check-yaml
+        files: ^odop/.*\.yaml$
+      - id: check-json
+        files: ^odop/.*\.json$
+  - repo: https://github.com/psf/black
+    rev: 24.3.0
+    hooks:
+      - id: black
+        files: ^odop/.*\.py$
+
+  - repo: https://github.com/PyCQA/isort
+    rev: 5.13.2
+    hooks:
+      - id: isort
+        files: ^odop/.*\.py$
+
+
+  # Add more hooks specific to your directory and its sub-directories
