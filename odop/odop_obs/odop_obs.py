@@ -4,9 +4,9 @@ import sys
 from typing import Optional
 
 from .core.common import ODOP_PATH
+from .exporter import Exporter
 from .process_monitoring_probe import ProcessMonitoringProbe
 from .system_monitoring_probe import SystemMonitoringProbe
-from .exporter import Exporter
 
 sys.path.append(ODOP_PATH)
 

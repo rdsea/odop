@@ -1,5 +1,5 @@
-import pkgutil
 import importlib
+import pkgutil
 
 # import all modules in the current folder
 for loader, module_name, is_pkg in pkgutil.walk_packages(__path__):

@@ -1,9 +1,10 @@
+import logging
 import math
 import pickle
 import socket
-from threading import Thread
-import logging
 import time
+from threading import Thread
+
 from .common import ODOP_PATH
 
 logging.basicConfig(

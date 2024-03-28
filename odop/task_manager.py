@@ -1,9 +1,10 @@
 # An implementation of the task reader with using a decorator.
 
 import functools
-import inspect
 import importlib.util
+import inspect
 import json
+
 import cloudpickle
 
 tasks = []

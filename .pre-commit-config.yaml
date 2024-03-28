@@ -16,11 +16,6 @@ repos:
       - id: black
         files: ^odop/.*\.py$
 
-  - repo: https://github.com/PyCQA/isort
-    rev: 5.13.2
-    hooks:
-      - id: isort
-        files: ^odop/.*\.py$
 
 
   # Add more hooks specific to your directory and its sub-directories

@@ -1,17 +1,16 @@
+import importlib
 import os
 import time
-import importlib
+
+from qoa4ml.gpuUtils import get_sys_gpu_metadata, get_sys_gpu_usage
 from qoa4ml.qoaUtils import (
-    get_sys_cpu_util,
-    get_sys_mem,
     convert_to_gbyte,
     convert_to_mbyte,
     get_sys_cpu_metadata,
+    get_sys_cpu_util,
+    get_sys_mem,
 )
-from qoa4ml.gpuUtils import (
-    get_sys_gpu_metadata,
-    get_sys_gpu_usage,
-)
+
 from .core.probe import Probe
 
 NODE_NAME = os.getenv("NODE_NAME")

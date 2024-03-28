@@ -1,15 +1,17 @@
-import logging
-import time
-import os
-import psutil
 import importlib
+import logging
+import os
+import time
+
+import psutil
 from qoa4ml.qoaUtils import (
     convert_to_mbyte,
-    report_proc_child_cpu,
-    report_proc_mem,
     get_process_allowed_cpus,
     get_process_allowed_memory,
+    report_proc_child_cpu,
+    report_proc_mem,
 )
+
 from .core.probe import Probe
 
 logging.basicConfig(

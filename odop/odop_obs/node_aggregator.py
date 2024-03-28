@@ -1,17 +1,19 @@
 import importlib
-import math
-import socket
-import pickle
-from threading import Thread
-from datetime import datetime
-import time
 import logging
+import math
+import pickle
+import socket
 import sys
+import time
+from datetime import datetime
+from threading import Thread
+
 from fastapi import APIRouter
 from flatten_dict import flatten, unflatten
-from tinyflux import TinyFlux, Point, TimeQuery
-from .core.common import ODOP_PATH
+from tinyflux import Point, TimeQuery, TinyFlux
+
 from . import odop_utils
+from .core.common import ODOP_PATH
 
 logging.basicConfig(
     format="%(asctime)s:%(levelname)s -- %(message)s", level=logging.INFO

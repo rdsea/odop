@@ -1,5 +1,5 @@
-import os
 import logging
+import os
 
 ODOP_PATH = os.getenv("ODOP_PATH")
 if not ODOP_PATH:
