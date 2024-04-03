@@ -33,15 +33,14 @@ Useful command:
 
 - scontrol show job -d $SLURM_JOBID: get information about a job
 - cat /proc/cgroups: find which controller is used
+- salloc --nodes=1 --account=project_462000523 --partition=debug --time=00:5:00
+  srun --cpu_bind=none --nodes=1 --pty bash -i
 
 # Cgroup v1 vs v2
 
 - In v1, the resources contraints is implememeted by multiple cgroup or it can have multiple hierarchy while v2 only has one. Then, the resouces in v1 can be constrainted quite flexbible as each resources use a different hierarchy and process can belongs to multipleone. On the other hand, the resouces in v2 are constrainted top-down or the child process can only use the constrained resources that its parents has.
-<<<<<<< HEAD
-=======
 - Cpu controller is different from Cpuset controller where the first one control the distribution of cpu cycles and the second one constraints the CPU and memory node placement of tasks to only specified resources.
->>>>>>> 82d3bf8 (small update to slurm finding)
 
 # Problems:
 
-- Cgroupv2 can use namespace, hiding the path to process cgroup, haven't tested on Slurm as it's using v1
+- Don't work with heterogeneous jobs yet
