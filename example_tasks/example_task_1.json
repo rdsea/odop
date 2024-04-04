@@ -1,10 +1,13 @@
 {
     "comment": "This is an example task for the opportunistic scheduler. This .json file contains information for the scheduler and for running the task. The python code is in a corresponding .py file.",
-    "name": "task 1",
+    "task_id": "task 1",
+    "time_limit": "5min",
+    "memory_limit": "1G",
+    "threads": 1,
+
+    "input_file_expression": "file_number_*.data",
+
     "module": "example_task_1.py",
     "function": "example_task_function",
-    "cpu": 1,
-    "time": "5min",
-    "memory": "1G",
     "dependencies": ["task 0"]
 }
