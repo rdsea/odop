@@ -2,18 +2,9 @@ import importlib
 import multiprocessing
 from typing import Optional
 
-<<<<<<< HEAD:odop/odop_obs/odop_obs.py
-from .core.common import ODOP_PATH
-from .exporter import Exporter
-from .process_monitoring_probe import ProcessMonitoringProbe
-from .system_monitoring_probe import SystemMonitoringProbe
-
-sys.path.append(ODOP_PATH)
-=======
 from qoa4ml.probes.process_monitoring_probe import ProcessMonitoringProbe
 from qoa4ml.probes.system_monitoring_probe import SystemMonitoringProbe
 from qoa4ml.observability.odop_obs.exporter import Exporter
->>>>>>> 8d6464e (refactor):odop/odop_obs.py
 
 
 class OdopObs:

@@ -9,14 +9,9 @@ module_dir = os.path.dirname(os.path.abspath(odop.__file__))
 examples_dir = os.path.join(module_dir, "example_tasks")
 
 
-<<<<<<< HEAD
-def test_task_manager():
-    """Read the example task and check variables are defined"""
-=======
 @pytest.mark.skip("Example file changed, need to update test if still needed.")
 def test_task_manager(tmp_path):
-    """ Read the example task and check variables are defined """
->>>>>>> main
+    """Read the example task and check variables are defined"""
 
     file_path = os.path.join(examples_dir, "example_task_with_decorator")
     odop.task_manager.read(file_path)

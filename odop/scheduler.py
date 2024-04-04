@@ -2,23 +2,17 @@
 
 import os
 import functools
-import importlib.util
 import inspect
+import importlib.util
 import json
-
 import cloudpickle
 from odop.task import Task
 
 tasks = []
 
 
-<<<<<<< HEAD:odop/task_manager.py
-def odop_task(**kwargs):
-    """The odop task decorator. Records each task in an imported
-=======
 def _odop_task(**kwargs):
-    """ The odop task decorator. Records each task in an imported
->>>>>>> main:odop/scheduler.py
+    """The odop task decorator. Records each task in an imported
     python file.
 
     Only accepts keyword arguments. Name, time, cpu, and memory are
@@ -46,18 +40,8 @@ def _odop_task(**kwargs):
 
         @functools.wraps(func)
         def wrapper(*args, **kwargs):
-<<<<<<< HEAD:odop/task_manager.py
-            """Calls the function and prints the function name before and
-            after the call
-            """
-            print(f"Running {func}")
-            return_value = func(*args, **kwargs)
-            print(f"Completed {func}")
-            return return_value
-=======
-            """ Thin wrapper we can assign attributes to """
+            """Thin wrapper we can assign attributes to"""
             return func(*args, **kwargs)
->>>>>>> main:odop/scheduler.py
 
         # Check required parameters
         if "name" not in kwargs:
@@ -83,7 +67,9 @@ def _odop_task(**kwargs):
         parameters = list(signature.parameters.keys())
         for parameter in parameters:
             if not parameter in wrapper.arguments:
-                raise ValueError(f"Parameter {parameter} not provided for task {wrapper.name}")
+                raise ValueError(
+                    f"Parameter {parameter} not provided for task {wrapper.name}"
+                )
 
         # Check for the inteyrupt_allowed parameter and default to True
         if not "interrupt_allowed" in kwargs:
@@ -94,34 +80,14 @@ def _odop_task(**kwargs):
         wrapper.module_file = inspect.getfile(func)
         wrapper.function_name = func.__name__
 
-<<<<<<< HEAD:odop/task_manager.py
-        # Extract parameter names from the function signature
-        signature = inspect.signature(func)
-        parameters = list(signature.parameters.keys())
-        wrapper.task_params = {}
-        for parameter in parameters:
-            if parameter in kwargs:
-                wrapper.task_params[parameter] = kwargs[parameter]
-            else:
-                raise ValueError(
-                    f"Parameter {parameter} not provided for task {wrapper.name}"
-                )
-
-=======
->>>>>>> main:odop/scheduler.py
         return wrapper
 
     return decorator
 
 
 def create_runner_serialized(task):
-<<<<<<< HEAD:odop/task_manager.py
-    """Create a runer for the task. This is saved to disk, so that the engine can
-    run the task on any node.
-=======
-    """ Create a runner for the task. This is saved to disk, so that
+    """Create a runner for the task. This is saved to disk, so that
     the engine can run the task on any node.
->>>>>>> main:odop/scheduler.py
 
     The task function and other parameters are serialized saved into a
     .pickle file.
@@ -150,26 +116,13 @@ def create_runner_serialized(task):
 
 
 def create_runner_script(task):
-<<<<<<< HEAD:odop/task_manager.py
-    """Create a runner for the task. This is saved to disk, so that the engine can
-    run the task on any node.
-=======
-    """ Create a runner for the task. This is saved to disk, so that the
+    """Create a runner for the task. This is saved to disk, so that the
     engine can run the task on any node.
->>>>>>> main:odop/scheduler.py
 
     The module containing the task function is copied to the output folder
     and a script is generated to import and run the function. The parameters,
     including the module file name and function name are written to a json file.
 
-<<<<<<< HEAD:odop/task_manager.py
-    We need to import everything the task function needs to run. The easiest way
-    to do this is to make a copy of the module, import the task function from
-    the module and run.
-
-    Any parameters for the function itself are written into a json file. Later,
-    this could be written by the engine before starting the task.
-=======
 
     Parameters:
 
@@ -179,7 +132,6 @@ def create_runner_script(task):
 
     filename: str
         Path to the file containing the runner script
->>>>>>> main:odop/scheduler.py
     """
 
     file_name = f"{task.name}_runner.py"
@@ -216,7 +168,7 @@ def create_runner_script(task):
 
 
 def read_module(module_name):
-    """ Find odop tasks in a Python module. Tasks are saved to an output
+    """Find odop tasks in a Python module. Tasks are saved to an output
     folder with the information necessary to run them.
 
     Parameters:
@@ -238,17 +190,13 @@ def read_module(module_name):
     spec.loader.exec_module(module)
 
     for name, obj in inspect.getmembers(module):
-<<<<<<< HEAD:odop/task_manager.py
-        if inspect.isfunction(obj) and getattr(obj, "is_task", False):
-=======
         if type(obj) == Task:
->>>>>>> main:odop/scheduler.py
             tasks.append(obj)
             create_runner_serialized(obj)
 
 
 def read_folder(folder):
-    """ Find odop tasks in all Python modules in a folder. Tasks are saved
+    """Find odop tasks in all Python modules in a folder. Tasks are saved
     to an output folder with the information necessary to run them.
 
     Parameters:
@@ -265,14 +213,9 @@ def read_folder(folder):
 
 if __name__ == "__main__":
     # For a quick test, find the tasks in the example_task_with_decorator.py
-<<<<<<< HEAD:odop/task_manager.py
     path = __file__.replace(
-        "task_manager.py", "example_tasks/example_task_with_decorator.py"
+        "scheduler.py", "example_tasks/example_task_with_decorator.py"
     )
-    read(path)
-=======
-    path = __file__.replace("scheduler.py", "example_tasks/example_task_with_decorator.py")
     read_module(path)
->>>>>>> main:odop/scheduler.py
 
     print([task.name for task in tasks])
