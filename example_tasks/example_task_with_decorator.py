@@ -49,13 +49,13 @@ if __name__ == "__main__":
     i = 0
     for i in range(0, 5):
          processes = []
-         for i in range(5):
+         for i in range(2):
             p = multiprocessing.Process(target=heavy_work_process)
             processes.append(p)
             p.start()
 
          threads = []
-         for i in range(3):
+         for i in range(2):
             t = threading.Thread(target=heavy_work_thread)
             threads.append(t)
             t.start()
