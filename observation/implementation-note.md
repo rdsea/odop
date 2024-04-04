@@ -55,6 +55,7 @@
     | report_latency                     |  0.273594 | 2.22106  | 0.056982 |  2.23613 |
     | calculating_process_metric_latency |  69.2098  | 86.9995  | 54.2936   | 87.4531   |
     | calculating_system_metric_latency  |  2.88274  |  4.48537 | 2.58803    |  4.53019 |
+- Mostly IO bound operation (reading from /proc) so quite hard to optimize
 2. Memory usage:
 - Total: after pydantic:56mb
 - Process probe: applying dynamic loading 
