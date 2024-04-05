@@ -9,12 +9,9 @@ the function.
 
 import pandas as pd
 import uuid
+import warnings
 
 tasks = []
-
-# Indicates whether a @task decorator has been encountered, and is not
-# complete. Used to check that 
-reading_task = False
 
 
 class Task:
@@ -126,4 +123,29 @@ def memory_limit(memory_limit):
         task.memory_limit = memory_limit
         return task
 
+    return decorator
+
+
+def for_files_in_folder(folder_path, task_name=None):
+
+    def decorator(task):
+        if type(task) is not Task:
+            task = Task(task)
+        if folder_path is not None:
+            task.input_folder = folder_path
+        if task_name is not None:
+            task.name = task_name
+        task.single_file_task
+
+        # Check that the function takes a single parameter.
+        # Warn if it is not called "filename"
+        assert len(task.func.__code__.co_varnames) == 1
+        if task.func.__code__.co_varnames[0] != "filename":
+            warnings.warn(
+                "Parameter name for a for_files_in_folder task is not 'filename'. The name of a file is still provided as the parameter."
+            )
+
+        return task
+    
+    
     return decorator
