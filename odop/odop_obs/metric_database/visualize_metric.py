@@ -43,7 +43,8 @@ def revert_unit(unit_conversion, converted_report: dict):
     return original_report
 
 
-unit_conversion = yaml.safe_load(open("../config/unit_conversion.yaml"))
+odop_obs_config = yaml.safe_load(open("../config/odop_obs_conf.yaml"))
+unit_conversion = odop_obs_config["exporter"]["node_aggregator"]["unit_conversion"]
 db = TinyFlux("./db.csv")
 time_query = TimeQuery()
 now = datetime.now()
