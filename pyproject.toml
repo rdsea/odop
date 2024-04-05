@@ -22,6 +22,11 @@ dependencies = [
 test = [
     "pytest",
 ]
+docs = [
+    "sphinx",
+    "sphinx_rtd_theme",
+    "myst_parser"
+]
 
 [project.urls]
 Repository = "https://github.com/rdsea/odop"

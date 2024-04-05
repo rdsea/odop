@@ -1,17 +1,10 @@
 """
-Implements the odop task decorators. These are used
-to mark tasks in written as Python functions
-Replaces task_manager.py
-
-Each decorator modifies the task specification dictionary
+The odop task decorators are used to mark tasks in written as
+Python functions. Each decorator modifies the task specification
 and saves the changes into the task list.
 
-Since decorator run order is "reversed", we need to check
-in each decorator it the task has been constructed yet.
-
-Once the tasks
-are read, they need to be processed to serialize the 
-function.
+Once the tasks are read, they need to be processed to serialize
+the function.
 """
 
 import pandas as pd
@@ -27,7 +20,6 @@ class Task:
         self.time_limit = None
 
     def to_dict(self):
-        # create a dictionary of all attributes except the function
         task_dict = {
             key: val for key, val in self.__dict__.items() if key != "func"
         }
