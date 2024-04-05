@@ -57,3 +57,10 @@ def test_task_list():
     assert odop.task.tasks[-2].name == "task 2"
     assert odop.task.tasks[-1].name == "task 3"
 
+
+def test_import_module():
+    tasks = len(odop.task.tasks)
+    odop.task.read_module(os.path.join(examples_dir, "example_task_with_decorator.py"))
+
+    assert len(odop.task.tasks) == tasks + 1
+    assert odop.task.tasks[-1].name == "example_task"

@@ -10,6 +10,7 @@ the function.
 import pandas as pd
 import uuid
 import warnings
+import importlib.util
 
 tasks = []
 
@@ -147,5 +148,23 @@ def for_files_in_folder(folder_path, task_name=None):
 
         return task
     
-    
     return decorator
+
+
+def read_module(module):
+    """ Read a module and find all tasks in it.
+
+    Parameters:
+    
+    module: module
+        The module to read tasks from
+    """
+
+    if not module.endswith(".py"):
+        module = module + ".py"
+    
+    # Import the module from the file. That is sufficient to register the tasks.
+    spec = importlib.util.spec_from_file_location("task_module", module)
+    module = importlib.util.module_from_spec(spec)
+    spec.loader.exec_module(module)
+
