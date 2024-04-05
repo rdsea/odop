@@ -53,7 +53,26 @@ import odop
 @odop.single_file
 @odop.input_folder("data")
 def step_a():
-    print("Rinning task 0")
+    print("Running task 0")
+```
+
+
+This is equivalent to directly creating and registering the
+task object.
+
+```python
+import odop
+
+def step_a():
+    print("Running task 0")
+
+task = odop.task.Task("task 0", step_a)
+task.time_limit = "10min"
+task.single_file = True
+task.input_folder = "data"
+
+odop.tasks.register_task(task)
+
 ```
 
 

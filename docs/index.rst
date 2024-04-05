@@ -10,6 +10,8 @@ Welcome to odop's documentation!
    :maxdepth: 2
    :caption: Contents:
 
+   task-specification
+
    api/odop
 
 

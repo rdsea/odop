@@ -12,6 +12,10 @@ import uuid
 
 tasks = []
 
+# Indicates whether a @task decorator has been encountered, and is not
+# complete. Used to check that 
+reading_task = False
+
 
 class Task:
     def __init__(self, func):
@@ -24,6 +28,14 @@ class Task:
             key: val for key, val in self.__dict__.items() if key != "func"
         }
         return task_dict
+
+
+def register_task(task):
+    """ Register a task for the scheduler.
+
+    Currently just adds it to the list.
+    """
+    tasks.append(task)
 
 
 def task(name=None, **kwargs):
@@ -57,7 +69,7 @@ def task(name=None, **kwargs):
         for key, val in kwargs.items():
             task[key] = val
 
-        tasks.append(task)
+        register_task(task)
 
         return task
 
