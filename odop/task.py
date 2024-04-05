@@ -25,7 +25,6 @@ class Task:
         self.func = func
         self.name = None
         self.time_limit = None
-        self.is_task = True
 
     def to_dict(self):
         # create a dictionary of all attributes except the function
