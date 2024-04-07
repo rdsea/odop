@@ -14,11 +14,18 @@ readme = "README.md"
 requires-python = ">=3.6"
 
 dependencies = [
+    "cloudpickle",
+    "pandas"
 ]
 
 [project.optional-dependencies]
 test = [
     "pytest",
+]
+docs = [
+    "sphinx",
+    "sphinx_rtd_theme",
+    "myst_parser"
 ]
 
 [project.urls]

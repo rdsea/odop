@@ -19,7 +19,7 @@ def test_decorators():
     @odop.task.memory_limit("2G")
     def test_task_function():
         return 1
-    
+
     assert test_task_function.name == "test_task"
     assert test_task_function.time_limit == pd.to_timedelta("2h")
     assert test_task_function.memory_limit == "2G"

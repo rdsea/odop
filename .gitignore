@@ -7,3 +7,5 @@
 /odop/odop_obs/logs/*.txt
 venv
 __pycache__/
+
+docs/_build/

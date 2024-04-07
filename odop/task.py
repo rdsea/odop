@@ -1,26 +1,16 @@
 """
-Implements the odop task decorators. These are used
-to mark tasks in written as Python functions
-Replaces task_manager.py
-
-Each decorator modifies the task specification dictionary
+The odop task decorators are used to mark tasks in written as
+Python functions. Each decorator modifies the task specification
 and saves the changes into the task list.
 
-Since decorator run order is "reversed", we need to check
-in each decorator it the task has been constructed yet.
-
-Once the tasks
-are read, they need to be processed to serialize the 
-function.
+Once the tasks are read, they need to be processed to serialize
+the function.
 """
 
-
-import inspect
-import importlib.util
-import json
-import cloudpickle
 import pandas as pd
 import uuid
+import warnings
+import importlib.util
 
 tasks = []
 
@@ -30,14 +20,20 @@ class Task:
         self.func = func
         self.name = None
         self.time_limit = None
-        self.is_task = True
 
     def to_dict(self):
-        # create a dictionary of all attributes except the function
         task_dict = {
             key: val for key, val in self.__dict__.items() if key != "func"
         }
         return task_dict
+
+
+def register_task(task):
+    """ Register a task for the scheduler.
+
+    Currently just adds it to the list.
+    """
+    tasks.append(task)
 
 
 def task(name=None, **kwargs):
@@ -71,7 +67,7 @@ def task(name=None, **kwargs):
         for key, val in kwargs.items():
             task[key] = val
 
-        tasks.append(task)
+        register_task(task)
 
         return task
 
@@ -129,3 +125,46 @@ def memory_limit(memory_limit):
         return task
 
     return decorator
+
+
+def for_files_in_folder(folder_path, task_name=None):
+
+    def decorator(task):
+        if type(task) is not Task:
+            task = Task(task)
+        if folder_path is not None:
+            task.input_folder = folder_path
+        if task_name is not None:
+            task.name = task_name
+        task.single_file_task
+
+        # Check that the function takes a single parameter.
+        # Warn if it is not called "filename"
+        assert len(task.func.__code__.co_varnames) == 1
+        if task.func.__code__.co_varnames[0] != "filename":
+            warnings.warn(
+                "Parameter name for a for_files_in_folder task is not 'filename'. The name of a file is still provided as the parameter."
+            )
+
+        return task
+    
+    return decorator
+
+
+def read_module(module):
+    """ Read a module and find all tasks in it.
+
+    Parameters:
+    
+    module: module
+        The module to read tasks from
+    """
+
+    if not module.endswith(".py"):
+        module = module + ".py"
+    
+    # Import the module from the file. That is sufficient to register the tasks.
+    spec = importlib.util.spec_from_file_location("task_module", module)
+    module = importlib.util.module_from_spec(spec)
+    spec.loader.exec_module(module)
+

@@ -44,17 +44,29 @@ requires files matching the regular expression `processed_data/*.data`.
 Tasks can be specified as Python functions using the odop task decorators. Here is an example
 of a task
 
-```python
-import odop
-
-@odop.task("task 0")
-@odop.time_limit("10min")
-@odop.memory_limit("1G")
-@odop.single_file
-@odop.input_folder("data")
-def step_a():
-    print("Rinning task 0")
+```{literalinclude} examples/task_specification_decorator.py
+:start-after: "#example 1"
+:end-before: "#end 1"
 ```
+
+
+This is equivalent to directly creating and registering the
+task object.
+
+```{literalinclude} examples/task_specification_decorator.py
+:start-after: "#example 2"
+:end-before: "#end "
+```
+
+    
+Some common task types have dedicated decorators, such as `for_files_in_folder`
+
+```{literalinclude} examples/task_specification_decorator.py
+:start-after: "#example 3"
+:end-before: "#end 3"
+```
+
+
 
 
 

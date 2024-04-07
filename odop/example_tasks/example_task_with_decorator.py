@@ -6,6 +6,7 @@
 
 import odop
 
+print("hello")
 
 @odop.task.task(name="example_task")
 @odop.task.time_limit("15min")

@@ -1,113 +1,66 @@
 """ Tests for the task_manager module. """
 
 import os
-import time
-import pytest
 import odop
+import pandas as pd
 
 module_dir = os.path.dirname(os.path.abspath(odop.__file__))
-examples_dir = os.path.join(module_dir, "example_tasks")
+examples_dir = os.path.join(module_dir, 'example_tasks')
 
 
-@pytest.mark.skip("Example file changed, need to update test if still needed.")
-def test_task_manager(tmp_path):
-    """Read the example task and check variables are defined"""
+def test_task():
+    @odop.task.task("test_name")
+    def test_task():
+        return "success"
 
-    file_path = os.path.join(examples_dir, "example_task_with_decorator")
-    odop.task_manager.read(file_path)
+    assert type(test_task) == odop.task.Task
 
-    assert odop.task_manager.tasks[0].name == "example_task"
-
-    # Check the task parameters
-    assert odop.task_manager.tasks[0].name == "example_task"
-    assert odop.task_manager.tasks[0].time == "2h"
-    assert odop.task_manager.tasks[0].cpu == "2-4"
-    assert odop.task_manager.tasks[0].memory == "2G"
-    assert odop.task_manager.tasks[0].is_task == True
+    assert test_task.name == "test_name"
+    assert test_task.func() == "success"
+    assert test_task.time_limit is None
 
 
-# Try creating a task without a required parameter
-def test_task_manager_missing_parameter():
-    """Test that a task without a required parameter raises a ValueError"""
-    with pytest.raises(ValueError):
+def test_time_limit_and_memory():
+    @odop.task.task("test_name")
+    @odop.task.time_limit("5min")
+    @odop.task.memory_limit("5G")
+    def test_task():
+        return "success"
 
-        @odop.task_manager.odop_task(time="2h", cpu="2", memory="2G")
-        def test_task_function():
-            time.sleep(1)
+    assert type(test_task) == odop.task.Task
 
-    with pytest.raises(ValueError):
-
-        @odop.task_manager.odop_task(name="test_task", cpu="2", memory="2G")
-        def test_task_function():
-            time.sleep(1)
-
-    with pytest.raises(ValueError):
-
-        @odop.task_manager.odop_task(name="test_task", time="2h", memory="2G")
-        def test_task_function():
-            time.sleep(1)
-
-    with pytest.raises(ValueError):
-
-        @odop.task_manager.odop_task(name="test_task", time="2h", cpu="2")
-        def test_task_function():
-            time.sleep(1)
+    assert test_task.name == "test_name"
+    assert test_task.func() == "success"
+    assert test_task.time_limit == pd.to_timedelta("5min")
+    assert test_task.memory_limit == "5G"
 
 
-def test_task_manager_decorator():
-    """Test the decorator directly"""
+def test_task_list():
+    @odop.task.task("task 1")
+    def task_1():
+        print("task 1")
 
-    @odop.task_manager.odop_task(
-        name="test_task", time="2h", cpu="2", memory="2G", other_parameter="other_value"
-    )
-    def test_task_function():
-        """docstring"""
-        return 1
+    @odop.task.task("task 2")
+    def task_2():
+        print("task 2")
 
-    assert test_task_function.name == "test_task"
-    assert test_task_function.time == "2h"
-    assert test_task_function.cpu == "2"
-    assert test_task_function.memory == "2G"
-    assert test_task_function.is_task == True
-    assert test_task_function.__name__ == "test_task_function"
-    assert test_task_function.other_parameter == "other_value"
-    assert test_task_function.__doc__ == " docstring "
-
-    # Check that the function is called
-    assert test_task_function() == 1
+    @odop.task.task("task 3")
+    def task_3():
+        print("task 3")
 
 
-@pytest.mark.skip("Example file changed, need to update test if still needed.")
-def test_run_from_script():
-    """Test running a task from a script"""
+    assert task_1.name == "task 1"
+    assert task_2.name == "task 2"
+    assert task_3.name == "task 3"
 
-    file_path = os.path.join(examples_dir, "example_task_with_decorator")
-    odop.task_manager.read(file_path)
-
-    assert odop.task_manager.tasks[0].name == "example_task"
-
-    # Write the task script (this is currently called when the task is read),
-    # but we call it again to allow changing that
-    odop.task_manager.create_runner_script(odop.task_manager.tasks[0])
-
-    # Run the task
-    os.system(f"python {odop.task_manager.tasks[0].name}.py")
-
-    # Run using the task_runner
-    odop.task_runner.engine_run_task_from_script(odop.task_manager.tasks[0].name)
+    assert odop.task.tasks[-3].name == "task 1"
+    assert odop.task.tasks[-2].name == "task 2"
+    assert odop.task.tasks[-1].name == "task 3"
 
 
-@pytest.mark.skip("Example file changed, need to update test if still needed.")
-def test_run_from_serialized():
-    """Test running a task from a serialized file"""
+def test_import_module():
+    tasks = len(odop.task.tasks)
+    odop.task.read_module(os.path.join(examples_dir, "example_task_with_decorator.py"))
 
-    file_path = os.path.join(examples_dir, "example_task_with_decorator")
-    odop.task_manager.read(file_path)
-
-    assert odop.task_manager.tasks[0].name == "example_task"
-
-    # Serialize the task
-    odop.task_manager.create_runner_serialized(odop.task_manager.tasks[0])
-
-    # Run the task
-    odop.task_runner.engine_run_task_from_serialized(odop.task_manager.tasks[0].name)
+    assert len(odop.task.tasks) == tasks + 1
+    assert odop.task.tasks[-1].name == "example_task"
