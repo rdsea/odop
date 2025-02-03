@@ -1,0 +1,84 @@
+case 1:
+  available_resource:
+    nodes:
+      node_1:
+        memory: 100
+        cpus: ["core_1", "core_2", "core_3"]
+        private_disk: 10
+    shared_disk: 10
+  queue:
+    task_1:
+      name: task_1
+      priority: 2
+      cpus: 1
+      queued_timestamp: 3
+    task_2:
+      name: task_2
+      priority: 3
+      cpus: 1
+      queued_timestamp: 2
+    task_3:
+      name: task_3
+      priority: 1
+      cpus: 2
+      queued_timestamp: 1
+case 2:
+  available_resource:
+    nodes:
+      node_1:
+        memory: 100
+        cpus: ["core_1", "core_2", "core_3"]
+        private_disk: 10
+      node_2:
+        memory: 100
+        cpus: ["core_1", "core_2", "core_3"]
+        private_disk: 10
+      node_3:
+        memory: 100
+        cpus: ["core_1", "core_2", "core_3"]
+        private_disk: 10
+    shared_disk: 10
+  queue:
+    task_1:
+      name: task_1
+      priority: 1
+      ranks: 2
+      cpus_per_rank: 1
+      queued_timestamp: 3
+      actual_cpu_count: 2
+    task_2:
+      name: task_2
+      priority: 3
+      cpus: 1
+      queued_timestamp: 2
+      actual_cpu_count: 1
+case 3:
+  available_resource:
+    nodes:
+      node_1:
+        memory: 100
+        cpus: ["core_1", "core_2", "core_3"]
+        private_disk: 10
+      node_2:
+        memory: 100
+        cpus: ["core_1", "core_2", "core_3"]
+        private_disk: 10
+      node_3:
+        memory: 100
+        cpus: ["core_1", "core_2", "core_3"]
+        private_disk: 10
+    shared_disk: 10
+  queue:
+    task_1:
+      name: task_1
+      priority: 2
+      nodes: 2
+      ranks_per_node: 3
+      cpus_per_rank: 1
+      queued_timestamp: 3
+      actual_cpu_count: 6
+    task_2:
+      name: task_2
+      priority: 1
+      cpus: 1
+      queued_timestamp: 2

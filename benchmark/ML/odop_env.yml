@@ -1,0 +1,11 @@
+name: odop
+channels:
+  - conda-forge
+dependencies:
+  - python=3.10
+  - mpi4py
+  - pip
+  - pip:
+    - /users/rantaha1/odop/
+    - python-openstackclient
+    - python-swiftclient

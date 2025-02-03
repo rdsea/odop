@@ -1,0 +1,8 @@
+h5py
+scipy
+f90nml
+pexpect
+pandas
+flatdict
+scikit-learn
+python-keystoneclient

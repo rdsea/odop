@@ -1,0 +1,57 @@
+case 1:
+  task_3:
+    node_1:
+      memory: 100
+      cpus: ["core_1", "core_2"]
+      ranks: 1
+      private_disk: 10
+    actual_cpu_count: 2
+  task_2:
+    actual_cpu_count: 1
+  task_1:
+    node_1:
+      memory: 0
+      cpus: ["core_3"]
+      ranks: 1
+      private_disk: 10
+    actual_cpu_count: 1
+case 2:
+  task_1:
+    node_1:
+      memory: 100
+      cpus: ["core_1"]
+      ranks: 1
+      private_disk: 10
+    node_2:
+      memory: 100
+      cpus: ["core_1"]
+      ranks: 1
+      private_disk: 10
+    actual_cpu_count: 2
+  task_2:
+    node_1:
+      memory: 0
+      cpus: ["core_2"]
+      ranks: 1
+      private_disk: 10
+    actual_cpu_count: 1
+case 3:
+  task_1:
+    node_1:
+      memory: 100
+      cpus: ["core_1", "core_2", "core_3"]
+      ranks: 3
+      private_disk: 10
+    node_2:
+      memory: 100
+      cpus: ["core_1", "core_2", "core_3"]
+      ranks: 3
+      private_disk: 10
+    actual_cpu_count: 2
+  task_2:
+    node_3:
+      memory: 100
+      cpus: ["core_1"]
+      ranks: 1
+      private_disk: 10
+    actual_cpu_count: 1

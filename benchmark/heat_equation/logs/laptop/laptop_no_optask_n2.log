@@ -1,0 +1,15 @@
+Reading input from "solver/input.json"
+Simulation parameters: rows: 32000 columns: 128 time steps: 100
+Number of MPI tasks: 2
+Rank 0 has 16000 rows and 128 columns
+Rank 1 has 16000 rows and 128 columns
+Average temperature at start: 44.999639
+Initialization took 1.962616 seconds.
+Initialization took 1.96226 seconds.
+Iteration took 8.344979 seconds.
+Average temperature: 44.999757
+Reference value with default arguments: 59.763305
+Total time: 10.3554 seconds.
+Total time: 12.177279 seconds.
+Elapsed time: 12.752013206481934
+Elapsed time: 12.727129936218262

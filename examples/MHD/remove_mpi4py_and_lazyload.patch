@@ -1,0 +1,391 @@
+diff --git a/python/pencil/__init__.py b/python/pencil/__init__.py
+index 9e22e3516..cddd2542d 100644
+--- a/python/pencil/__init__.py
++++ b/python/pencil/__init__.py
+@@ -3,18 +3,10 @@ The __init__ file is used not only to import the sub-modules, but also to
+ set everything up properly.
+ """
+
+-try:
+-    from mpi4py import MPI
+-    comm = MPI.COMM_WORLD
+-    rank = comm.Get_rank()
+-    size = comm.Get_size()
+-    l_mpi = True
+-    l_mpi = l_mpi and (size != 1)
+-except ImportError:
+-    rank = 0
+-    size = 1
+-    comm = None
+-    l_mpi = False
++rank = 0
++size = 1
++comm = None
++l_mpi = False
+
+ if rank == 0:
+     print("Warning: pencilnew has moved to pencil.")
+@@ -25,8 +17,7 @@ if rank == 0:
+
+ try:
+     import h5py
+-# except ImportError:
+-except:
++except ImportError:
+     if rank == 0:
+         print(
+             "Error: You need to install h5py library doing 'pip3 install h5py' (Python 3) \
+@@ -35,37 +26,46 @@ except:
+
+ try:
+     import os
+-    os.environ['HDF5_USE_FILE_LOCKING']='FALSE'
++    os.environ["HDF5_USE_FILE_LOCKING"] = "FALSE"
+ except:
+     if rank == 0:
+         print("os could not be imported -> HDF5 file locking still in effect.")
+-
+-# Load sub-modules.
+-from . import io
+-from . import diag
+-from . import visu
+-from . import calc
+-from . import math
+-from . import sim
+-from . import read
+-from . import tool_kit
+-from . import export
+-from . import backpack
+-from . import ism_dyn
+-from . import pipelines
+-from pencil.util import is_sim_dir
++
++# Lazy-load mechanism.
++_submodules = {
++    "io": None,
++    "diag": None,
++    "visu": None,
++    "calc": None,
++    "math": None,
++    "sim": None,
++    "read": None,
++    "tool_kit": None,
++    "export": None,
++    "backpack": None,
++    "ism_dyn": None,
++    "pipelines": None
++}
++
++def __getattr__(name):
++    if name in _submodules:
++        if _submodules[name] is None:
++            import importlib
++            _submodules[name] = importlib.import_module(f".{name}", __name__)
++        return _submodules[name]
++    raise AttributeError(f"Module '{__name__}' has no attribute '{name}'")
++
+
+ # Internal routines.
+ def get_sim(path=".", quiet=True):
+     """
+     Return simulation object from 'path, if already existing, or creates new
+-    simulation object from path, if its as simulation.
++    simulation object from path, if its a simulation.
+
+     Args:
+         path:   Base directory where to look for simulation from.
+         quiet:  Switches out the output of the function. Default: False.
+     """
+-
+     return sim.get(path, quiet=quiet)
+
+
+@@ -78,11 +78,10 @@ def get_sims(path_root=".", depth=1, unhide_all=False, quiet=True):
+         path_root:  Base directory where to look for simulation from.
+         depth:      Depth of searching for simulations, default is 1,
+                     i.e. only one level deeper directories will be scanned.
+-        unhide_all: Unhides all simulation found if True, if False (default)
+-                    hidden sim will stay hidden.
++        unhide_all: Unhides all simulations found if True, if False (default)
++                    hidden sims will stay hidden.
+         quiet:      Switches out the output of the function. Default: True.
+     """
+-
+     return sim.get_sims(
+         path_root=path_root, depth=depth, unhide_all=unhide_all, quiet=quiet
+     )
+@@ -90,9 +89,8 @@ def get_sims(path_root=".", depth=1, unhide_all=False, quiet=True):
+
+ def check_dependencies():
+     """
+-    Check if dependencies are fullfilled for pencil.
++    Check if dependencies are fulfilled for pencil.
+     """
+-
+     import importlib
+     from itertools import compress
+
+@@ -104,10 +102,12 @@ def check_dependencies():
+     if rank == 0:
+         print(
+             "WARNING: The following python modules have not been found. \
+-              Full functionallity may not be granted!"
++              Full functionality may not be granted!"
+         )
+
+         if "vtk" in missing_dependencies:
+-            print("Warning: vtk missing. Try to install the python-vtk or pyevtk module.")
++            print(
++                "Warning: vtk missing. Try to install the python-vtk or pyevtk module."
++            )
+         if "tqdm" in missing_dependencies:
+             print("Warning: tqdm missing. Check out https://github.com/tqdm/tqdm.")
+diff --git a/python/pencil/calc/__init__.py b/python/pencil/calc/__init__.py
+index 9730d9d7e..ba6536787 100644
+--- a/python/pencil/calc/__init__.py
++++ b/python/pencil/calc/__init__.py
+@@ -2,18 +2,10 @@
+ Math functions and further calculations.
+ """
+
+-try:
+-    from mpi4py import MPI
+-    comm = MPI.COMM_WORLD
+-    rank = comm.Get_rank()
+-    size = comm.Get_size()
+-    l_mpi = True
+-    l_mpi = l_mpi and (size != 1)
+-except ImportError:
+-    rank = 0
+-    size = 1
+-    comm = None
+-    l_mpi = False
++rank = 0
++size = 1
++comm = None
++l_mpi = False
+
+ from .streamlines import *
+
+diff --git a/python/pencil/calc/aver2h5.py b/python/pencil/calc/aver2h5.py
+index d02179274..c24f9741c 100644
+--- a/python/pencil/calc/aver2h5.py
++++ b/python/pencil/calc/aver2h5.py
+@@ -80,20 +80,10 @@ def zav2h5(
+     """ Find out if the calculation is parallel and distribute the arrays
+         according to y-index and ipz=0 processor layout
+     """
+-    try:
+-        from mpi4py import MPI
+-
+-        comm = MPI.COMM_WORLD
+-        rank = comm.Get_rank()  # rank of processor on which this script runs
+-        size = comm.Get_size()  # number of  ~  ~  ~  ~
+-
+-        l_mpi = True
+-        l_mpi = l_mpi and (size != 1)
+-    except ImportError:
+-        l_mpi = False
+-        rank = 0
+-        size = 1
+-        comm = None
++    l_mpi = False
++    rank = 0
++    size = 1
++    comm = None
+     dim = read.dim()
+     nx, nny = dim.nx, dim.ny
+     ayindex = np.arange(nny)
+diff --git a/python/pencil/io/__init__.py b/python/pencil/io/__init__.py
+index 5bda4217f..14e17695f 100644
+--- a/python/pencil/io/__init__.py
++++ b/python/pencil/io/__init__.py
+@@ -2,18 +2,10 @@
+ Input und output functions, like saving data.
+ """
+
+-try:
+-    from mpi4py import MPI
+-    comm = MPI.COMM_WORLD
+-    rank = comm.Get_rank()
+-    size = comm.Get_size()
+-    l_mpi = True
+-    l_mpi = l_mpi and (size != 1)
+-except ImportError:
+-    rank = 0
+-    size = 1
+-    comm = None
+-    l_mpi = False
++rank = 0
++size = 1
++comm = None
++l_mpi = False
+
+ from .npfile import npfile
+ from .mkdir import mkdir
+diff --git a/python/pencil/io/fort2h5.py b/python/pencil/io/fort2h5.py
+index cd08c4d98..e20cbeb5d 100644
+--- a/python/pencil/io/fort2h5.py
++++ b/python/pencil/io/fort2h5.py
+@@ -893,21 +893,11 @@ def sim2h5(
+     from . import write_h5_grid
+     from pencil.util import is_sim_dir
+
+-    try:
+-        from mpi4py import MPI
+-
+-        comm = MPI.COMM_WORLD
+-        rank = comm.Get_rank()
+-        size = comm.Get_size()
+-        driver = "mpio"
+-        l_mpi = True
+-        l_mpi = l_mpi and (size != 1)
+-    except ImportError:
+-        comm = None
+-        driver = None
+-        rank = 0
+-        size = 1
+-        l_mpi = False
++    comm = None
++    driver = None
++    rank = 0
++    size = 1
++    l_mpi = False
+     if not l_mpi:
+         comm = None
+         driver = None
+diff --git a/python/pencil/ism_dyn/rhs_terms.py b/python/pencil/ism_dyn/rhs_terms.py
+index 1517e79d7..5fc0bfce4 100644
+--- a/python/pencil/ism_dyn/rhs_terms.py
++++ b/python/pencil/ism_dyn/rhs_terms.py
+@@ -14,18 +14,10 @@
+       compute "structure" functions as required
+ """
+
+-try:
+-    from mpi4py import MPI
+-    comm = MPI.COMM_WORLD
+-    rank = comm.Get_rank()
+-    size = comm.Get_size()
+-    l_mpi = True
+-    l_mpi = l_mpi and (size != 1)
+-except ImportError:
+-    rank = 0
+-    size = 1
+-    comm = None
+-    l_mpi = False
++rank = 0
++size = 1
++comm = None
++l_mpi = False
+
+ import numpy as np
+ from pencil.math import dot, dot2, cross, cpu_optimal
+diff --git a/python/pencil/math/stats/struct.py b/python/pencil/math/stats/struct.py
+index 5ed4f971c..e06d52e09 100644
+--- a/python/pencil/math/stats/struct.py
++++ b/python/pencil/math/stats/struct.py
+@@ -726,19 +726,10 @@ def space_struct_mpi(
+         print(lmax)
+     mar = np.ma.array(arr)  # permit handling of masked arrays
+     # compute correlations
+-    try:
+-        from mpi4py import MPI
+-
+-        comm = MPI.COMM_WORLD
+-        rank = comm.Get_rank()
+-        size = comm.Get_size()
+-        l_mpi = True
+-        l_mpi = l_mpi and (size != 1)
+-    except ImportError:
+-        rank = 0
+-        size = 1
+-        comm = None
+-        l_mpi = False
++    rank = 0
++    size = 1
++    comm = None
++    l_mpi = False
+     Dtmp = np.zeros(Dshape)
+     elltmp = np.zeros(Dshape)
+     if l_mpi:
+diff --git a/python/pencil/pipelines/__init__.py b/python/pencil/pipelines/__init__.py
+index c50653a2b..6e72920da 100644
+--- a/python/pencil/pipelines/__init__.py
++++ b/python/pencil/pipelines/__init__.py
+@@ -2,18 +2,10 @@
+ Read data and parameters from data directories.
+ """
+
+-try:
+-    from mpi4py import MPI
+-    comm = MPI.COMM_WORLD
+-    rank = comm.Get_rank()
+-    size = comm.Get_size()
+-    l_mpi = True
+-    l_mpi = l_mpi and (size != 1)
+-except ImportError:
+-    rank = 0
+-    size = 1
+-    comm = None
+-    l_mpi = False
++rank = 0
++size = 1
++comm = None
++l_mpi = False
+
+ try:
+     import f90nml
+diff --git a/python/pencil/sim/simulation.py b/python/pencil/sim/simulation.py
+index 4c6c3c97b..ec0674d73 100644
+--- a/python/pencil/sim/simulation.py
++++ b/python/pencil/sim/simulation.py
+@@ -7,18 +7,10 @@ manipulate simulations.
+ import os
+ from os.path import join, exists, split, islink, realpath, abspath, basename
+
+-try:
+-    from mpi4py import MPI
+-    comm = MPI.COMM_WORLD
+-    rank = comm.Get_rank()
+-    size = comm.Get_size()
+-    l_mpi = True
+-    l_mpi = l_mpi and (size != 1)
+-except ImportError:
+-    rank = 0
+-    size = 1
+-    comm = None
+-    l_mpi = False
++rank = 0
++size = 1
++comm = None
++l_mpi = False
+
+
+ def simulation(*args, **kwargs):
+diff --git a/python/pencil/visu/__init__.py b/python/pencil/visu/__init__.py
+index dce82fd59..a7aef90cf 100644
+--- a/python/pencil/visu/__init__.py
++++ b/python/pencil/visu/__init__.py
+@@ -2,18 +2,10 @@
+ Visualization routines.
+ """
+
+-try:
+-    from mpi4py import MPI
+-    comm = MPI.COMM_WORLD
+-    rank = comm.Get_rank()
+-    size = comm.Get_size()
+-    l_mpi = True
+-    l_mpi = l_mpi and (size != 1)
+-except ImportError:
+-    rank = 0
+-    size = 1
+-    comm = None
+-    l_mpi = False
++rank = 0
++size = 1
++comm = None
++l_mpi = False
+
+ from .animate_interactive import animate_interactive

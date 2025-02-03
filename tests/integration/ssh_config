@@ -1,0 +1,4 @@
+# ssh_config
+Host *
+    StrictHostKeyChecking no
+    UserKnownHostsFile /dev/null
