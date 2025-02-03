@@ -1,0 +1,39 @@
+Reading input from "solver/input.json"
+Rank 6 has 4000 rows and 128 columns
+Rank 4 has 4000 rows and 128 columns
+Rank 2 has 4000 rows and 128 columns
+Simulation parameters: rows: 32000 columns: 128 time steps: 100
+Number of MPI tasks: 8
+Rank 0 has 4000 rows and 128 columns
+Rank 1 has 4000 rows and 128 columns
+Rank 7 has 4000 rows and 128 columns
+Rank 3 has 4000 rows and 128 columns
+Rank 5 has 4000 rows and 128 columns
+Average temperature at start: Initialization took 2.24682 seconds.Initialization took 2.24678 seconds.
+Initialization took 2.24669Initialization took 2.24719 seconds.
+Initialization took 2.24673 seconds.
+Initialization took 2.24674 seconds.
+Initialization took 2.24669 seconds.
+44.999639
+Initialization took 2.246811 seconds.
+
+ seconds.
+Iteration took 3.714646 seconds.
+Average temperature: 44.999757
+Reference value with default arguments: 59.763305
+Total time: 6.01546 seconds.
+Total time: 6.01581 seconds.
+Total time: 6.01604 seconds.
+Total time: 6.01666 seconds.
+Total time: 6.01724 seconds.
+Total time: 6.01792 seconds.
+Total time: 6.02021 seconds.
+Total time: 8.264830 seconds.
+Elapsed time: 9.373966693878174
+Elapsed time: 8.997281551361084
+Elapsed time: 9.116154909133911
+Elapsed time: 9.190734148025513
+Elapsed time: 8.92975401878357
+Elapsed time: 9.019798040390015
+Elapsed time: 8.929352760314941
+Elapsed time: 9.497637510299683

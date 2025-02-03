@@ -1,0 +1,6 @@
+.tox
+.git
+.github
+.ruff_cache
+.mypy_cache
+.pytest_cache

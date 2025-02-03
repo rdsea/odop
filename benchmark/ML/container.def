@@ -1,0 +1,27 @@
+Bootstrap: docker
+From: ubuntu:22.04
+
+
+%files
+   ../../* odop/
+
+
+%post
+apt update
+apt install -y tree python3.11 python3.11-distutils python3.11-dev curl
+curl -sS https://bootstrap.pypa.io/get-pip.py | python3.11
+python3.11 -m pip install --upgrade --extra-index-url https://download.pytorch.org/whl/rocm6.0/ \
+   odop/ \
+   pytorch-triton-rocm==2.3.1 \
+   torch==2.3.1+rocm6.0 \
+   torchaudio==2.3.1+rocm6.0 \
+   torchvision==0.18.1+rocm6.0 \
+   psutil \
+   transformers \
+   accelerate==0.29 \
+   huggingface_hub==0.27 \
+   datasets==2.18 \
+   python-openstackclient \
+   python-swiftclient \
+   pandas
+    

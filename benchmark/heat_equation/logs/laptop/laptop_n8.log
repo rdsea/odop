@@ -1,0 +1,235 @@
+ODOP STARTING
+ODOP: Observability module started
+task_folder /u/24/rantahj1/unix/src/odop/benchmark/heat_equation
+module: <module 'averages' from '/u/24/rantahj1/unix/src/odop/benchmark/heat_equation/averages.py'>
+tasks: {'output_stats': <odop.task_definition.Task object at 0x79b24f122ef0>}
+tasks: {'output_stats': <odop.task_definition.Task object at 0x79b24f122ef0>}
+writing to /u/24/rantahj1/unix/.odop/runs/heat_equation/task_parameters/output_stats.json
+starting task manager
+reading /u/24/rantahj1/unix/.odop/runs/heat_equation/task_parameters/output_stats.json
+TASK MANAGER: 1 tasks
+TASK MANAGER: queue length 0
+2025-01-10 15:06:18,613:controller:INFO -- Loading algorithm priority
+INFO:controller:Loading algorithm priority
+2025-01-10 15:06:18,615:controller:INFO -- engine starting
+INFO:controller:engine starting
+<module 'odop.scheduler.algorithms.priority' from '/u/24/rantahj1/unix/src/odop/odop/scheduler/algorithms/priority.py'>
+2025-01-10 15:06:18,620:controller:INFO -- controller starting
+INFO:controller:controller starting
+2025-01-10 15:06:18,621:engine:INFO -- ENGINE STARTING
+INFO:engine:ENGINE STARTING
+2025-01-10 15:06:18,622:engine:INFO -- updating tasks
+INFO:engine:updating tasks
+2025-01-10 15:06:18,624:controller:INFO -- api starting
+INFO:controller:api starting
+2025-01-10 15:06:18,625:controller:INFO -- connecting to engine
+INFO:controller:connecting to engine
+127.0.0.1 - - [10/Jan/2025 15:06:18] "POST /RPC2 HTTP/1.1" 200 -
+2025-01-10 15:06:18,630:controller:INFO -- Connected to engine
+INFO:controller:Connected to engine
+2025-01-10 15:06:18,631:controller:INFO -- main loop
+INFO:controller:main loop
+INFO:     Started server process [95282]
+INFO:     Waiting for application startup.
+INFO:     Application startup complete.
+INFO:     Uvicorn running on http://0.0.0.0:8000 (Press CTRL+C to quit)
+Reading input from "solver/input.json"
+Rank 7 has 4000 rows and 128 columns
+Rank 3 has 4000 rows and 128 columns
+ERROR:root:Connection to aggregator refused
+ERROR:root:Connection to aggregator refused
+ERROR:root:Connection to aggregator refused
+ERROR:root:Connection to aggregator refused
+ERROR:root:Connection to aggregator refused
+ERROR:root:Connection to aggregator refused
+ERROR:root:Connection to aggregator refused
+ERROR:root:Connection to aggregator refused
+Rank 4 has 4000 rows and 128 columns
+Rank 2 has 4000 rows and 128 columns
+Simulation parameters: rows: 32000 columns: 128 time steps: 100
+Number of MPI tasks: 8
+Rank 0 has 4000 rows and 128 columns
+Rank 5 has 4000 rows and 128 columns
+Rank 6 has 4000 rows and 128 columns
+Rank 1 has 4000 rows and 128 columns
+TASK MANAGER: queue length 1
+2025-01-10 15:06:19,622:engine:INFO -- updating tasks
+INFO:engine:updating tasks
+2025-01-10 15:06:19,637:controller:INFO -- main loop
+INFO:controller:main loop
+ERROR:root:Connection to aggregator refused
+INFO:root:node aggregator started
+ERROR:root:Connection to aggregator refused
+ERROR:root:Connection to aggregator refused
+INFO:     Started server process [95258]
+INFO:     Waiting for application startup.
+INFO:     Application startup complete.
+INFO:     Uvicorn running on http://0.0.0.0:8001 (Press CTRL+C to quit)
+TASK MANAGER: queue length 1
+2025-01-10 15:06:20,623:engine:INFO -- updating tasks
+INFO:engine:updating tasks
+INFO:     127.0.0.1:47282 - "GET /metrics HTTP/1.1" 200 OK
+2025-01-10 15:06:20,648:controller:INFO -- main loop
+INFO:controller:main loop
+TASK MANAGER: queue length 1
+2025-01-10 15:06:21,624:engine:INFO -- updating tasks
+INFO:engine:updating tasks
+INFO:     127.0.0.1:47296 - "GET /metrics HTTP/1.1" 200 OK
+2025-01-10 15:06:21,655:controller:INFO -- Executing task output_stats
+INFO:controller:Executing task output_stats
+2025-01-10 15:06:21,657:engine:INFO -- running task output_stats
+INFO:engine:running task output_stats
+2025-01-10 15:06:21,659:engine:INFO -- COMMAND nice -n 20 python /u/24/rantahj1/unix/src/odop/odop/engine/execute_task.py --config /u/24/rantahj1/unix/.odop/runs/heat_equation/executables/task_configs/output_stats_0.py
+INFO:engine:COMMAND nice -n 20 python /u/24/rantahj1/unix/src/odop/odop/engine/execute_task.py --config /u/24/rantahj1/unix/.odop/runs/heat_equation/executables/task_configs/output_stats_0.py
+127.0.0.1 - - [10/Jan/2025 15:06:21] "POST /RPC2 HTTP/1.1" 200 -
+2025-01-10 15:06:21,672:controller:INFO -- main loop
+INFO:controller:main loop
+Average temperature at start: 44.999639
+Initialization took 3.005746 seconds.
+Initialization took 3.00555 seconds.
+Initialization took 3.00539 seconds.
+Initialization took 3.00575 seconds.
+Initialization took 3.00557 seconds.
+Initialization took 3.00589 seconds.
+Initialization took 3.00589 seconds.
+Initialization took 3.0071 seconds.
+TASK MANAGER: queue length 0
+2025-01-10 15:06:22,628:engine:INFO -- updating tasks
+INFO:engine:updating tasks
+127.0.0.1 - - [10/Jan/2025 15:06:22] "POST /RPC2 HTTP/1.1" 200 -
+2025-01-10 15:06:22,676:controller:INFO -- Task output_stats status: running
+INFO:controller:Task output_stats status: running
+INFO:     127.0.0.1:47308 - "GET /metrics HTTP/1.1" 200 OK
+2025-01-10 15:06:22,682:controller:INFO -- main loop
+INFO:controller:main loop
+placement: [0]
+my cpu group [0, 1, 2, 3, 4, 5, 6, 7, 8, 9, 10, 11]
+TASK MANAGER: queue length 0
+2025-01-10 15:06:23,629:engine:INFO -- updating tasks
+INFO:engine:updating tasks
+2025-01-10 15:06:23,629:engine:INFO -- task output_stats exited with return value 0
+INFO:engine:task output_stats exited with return value 0
+127.0.0.1 - - [10/Jan/2025 15:06:23] "POST /RPC2 HTTP/1.1" 200 -
+2025-01-10 15:06:23,683:controller:INFO -- Task output_stats status: completed
+INFO:controller:Task output_stats status: completed
+2025-01-10 15:06:23,684:controller:INFO -- Task output_stats completed
+INFO:controller:Task output_stats completed
+INFO:     127.0.0.1:47320 - "GET /metrics HTTP/1.1" 200 OK
+2025-01-10 15:06:23,690:controller:INFO -- main loop
+INFO:controller:main loop
+TASK MANAGER: queue length 0
+2025-01-10 15:06:24,630:engine:INFO -- updating tasks
+INFO:engine:updating tasks
+INFO:     127.0.0.1:53832 - "GET /metrics HTTP/1.1" 200 OK
+2025-01-10 15:06:24,696:controller:INFO -- main loop
+INFO:controller:main loop
+TASK MANAGER: queue length 0
+2025-01-10 15:06:25,631:engine:INFO -- updating tasks
+INFO:engine:updating tasks
+INFO:     127.0.0.1:53838 - "GET /metrics HTTP/1.1" 200 OK
+2025-01-10 15:06:25,703:controller:INFO -- main loop
+INFO:controller:main loop
+Iteration took 3.832424 seconds.
+Average temperature: 44.999757
+Reference value with default arguments: 59.763305
+Total time: 6.86177 seconds.
+Total time: 6.86611 seconds.
+Total time: 6.86778 seconds.
+Total time: 6.86664 seconds.
+Total time: 6.86782 seconds.
+Total time: 6.86771 seconds.
+Total time: 6.8697 seconds.
+TASK MANAGER: queue length 1
+2025-01-10 15:06:26,632:engine:INFO -- updating tasks
+INFO:engine:updating tasks
+INFO:     127.0.0.1:53846 - "GET /metrics HTTP/1.1" 200 OK
+2025-01-10 15:06:26,711:controller:INFO -- Executing task output_stats
+INFO:controller:Executing task output_stats
+2025-01-10 15:06:26,712:engine:INFO -- running task output_stats
+INFO:engine:running task output_stats
+2025-01-10 15:06:26,713:engine:INFO -- COMMAND nice -n 20 python /u/24/rantahj1/unix/src/odop/odop/engine/execute_task.py --config /u/24/rantahj1/unix/.odop/runs/heat_equation/executables/task_configs/output_stats_1.py
+INFO:engine:COMMAND nice -n 20 python /u/24/rantahj1/unix/src/odop/odop/engine/execute_task.py --config /u/24/rantahj1/unix/.odop/runs/heat_equation/executables/task_configs/output_stats_1.py
+127.0.0.1 - - [10/Jan/2025 15:06:26] "POST /RPC2 HTTP/1.1" 200 -
+2025-01-10 15:06:26,716:controller:INFO -- main loop
+INFO:controller:main loop
+TASK MANAGER: queue length 0
+2025-01-10 15:06:27,634:engine:INFO -- updating tasks
+INFO:engine:updating tasks
+127.0.0.1 - - [10/Jan/2025 15:06:27] "POST /RPC2 HTTP/1.1" 200 -
+2025-01-10 15:06:27,720:controller:INFO -- Task output_stats status: running
+INFO:controller:Task output_stats status: running
+INFO:     127.0.0.1:53862 - "GET /metrics HTTP/1.1" 200 OK
+2025-01-10 15:06:27,725:controller:INFO -- main loop
+INFO:controller:main loop
+placement: [0]
+my cpu group [0, 1, 2, 3, 4, 5, 6, 7, 8, 9, 10, 11]
+Total time: 9.642785 seconds.
+TASK MANAGER: queue length 0
+Elapsed time: 11.056200742721558
+2025-01-10 15:06:28,635:engine:INFO -- updating tasks
+INFO:engine:updating tasks
+2025-01-10 15:06:28,636:engine:INFO -- task output_stats exited with return value 1
+INFO:engine:task output_stats exited with return value 1
+2025-01-10 15:06:28,636:engine:INFO -- stdout: None
+INFO:engine:stdout: None
+2025-01-10 15:06:28,636:engine:INFO -- stderr: Error executing task: the number of columns changed from 128 to 87 at row 18608; use `usecols` to select a subset and avoid this error
+
+INFO:engine:stderr: Error executing task: the number of columns changed from 128 to 87 at row 18608; use `usecols` to select a subset and avoid this error
+
+Elapsed time: 11.068446159362793
+INFO:     Shutting down
+127.0.0.1 - - [10/Jan/2025 15:06:28] "POST /RPC2 HTTP/1.1" 200 -
+2025-01-10 15:06:28,727:controller:INFO -- Task output_stats status: failed
+INFO:controller:Task output_stats status: failed
+2025-01-10 15:06:28,727:controller:INFO -- Task output_stats failed
+INFO:controller:Task output_stats failed
+Elapsed time: 11.05482292175293
+2025-01-10 15:06:28,733:controller:INFO -- Executing task output_stats
+INFO:controller:Executing task output_stats
+2025-01-10 15:06:28,734:engine:INFO -- running task output_stats
+INFO:engine:running task output_stats
+2025-01-10 15:06:28,737:engine:INFO -- COMMAND nice -n 20 python /u/24/rantahj1/unix/src/odop/odop/engine/execute_task.py --config /u/24/rantahj1/unix/.odop/runs/heat_equation/executables/task_configs/output_stats_1.py
+INFO:engine:COMMAND nice -n 20 python /u/24/rantahj1/unix/src/odop/odop/engine/execute_task.py --config /u/24/rantahj1/unix/.odop/runs/heat_equation/executables/task_configs/output_stats_1.py
+127.0.0.1 - - [10/Jan/2025 15:06:28] "POST /RPC2 HTTP/1.1" 200 -
+2025-01-10 15:06:28,741:controller:INFO -- main loop
+INFO:controller:main loop
+Elapsed time: 11.058621883392334
+INFO:     Waiting for application shutdown.
+INFO:     Application shutdown complete.
+INFO:     Finished server process [95258]
+Elapsed time: 11.046619415283203
+Elapsed time: 11.037240028381348
+ERROR:root:Connection to aggregator refused
+placement: [0]
+my cpu group [0, 1, 2, 3, 4, 5, 6, 7, 8, 9, 10, 11]
+2025-01-10 15:06:29,635:controller:INFO -- Stopping
+INFO:controller:Stopping
+2025-01-10 15:06:29,636:engine:INFO -- updating tasks
+INFO:engine:updating tasks
+2025-01-10 15:06:29,636:engine:INFO -- task output_stats exited with return value 0
+INFO:engine:task output_stats exited with return value 0
+INFO:     Shutting down
+127.0.0.1 - - [10/Jan/2025 15:06:29] "POST /RPC2 HTTP/1.1" 200 -
+2025-01-10 15:06:29,746:controller:INFO -- Task output_stats status: failed
+INFO:controller:Task output_stats status: failed
+2025-01-10 15:06:29,747:controller:INFO -- Task output_stats failed
+INFO:controller:Task output_stats failed
+2025-01-10 15:06:29,754:controller:INFO -- Executing task output_stats
+INFO:controller:Executing task output_stats
+2025-01-10 15:06:29,756:engine:INFO -- running task output_stats
+INFO:engine:running task output_stats
+2025-01-10 15:06:29,758:engine:INFO -- COMMAND nice -n 20 python /u/24/rantahj1/unix/src/odop/odop/engine/execute_task.py --config /u/24/rantahj1/unix/.odop/runs/heat_equation/executables/task_configs/output_stats_1.py
+INFO:engine:COMMAND nice -n 20 python /u/24/rantahj1/unix/src/odop/odop/engine/execute_task.py --config /u/24/rantahj1/unix/.odop/runs/heat_equation/executables/task_configs/output_stats_1.py
+127.0.0.1 - - [10/Jan/2025 15:06:29] "POST /RPC2 HTTP/1.1" 200 -
+INFO:     Waiting for application shutdown.
+INFO:     Application shutdown complete.
+INFO:     Finished server process [95282]
+ERROR:root:Connection to aggregator refused
+Elapsed time: 13.058593273162842
+placement: [0]
+my cpu group [0, 1, 2, 3, 4, 5, 6, 7, 8, 9, 10, 11]
+2025-01-10 15:06:30,774:controller:INFO -- Stopped
+INFO:controller:Stopped
+TASK MANAGER: stopping
+TASK MANAGER: stopped
+Elapsed time: 13.463672876358032

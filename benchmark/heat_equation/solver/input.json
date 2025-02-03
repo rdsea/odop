@@ -1,0 +1,12 @@
+{
+  "cols": 2000,
+  "diffusion_constant": 0.1,
+  "fname": "",
+  "grid_spacing_x": 0.01,
+  "grid_spacing_y": 0.01,
+  "image_interval": 100,
+  "nsteps": 2000,
+  "png_name_prefix": "data/heat_",
+  "read_file": false,
+  "rows": 2000
+}

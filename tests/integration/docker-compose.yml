@@ -1,0 +1,59 @@
+version: '3'
+services:
+  node1:
+    build:
+      context: ../..
+      dockerfile: tests/integration/Dockerfile
+    hostname: node1
+    environment:
+      ODOP_PATH: /tmp/odop/
+    volumes:
+      - ../..:/app
+      - /tmp:/tmp
+    working_dir: /tmp/app
+    ports:
+     - "2222:22"
+    networks:
+      - my-network
+    command: >
+      bash -c "
+        mkdir -p /tmp/app/ && \
+        sudo /usr/sbin/sshd -D& \
+        sudo cp -r /app/* ./
+        sleep 2 ; \
+        ssh node2 hostname && \
+        sudo chown -R myuser:myuser . && \
+        sudo chown -R myuser:myuser /tmp/odop/ && \
+        bash tests/integration/slurm/run_multiple.sh 
+      "
+
+  node2:
+    build:
+      context: ../..
+      dockerfile: tests/integration/Dockerfile
+    hostname: node2
+    environment:
+      ODOP_PATH: /tmp/odop/
+    volumes:
+      - ../..:/app
+      - /tmp:/tmp
+    working_dir: /tmp/app
+    ports:
+     - "2223:22"
+    networks:
+      - my-network
+    command: >
+      bash -c "
+        mkdir -p /tmp/app/ && \
+        sudo /usr/sbin/sshd -D& \
+        sudo cp -r /app/* ./
+        sleep 2 ; \
+        ssh node1 hostname && \
+        sudo chown -R myuser:myuser . && \
+        sudo chown -R myuser:myuser /tmp/odop/ && \
+        bash tests/integration/slurm/run_multiple.sh 
+      "
+
+networks:
+  my-network:
+    driver: bridge
