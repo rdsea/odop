@@ -6,3 +6,4 @@ pandas
 flatdict
 scikit-learn
 python-keystoneclient
+python-swiftclient
