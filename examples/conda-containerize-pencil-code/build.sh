@@ -22,5 +22,4 @@ ml buildtools
 ml PrgEnv-gnu/8.5.0
 ml lumi-container-wrapper
 
-# probably need to set more paths...
-conda-containerize new -r $requirements --prefix $prefix --post $post_build -w pencil-code/test_run/start.chs,pencil-code/test_run/src/start.x,pencil-code/test_run/run.chs,pencil-code/test_run/src/run.x $env
+conda-containerize new -r $requirements --prefix $prefix --post $post_build -w bin $env
