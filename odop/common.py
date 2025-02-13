@@ -27,8 +27,10 @@ if ODOP_PATH is None:
     user_home = Path.home()
     # assume that we have odop dir
     ODOP_PATH = user_home / ".odop"
-    os.makedirs(ODOP_PATH, exist_ok=True)
 else:
     ODOP_PATH = Path(ODOP_PATH)
+
+if not ODOP_PATH.is_dir():
+    os.makedirs(ODOP_PATH, exist_ok=True)
 
 RUN_ID = os.getenv("RUN_ID")
