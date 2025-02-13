@@ -4,13 +4,12 @@ import click
 import requests
 
 import odop
-from odop.common import ODOP_PATH
+from odop.common import ODOP_RUNS_PATH
 from odop.ui import Status
 
 
 def get_status(run_name):
-    runs_base_path = os.path.join(ODOP_PATH, "runs")
-    run_folder = os.path.join(runs_base_path, run_name)
+    run_folder = os.path.join(ODOP_RUNS_PATH, run_name)
     status_file = os.path.join(run_folder, "status")
     status = Status(status_file)
     return status
@@ -35,8 +34,7 @@ def scan_tasks_folder(run_name, task_folder):
     """Loads tasks from the task folder path and all subpaths."""
     print("Task folder:", task_folder)
 
-    runs_base_path = os.path.join(ODOP_PATH, "runs")
-    run_folder = os.path.join(runs_base_path, run_name)
+    run_folder = os.path.join(ODOP_RUNS_PATH, run_name)
     executables_folder = os.path.join(run_folder, "executables")
     task_parameters_folder = os.path.join(run_folder, "task_parameters")
 
@@ -76,8 +74,7 @@ def visualize_folder(run_name):
     """Visualize cpu utilization of all core"""
     from .visualization.visualize_all_folder import process_folder
 
-    runs_base_path = os.path.join(ODOP_PATH, "runs")
-    run_folder = os.path.join(runs_base_path, run_name)
+    run_folder = os.path.join(ODOP_RUNS_PATH, run_name)
     data_folder = os.path.join(run_folder, "metric_database")
 
     process_folder(data_folder)

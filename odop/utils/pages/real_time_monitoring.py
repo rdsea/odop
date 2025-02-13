@@ -7,7 +7,7 @@ import requests
 import streamlit as st
 import yaml
 
-from odop.common import ODOP_PATH, create_logger
+from odop.common import ODOP_RUNS_PATH, create_logger
 
 logger = create_logger("monitoring")
 
@@ -32,21 +32,19 @@ def get_config_data(run_path: str):
         return None
 
 
-base_runs_path = os.path.join(ODOP_PATH, "runs")
-
-run_paths = os.listdir(base_runs_path)
+run_paths = os.listdir(ODOP_RUNS_PATH)
 run_paths = filter_run_dir(run_paths)
 run_paths.sort()
 
 chosen_run = st.selectbox("Which run you want to monitor", run_paths)
 
 node_names = list(
-    glob.glob(os.path.join(base_runs_path, chosen_run, "metric_database/*.csv"))
+    glob.glob(os.path.join(ODOP_RUNS_PATH, chosen_run, "metric_database/*.csv"))
 )
 node_to_choose = [
     Path(filepath).stem
     for filepath in glob.glob(
-        os.path.join(base_runs_path, chosen_run, "metric_database/*.csv")
+        os.path.join(ODOP_RUNS_PATH, chosen_run, "metric_database/*.csv")
     )
 ]
 node_to_choose.sort()

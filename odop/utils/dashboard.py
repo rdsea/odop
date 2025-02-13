@@ -8,7 +8,7 @@ import pandas as pd
 import streamlit as st
 
 from odop.cli.visualization.common import extract_data_from_file_path
-from odop.common import ODOP_PATH
+from odop.common import ODOP_RUNS_PATH
 
 
 @st.cache_data()
@@ -59,12 +59,11 @@ def plot_monitoring_data_with_slider(timestamps, cpu_values, allowed_cpu_values)
         st.altair_chart(chart, use_container_width=True)
 
 
-base_runs_path = os.path.join(ODOP_PATH, "runs")
-chosen_run = st.selectbox("Which run you want to see", os.listdir(base_runs_path))
+chosen_run = st.selectbox("Which run you want to see", os.listdir(ODOP_RUNS_PATH))
 node_to_choose = [
     Path(filepath).stem
     for filepath in glob.glob(
-        os.path.join(base_runs_path, chosen_run, "metric_database/*.csv")
+        os.path.join(ODOP_RUNS_PATH, chosen_run, "metric_database/*.csv")
     )
 ]
 chosen_node = st.selectbox(
@@ -74,7 +73,7 @@ chosen_node = st.selectbox(
 
 timestamps, cpu_values, allowed_cpu_values = load_data(
     os.path.join(
-        base_runs_path,
+        ODOP_RUNS_PATH,
         chosen_run,
         "metric_database",
         f"{chosen_node}.csv",

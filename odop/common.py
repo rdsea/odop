@@ -34,3 +34,5 @@ if not ODOP_PATH.is_dir():
     os.makedirs(ODOP_PATH, exist_ok=True)
 
 RUN_ID = os.getenv("RUN_ID")
+
+ODOP_RUNS_PATH = ODOP_PATH / "runs"
