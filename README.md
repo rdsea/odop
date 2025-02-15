@@ -1,8 +1,18 @@
 # ODOP - Opportunistic Data Operations Platform
 
-ODOP Engine in HPC
+## Overview
 
-## Architecture
+ODOP is a framework supporting the developer/scientist to explore free resources allocated for their long running applications to carry out data operations in an opportunistic manner. The key idea is that applications can be annotated with functions for data operations, such as moving files, lightweight data analysis and ML, to be executed when resources are free during the run of the main applications. Usually these operations must be done after the long-running application finished.
+
+![ODOP Concept](img/odopconcept.png)
+
+The following publication provides a high overview of ODOP:
+>Minh-Tri Nguyen, Anh-Dung Nguyen, Jarno Rantaharju, Touko Puro, Matthias Rheinhardt, Maarit Korpi-Lagg, Hong-Linh Truong, **"Supporting Opportunistic Data Operations for Data-Intensive Computational Applications** ([download PDF](https://acris.aalto.fi/ws/portalfiles/portal/165401785/BDOP_CameraReady.pdf)), 2024 IEEE International Conference on Big Data (BigData), Washington, DC, USA, 2024, pp. 3735-3744, doi: 10.1109/BigData62323.2024.10826079. 
+
+
+Currently ODOP is mainly tested with applications executed atop LUMI. 
+
+## ODOP Architecture
 
 - OpObservability
 - OpSchedule
@@ -135,3 +145,8 @@ python -m http.server
   ```bash
   pytest
   ```
+
+## Acknowledgment
+
+This work has received funding from the European HighPerformance Computing Joint Undertaking (JU) under grant
+agreement No 101118139. W
