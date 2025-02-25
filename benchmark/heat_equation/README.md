@@ -35,6 +35,11 @@ srun -n 4 -t 00:01:00 -p test -A project_..... python main.py
 ```
 
 ## The opportunistic tasks
+
 `averages.py` contains some data reductions and an odop tasks definition.
 
 Didn't get it running yet on LUMI as it has a dependecy on `matplotlib`.
+
+## Source
+
+The code used in this benchmark is taken from [heat-equation](https://github.com/cschpc/heat-equation/tree/main/ctest-gtest)
