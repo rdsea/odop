@@ -1,13 +1,12 @@
 #!/bin/bash
 
-ml LUMI/24.03
-ml partition/C
-ml buildtools
-ml PrgEnv-gnu/8.5.0
+module load CrayEnv
+module load rocm
+module load cray-python
 
 config_file=lumi_gnu.config
 
-tee $config_file << 'EOF' > /dev/null
+tee $config_file <<'EOF' >/dev/null
 %include compilers/GNU-GCC_MPI
 %section Makefile
         # turn on software optimizations
@@ -25,16 +24,18 @@ tee $config_file << 'EOF' > /dev/null
 %endsection runtime
 EOF
 
-set -exu
+set -ex
 git clone https://github.com/pencil-code/pencil-code.git
 
 cd pencil-code
+git reset --hard 5e2c0e4
+git submodule update --init
+cd src/astaroth/submodule
+git reset --hard 6ba44bab
+cd ../../..
 . sourceme.sh
-mkdir test_run
-cd test_run
-cp -r ../samples/conv-slab/* .
-mkdir data
+cd samples/gputest
 
 pc_setupsrc
 
-pc_build -f ../../$config_file
+pc_build

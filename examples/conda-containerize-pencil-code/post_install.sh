@@ -18,7 +18,7 @@ cd ${install_dir}
 
 # Generate a config file
 config_file=lumi_gnu.config
-tee $config_file << 'EOF' > /dev/null
+tee $config_file <<'EOF' >/dev/null
 %include compilers/GNU-GCC_MPI
 %section Makefile
         # turn on software optimizations
@@ -45,7 +45,7 @@ pc_build -j 12 -f ./$config_file
 mkdir -p ${CW_INSTALLATION_PATH}/bin
 
 start_file=${CW_INSTALLATION_PATH}/bin/start.sh
-tee $start_file << EOF > /dev/null
+tee $start_file <<EOF >/dev/null
 #!/bin/bash
 
 cd ${CW_INSTALLATION_PATH}
@@ -56,7 +56,7 @@ cd ../$install_dir
 EOF
 
 run_file=${CW_INSTALLATION_PATH}/bin/run.sh
-tee $run_file << EOF > /dev/null
+tee $run_file <<EOF >/dev/null
 #!/bin/bash
 
 cd ${CW_INSTALLATION_PATH}
