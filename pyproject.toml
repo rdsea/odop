@@ -1,5 +1,5 @@
 [build-system]
-requires = ["hatchling"]
+requires = ["hatchling<1.27"]
 build-backend = "hatchling.build"
 
 [tool.hatch.build.targets.wheel]
@@ -12,8 +12,30 @@ include = ["odop"]
 name = "odop"
 version = "0.0.1"
 description = "ODOP Engine in HPC"
-authors = []
+authors = [
+  { name = "AaltoSEA", email = "linh.truong@aalto.fi" },
+  { name = "nguu0123", email = "nguu0123@gmail.com" },
+  { name = "rantahar", email = "jarno.rantaharju@aalto.fi" },
+  { name = "minhtribk12", email = "tri.m.nguyen@aalto.fi" },
+
+]
+
+license = { text = "Apache-2.0" }
 readme = "README.md"
+homepage = "https://rdsea.github.io/"
+
+classifiers = [
+  "License :: OSI Approved :: Apache Software License",
+  "Development Status :: 3 - Alpha",
+  "Programming Language :: Python :: 3.9",
+  "Programming Language :: Python :: 3.10",
+  "Programming Language :: Python :: 3.11",
+  "Programming Language :: Python :: 3.12",
+  "Topic :: Software Development :: Libraries",
+  "Topic :: Software Development :: Libraries :: Python Modules",
+  "Topic :: Utilities",
+  "Operating System :: POSIX :: Linux",
+]
 requires-python = ">=3.6"
 
 dependencies = [
@@ -33,6 +55,7 @@ docs = ["sphinx", "sphinx_rtd_theme", "myst_parser"]
 
 [project.urls]
 Repository = "https://github.com/rdsea/odop"
+AaltoSEA = "https://rdsea.github.io/"
 
 [tool.rye]
 dev-dependencies = [
