@@ -1,14 +1,14 @@
- #!/bin/bash
+#!/bin/bash
 
-[ $# -eq 4 ] || { 
-    echo "Give four arguments:"
-    echo "path to requirements.txt"
-    echo "path to install dir"
-    echo "path to post build script"
-    echo "path to env.yaml"
-    echo "For example:"
-    echo "./build.sh requirements.txt /projappl/project_462000509/pc-containerized post_install.sh env.yaml"
-    exit 1
+[ $# -eq 4 ] || {
+  echo "Give four arguments:"
+  echo "path to requirements.txt"
+  echo "path to install dir"
+  echo "path to post build script"
+  echo "path to env.yaml"
+  echo "For example:"
+  echo "./build.sh requirements.txt /projappl/project_462000509/pc-containerized post_install.sh env.yaml"
+  exit 1
 }
 
 requirements=$1
