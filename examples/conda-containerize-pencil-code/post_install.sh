@@ -6,39 +6,25 @@ install_dir=pc_install
 cd ${CW_INSTALLATION_PATH}
 
 set -ex
+module load CrayEnv
+module load rocm
+module load cray-python
+
+set -ex
 git clone https://github.com/pencil-code/pencil-code.git
 
 cd pencil-code
+git reset --hard 5e2c0e4
+git submodule update --init
+cd src/astaroth/submodule
+git reset --hard 6ba44bab
+cd ../../..
 . sourceme.sh
-cd ..
+cd samples/gputest
 
-mkdir -p ${install_dir}
-cp -r ${PENCIL_HOME}/samples/${sample}/* ${install_dir}/
-cd ${install_dir}
-
-# Generate a config file
-config_file=lumi_gnu.config
-tee $config_file <<'EOF' >/dev/null
-%include compilers/GNU-GCC_MPI
-%section Makefile
-        # turn on software optimizations
-        FC = ftn
-        F90 = $(FC)
-        CC = cc
-        FFLAGS += -O3 -g
-        FFLAGS += -mcmodel=large 
-        CFLAGS += -O2 -D_GNU_SOURCE
-        LDFLAGS += -ldl -lpthread 
-%endsection Makefile
-
-%section runtime
-        mpiexec = srun
-%endsection runtime
-EOF
-
-# Build pencil code
 pc_setupsrc
-pc_build -j 12 -f ./$config_file
+
+pc_build
 
 # PC is a convoluted mess when it comes to installing and running binaries.
 # Make wrappers that can be called from outside
