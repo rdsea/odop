@@ -37,7 +37,7 @@ pc_build
 mkdir -p ${CW_INSTALLATION_PATH}/bin
 
 start_file=${CW_INSTALLATION_PATH}/bin/start.sh
-tee $start_file <<EOF >/dev/null
+cat <<EOF | tee $start_file
 #!/bin/bash
 
 cd ${CW_INSTALLATION_PATH}
@@ -48,7 +48,7 @@ cd ../$install_dir
 EOF
 
 run_file=${CW_INSTALLATION_PATH}/bin/run.sh
-tee $run_file <<EOF >/dev/null
+cat <<EOF | tee $run_file
 #!/bin/bash
 
 cd ${CW_INSTALLATION_PATH}
