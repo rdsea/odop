@@ -6,6 +6,8 @@ module load rocm
 sample=gputest
 install_dir=pc_install
 
+# CW_INSTALLATION_PATH: point to the root of the installation which will be containerized, files placed outside this path will not be part of the installation
+
 cd ${CW_INSTALLATION_PATH}
 
 set -ex
