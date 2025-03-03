@@ -1,29 +1,33 @@
 #!/bin/bash
 
-sample=conv-slab
+module load CrayEnv
+module load rocm
+
+sample=gputest
 install_dir=pc_install
 
 cd ${CW_INSTALLATION_PATH}
 
 set -ex
-module load CrayEnv
-module load rocm
-module load cray-python
-
-set -ex
 git clone https://github.com/pencil-code/pencil-code.git
 
 cd pencil-code
+
 git reset --hard 5e2c0e4
 git submodule update --init
 cd src/astaroth/submodule
 git reset --hard 6ba44bab
 cd ../../..
+
 . sourceme.sh
-cd samples/gputest
+cd ..
 
+mkdir -p ${install_dir}
+cp -r ${PENCIL_HOME}/samples/${sample}/* ${install_dir}/
+cd ${install_dir}
+
+# Build pencil code
 pc_setupsrc
-
 pc_build
 
 # PC is a convoluted mess when it comes to installing and running binaries.
