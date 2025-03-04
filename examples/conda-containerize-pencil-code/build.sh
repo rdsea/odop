@@ -17,9 +17,10 @@ post_build=$3
 env=$4
 
 ml LUMI/24.03
-ml partition/C
+ml partition/G
 ml buildtools
-ml PrgEnv-gnu/8.5.0
+ml PrgEnv-cray/8.5.0
+ml rocm/6.0.3
 ml lumi-container-wrapper
 
 conda-containerize new -r $requirements --prefix $prefix --post $post_build -w bin $env
