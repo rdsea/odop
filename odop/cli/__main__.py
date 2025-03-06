@@ -1,10 +1,11 @@
 import os
+import pathlib
 
 import click
 import requests
 
 import odop
-from odop.common import ODOP_RUNS_PATH
+from odop.common import ODOP_RUNS_PATH, get_runs
 from odop.ui import Status
 
 
@@ -54,6 +55,26 @@ def remove_task(run_name, task_name):
         print(f"Task {task_name} removed from run {run_name}")
     else:
         print(f"Task {task_name} not found in run {run_name}")
+
+
+@odop_cli.command()
+def list_runs():
+    """List all known runs and their statuts"""
+    runs: list[pathlib.Path] = get_runs()
+
+    run_name_len = 0
+    for run in runs:
+        if len(run.name) <= run_name_len:
+            continue
+        run_name_len = len(run.name)
+    run_name_len = min(run_name_len, 20)
+
+    print(f"{'': <2}\t{'RUN NAME': <{run_name_len}}\t{'STATUS': <8}")
+    for idx, run in enumerate(runs):
+        run_name = run.name
+        status: Status = get_status(run_name)
+
+        print(f"{idx: <2}\t{run_name: <{run_name_len}}\t{status['runtime_status']: <8}")
 
 
 @odop_cli.command()
