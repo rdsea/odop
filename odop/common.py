@@ -17,6 +17,8 @@ def create_logger(name, level=logging.INFO):
 
 logger = create_logger("odop")
 
+ODOP_CONF_FILENAME = "odop_conf.yaml"
+
 try:
     ODOP_PATH = os.getenv("ODOP_PATH")
 except KeyError:

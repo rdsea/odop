@@ -5,6 +5,7 @@ import click
 import requests
 
 import odop
+from odop.benchmark import BenchmarkRecord, get_benchmark_records
 from odop.common import ODOP_RUNS_PATH, get_runs
 from odop.ui import Status
 
@@ -158,6 +159,28 @@ def check_tasks(task_folder):
     print("Task folder:", task_folder)
 
     odop.scan_tasks_folder(task_folder, write=False)
+
+
+@odop_cli.group()
+def benchmark():
+    pass
+
+
+@benchmark.command("list")
+def benchmark_list():
+    """List known benchmark records."""
+    records: list[BenchmarkRecord] = get_benchmark_records()
+
+    run_name_len = 0
+    for record in records:
+        if len(record.run_name) <= run_name_len:
+            continue
+        run_name_len = len(record.run_name)
+    run_name_len = min(run_name_len, 20)
+
+    print(f"{'ID': <36}\t{'RUN NAME': <{run_name_len}}")
+    for record in records:
+        print(f"{record.id: <36}\t{record.run_name: <{run_name_len}}")
 
 
 if __name__ == "__main__":
