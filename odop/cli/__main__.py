@@ -1,5 +1,6 @@
 import os
 import pathlib
+import sys
 
 import click
 import requests
@@ -181,6 +182,35 @@ def benchmark_list():
     print(f"{'ID': <36}\t{'RUN NAME': <{run_name_len}}")
     for record in records:
         print(f"{record.id: <36}\t{record.run_name: <{run_name_len}}")
+
+
+@benchmark.command("save")
+@click.argument("run_id", type=click.IntRange(0), required=True)
+def benchmark_save(run_id: int):
+    """Convert an ODOP run into a benchmark record."""
+    # TODO: Add support for specifying using run name. Will require a prompt in case there are multiple runs with the
+    # same name.
+    runs: list[pathlib.Path] = get_runs()
+    if len(runs) == 0:
+        print("There are no runs to save. Aborting.")
+
+    if run_id > len(runs) - 1:
+        raise click.BadArgumentUsage(
+            f"Value {run_id} of 'run_id' is not valid. Use values from within the range <0, {len(runs) - 1}>."
+        )
+
+    selected_run: pathlib.Path = runs[run_id]
+    try:
+        record: BenchmarkRecord = BenchmarkRecord.from_run(selected_run)
+    except FileNotFoundError:
+        print(
+            f"Unexpected error: The run directory {selected_run} does not exist.",
+            file=sys.stderr,
+        )
+
+    print(
+        f"Created a new benchmark record of run {record.run_name} with ID {record.id}."
+    )
 
 
 if __name__ == "__main__":
