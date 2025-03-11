@@ -46,12 +46,12 @@ dependencies = [
   "fastapi",
   "pydantic-settings",
   "loguru>=0.7.2",
-  "streamlit>=1.39.0",
 ]
 
 [project.optional-dependencies]
 dev = ["pytest", "mypy"]
 docs = ["sphinx", "sphinx_rtd_theme", "myst_parser"]
+dashboard = ["streamlit>=1.39.0"]
 
 [project.urls]
 Repository = "https://github.com/rdsea/odop"
