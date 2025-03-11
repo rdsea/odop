@@ -1,13 +1,20 @@
 #!/bin/bash
 
+# Define variables
+## Sample
 sample=gputest
 
+## Directories
 src_dir=${CW_INSTALLATION_PATH}/pencil-code
 build_dir=${CW_INSTALLATION_PATH}/build
-bin_dir=${CW_INSTALLATION_PATH}/bin
-data_dir=${CW_INSTALLATION_PATH}/data
+bin_dir=${CW_INSTALLATION_PATH}/bin/pencil-code
 
-# Clone pencil-code and set correct git branches
+# Create directories
+mkdir -p ${src_dir}
+mkdir -p ${build_dir}
+mkdir -p ${bin_dir}
+
+# Clone & setup
 set -ex
 git clone https://github.com/pencil-code/pencil-code.git ${src_dir}
 cd ${src_dir}
@@ -16,51 +23,36 @@ git submodule update --init --recursive
 cd src/astaroth/submodule/
 git checkout PCinterface_2019-8-12
 
-# Setup sources and copy a sample to build
-. ${src_dir}/sourceme.sh
-cd
-mkdir -p ${build_dir}
+# Setup sources
+cd ${src_dir}
+. sourceme.sh
 cp -r ${src_dir}/samples/${sample}/* ${build_dir}/
-cd ${build_dir}
 
-# replace some runtime parameters
+# Build
+cd ${build_dir}
+## Replace params
 sed -i 's/\(ncpus\)=16/\1=8/' src/cparam.local
 sed -i 's/\(nprocy\)=4/\1=2/' src/cparam.local
 sed -i 's/\(nxgrid\)=64/\1=32/' src/cparam.local
 
-# Add a data dir file that pencil code uses
-datadir_file=${build_dir}/datadir.in
-tee ${datadir_file} << EOF > /dev/null
-${data_dir}
-EOF
-
-# build pencil code
+## Compilation
 pc_setupsrc
 pc_build -j 12 -f ${src_dir}/config/hosts/lumi/host-uan01-GNU_Linux.conf 
 
-# Add binaries we want to run from outside the container to ${bin_dir}
-cd
-mkdir -p ${bin_dir}
-cp ${src_dir}/bin/getconf.csh ${bin_dir}/.
-cp ${src_dir}/bin/start.csh ${bin_dir}/.
-cp ${build_dir}/src/*.x ${bin_dir}/
+# Add wrappers
+## start.csh wrapper
+start_file=${bin_dir}/start.sh
+tee ${start_file} << EOF > /dev/null
+#!/bin/bash
+PATH=${src_dir}/bin:${PATH} start.csh
+EOF
 
-#start_file=${bin_dir}/pcc_start.sh
-#tee ${start_file} << EOF > /dev/null
-##!/bin/bash
-#
-#. ${src_dir}/sourceme.sh
-#cd ${build_dir}
-#./start.csh
-#EOF
-#
-#run_file=${bin_dir}/pcc_run.sh
-#tee ${run_file} << EOF > /dev/null
-##!/bin/bash
-#
-#. ${src_dir}/sourceme.sh
-#cd ${build_dir}
-#./src/run.x
-#EOF
-#
-#chmod +x ${start_file} ${run_file}
+## run.x wrapper
+run_file=${bin_dir}/run.sh
+tee ${run_file} << EOF > /dev/null
+#!/bin/bash
+LD_LIBRARY_PATH=${build_dir}/src/astaroth:${LD_LIBRARY_PATH} ${build_dir}/src/run.x
+EOF
+
+## Make wrappers executable
+chmod +x ${start_file} ${run_file}

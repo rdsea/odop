@@ -23,4 +23,4 @@ ml PrgEnv-cray/8.5.0
 ml rocm/6.0.3
 ml lumi-container-wrapper
 
-conda-containerize new -r $requirements --prefix $prefix --post $post_build -w bin $env
+conda-containerize new -r $requirements --prefix $prefix --post $post_build -w bin/pencil-code $env
