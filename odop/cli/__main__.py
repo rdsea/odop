@@ -4,13 +4,12 @@ import click
 import requests
 
 import odop
-from odop.common import ODOP_PATH
+from odop.common import ODOP_RUNS_PATH
 from odop.ui import Status
 
 
 def get_status(run_name):
-    runs_base_path = os.path.join(ODOP_PATH, "runs")
-    run_folder = os.path.join(runs_base_path, run_name)
+    run_folder = os.path.join(ODOP_RUNS_PATH, run_name)
     status_file = os.path.join(run_folder, "status")
     status = Status(status_file)
     return status
@@ -23,7 +22,7 @@ def odop_cli():
     pass
 
 
-@click.command()
+@odop_cli.command()
 @click.argument("run_name", nargs=1)
 @click.argument(
     "task_folder",
@@ -35,15 +34,14 @@ def scan_tasks_folder(run_name, task_folder):
     """Loads tasks from the task folder path and all subpaths."""
     print("Task folder:", task_folder)
 
-    runs_base_path = os.path.join(ODOP_PATH, "runs")
-    run_folder = os.path.join(runs_base_path, run_name)
+    run_folder = os.path.join(ODOP_RUNS_PATH, run_name)
     executables_folder = os.path.join(run_folder, "executables")
     task_parameters_folder = os.path.join(run_folder, "task_parameters")
 
     odop.scan_tasks_folder(task_folder, task_parameters_folder, executables_folder)
 
 
-@click.command()
+@odop_cli.command()
 @click.argument("run_name", type=str)
 @click.argument("task_name", type=str)
 def remove_task(run_name, task_name):
@@ -58,7 +56,7 @@ def remove_task(run_name, task_name):
         print(f"Task {task_name} not found in run {run_name}")
 
 
-@click.command()
+@odop_cli.command()
 @click.argument("run_name", type=str)
 def list_tasks(run_name):
     """List task names in given run"""
@@ -70,14 +68,13 @@ def list_tasks(run_name):
         print(task_file.replace(".json", ""))
 
 
-@click.command()
+@odop_cli.command()
 @click.argument("run_name", type=str)
 def visualize_folder(run_name):
     """Visualize cpu utilization of all core"""
     from .visualization.visualize_all_folder import process_folder
 
-    runs_base_path = os.path.join(ODOP_PATH, "runs")
-    run_folder = os.path.join(runs_base_path, run_name)
+    run_folder = os.path.join(ODOP_RUNS_PATH, run_name)
     data_folder = os.path.join(run_folder, "metric_database")
 
     process_folder(data_folder)
@@ -96,7 +93,7 @@ def request_api(run_name, endpoint):
         return {}
 
 
-@click.command()
+@odop_cli.command()
 @click.argument("run_name", type=str)
 def queue_summary(run_name):
     """Return a summary of the task queue for a given run."""
@@ -106,7 +103,7 @@ def queue_summary(run_name):
         print(f"{status}: {summaries[status]}")
 
 
-@click.command()
+@odop_cli.command()
 @click.argument("run_name", type=str)
 def queue_status(run_name):
     """Return the status of tasks in a given run."""
@@ -119,7 +116,7 @@ def queue_status(run_name):
         print()
 
 
-@click.command()
+@odop_cli.command()
 @click.argument("run_name", type=str)
 @click.argument("task_id", type=int)
 def queue_detail(run_name, task_id):
@@ -128,7 +125,7 @@ def queue_detail(run_name, task_id):
     print("Task info:", task_info)
 
 
-@click.command()
+@odop_cli.command()
 @click.argument(
     "task_folder",
     required=False,
@@ -142,14 +139,5 @@ def check_tasks(task_folder):
     odop.scan_tasks_folder(task_folder, write=False)
 
 
-odop_cli.add_command(list_tasks)
-odop_cli.add_command(scan_tasks_folder)
-odop_cli.add_command(remove_task)
-odop_cli.add_command(visualize_folder)
-odop_cli.add_command(list_tasks)
-odop_cli.add_command(queue_summary)
-odop_cli.add_command(queue_status)
-odop_cli.add_command(queue_detail)
-odop_cli.add_command(check_tasks)
 if __name__ == "__main__":
     odop_cli()

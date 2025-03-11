@@ -5,7 +5,7 @@ import requests
 import streamlit as st
 import yaml
 
-from odop.common import ODOP_PATH
+from odop.common import ODOP_RUNS_PATH
 
 
 def query_data(hostname: str) -> list[dict]:
@@ -28,9 +28,7 @@ def get_config_data(run_path: str):
         return None
 
 
-base_runs_path = os.path.join(ODOP_PATH, "runs")
-
-run_paths = os.listdir(base_runs_path)
+run_paths = os.listdir(ODOP_RUNS_PATH)
 run_paths = filter_run_dir(run_paths)
 run_paths.sort()
 

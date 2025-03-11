@@ -8,7 +8,7 @@ import time
 
 import odop
 import odop.scheduler as scheduler
-from odop.common import ODOP_PATH, create_logger
+from odop.common import ODOP_PATH, ODOP_RUNS_PATH, create_logger
 from odop.odop_obs import OdopObs
 from odop.ui import Status, read_config
 
@@ -188,7 +188,7 @@ class OdopRuntime:
                     )
                 run_name = runtime_config["run_name"]
 
-            self.run_folder = os.path.join(ODOP_PATH, "runs", run_name)
+            self.run_folder = os.path.join(ODOP_RUNS_PATH, run_name)
             os.makedirs(self.run_folder, exist_ok=True)
             self.status = Status(os.path.join(self.run_folder, "status"))
             self.status.reset()

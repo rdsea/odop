@@ -26,7 +26,13 @@ except KeyError:
 if ODOP_PATH is None:
     user_home = Path.home()
     # assume that we have odop dir
-    ODOP_PATH = os.path.join(user_home, ".odop")
+    ODOP_PATH = user_home / ".odop"
+else:
+    ODOP_PATH = Path(ODOP_PATH)
+
+if not ODOP_PATH.is_dir():
     os.makedirs(ODOP_PATH, exist_ok=True)
 
 RUN_ID = os.getenv("RUN_ID")
+
+ODOP_RUNS_PATH = ODOP_PATH / "runs"
