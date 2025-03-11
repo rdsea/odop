@@ -25,6 +25,7 @@ dependencies = [
   "pydantic-settings",
   "loguru>=0.7.2",
   "streamlit>=1.39.0",
+  "tinyflux",
 ]
 
 [project.optional-dependencies]
