@@ -63,7 +63,3 @@ def upload_folder(filenames=None):
         except SwiftError as e:
             print(f"Error during upload: {e.value}")
     print("---------------------- DONE --------------------")
-
-
-if __name__ == "__main__":
-    upload_folder()
