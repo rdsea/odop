@@ -60,3 +60,27 @@ for algo in "${algorithms[@]}"; do
 
   sbatch --wait python-dispatch.sh
 done
+
+#  2 tasks
+for algo in "${algorithms[@]}"; do
+  echo "[Processing reduce and data movement task for algorithm: $algo"
+  TASK_FOLDER="./opportunistic_task/2_tasks"
+  CONFIG_FILE="/users/anhdungn/.odop/${algo}/2_tasks/odop_conf_2_tasks_${algo}.yaml"
+
+  BUCKET_NAME="odop-benchmark-2-tasks-${algo}"
+
+  # Update the script file
+  sed -i "s|task_folder=\"[^\"]*\"|task_folder=\"$TASK_FOLDER\"|" call.py
+  sed -i "s|config_file=\"[^\"]*\"|config_file=\"$CONFIG_FILE\"|" call.py
+
+  # Update bucket to move data to
+  sed -i "s|bucket_name = \"[^\"]*\"|bucket_name = \"$BUCKET_NAME\"|" "${TASK_FOLDER}/upload_data.py"
+
+  echo "Updated script"
+
+  mkdir -p reduced_data
+  sbatch --wait python-dispatch.sh
+
+  mv reduced_data "reduced_data_2_tasks_${algo}"
+  mkdir reduced_data
+done
