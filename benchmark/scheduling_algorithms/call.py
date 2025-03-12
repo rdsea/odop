@@ -1,9 +1,8 @@
-from ctypes import *
+import time
 
 # from odop.odop_obs import OdopObs
 # import odop.odop_obs
 import odop
-import time
 
 # so_file = "./src/libPC.so"
 # my_funcs = CDLL(so_file)
@@ -19,7 +18,7 @@ def main():
     )
 
     # my_funcs.run_start()
-    # start_time = time.time()
+    start_time = time.time()
     while time.time() - start_time < 480:
         time.sleep(1)
     # print("End from python")
