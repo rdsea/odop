@@ -5,8 +5,9 @@ algorithms=("best_fit" "priority" "fifo" "round_robin")
 
 # 1 task reduce task
 for algo in "${algorithms[@]}"; do
+  echo "[Processing reduce task for algorithm: $algo"
   TASK_FOLDER="./opportunistic_task/1_task/reduce_task"
-  CONFIG_FILE="/users/anhdungn/.odop/${algo}/1_task/reduce/odop_conf_1_task_reduce_task_${algo}.yaml"
+  CONFIG_FILE="/users/anhdungn/.odop/${algo}/1_task/reduce/odop_conf_1_task_reduce_${algo}.yaml"
 
   # Update the script file
   sed -i "s|task_folder=\"[^\"]*\"|task_folder=\"$TASK_FOLDER\"|" call.py
@@ -23,7 +24,8 @@ done
 
 # 1 task data movement
 for algo in "${algorithms[@]}"; do
-  TASK_FOLDER="./opportunistic_task/task/data_movement"
+  echo "[Processing data movement task for algorithm: $algo"
+  TASK_FOLDER="./opportunistic_task/1_task/data_movement"
   CONFIG_FILE="/users/anhdungn/.odop/${algo}/1_task/data_movement/odop_conf_1_task_data_movement_${algo}.yaml"
   BUCKET_NAME="odop-benchmark-1-task-${algo}"
 
@@ -38,7 +40,7 @@ for algo in "${algorithms[@]}"; do
 
   cat "${TASK_FOLDER}/upload_data.py"
 
-  # sbatch --wait python-dispatch.sh
+  sbatch --wait python-dispatch.sh
 done
 
 # 1 task data movement splitted
