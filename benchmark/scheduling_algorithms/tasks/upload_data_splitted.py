@@ -12,9 +12,8 @@ logging.getLogger("swiftclient").setLevel(logging.CRITICAL)
 
 @odop.task(
     name="upload_data_to_allas",
-    trigger=odop.FileUpdated(
-        "/users/anhdungn/pencil-code2/samples/gputest/data/proc0/var.dat"
-    ),
+    trigger="file_updated",
+    file_path="/users/anhdungn/pencil-code2/samples/gputest/data/proc0/var.dat",
 )
 def upload_folder(filenames=None):
     options = {
@@ -42,7 +41,7 @@ def upload_folder(filenames=None):
         upload_objects = []
         folders = [
             f"/users/anhdungn/pencil-code2/samples/gputest/data/proc{i}"
-            for i in range(16)
+            for i in range(32)
         ]
         for folder in folders:
             for root, _, files in os.walk(folder):
