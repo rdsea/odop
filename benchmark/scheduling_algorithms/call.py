@@ -2,10 +2,12 @@ import time
 
 # from odop.odop_obs import OdopObs
 # import odop.odop_obs
+from ctypes import CDLL
+
 import odop
 
-# so_file = "./src/libPC.so"
-# my_funcs = CDLL(so_file)
+so_file = "./src/libPC.so"
+my_funcs = CDLL(so_file)
 
 
 def main():
@@ -17,7 +19,7 @@ def main():
         config_file="/users/anhdungn/.odop/odop_conf_1_task_data_movement_round_robin.yaml",
     )
 
-    # my_funcs.run_start()
+    my_funcs.run_start()
     start_time = time.time()
     while time.time() - start_time < 480:
         time.sleep(1)
