@@ -1,0 +1,62 @@
+runtime:
+  frequency: 1
+  run_name: "run_2_tasks_priority"
+  host: "0.0.0.0"
+  info_api_port: 8000
+  engine_port: 8003
+  controller_port: 8004
+  algorithm: best_fit
+
+  scheduling:
+    max_task_failures: 3
+    cpu_free_threshhold: 10
+    excluded_cpus: [0, 1]
+
+odop_obs:
+  process:
+    frequency: 1
+    require_register: false
+    log_latency_flag: true
+    latency_logging_path: "logs/"
+    environment: "HPC"
+
+  system:
+    frequency: 1
+    require_register: false
+    latency_logging_path: "logs/"
+    log_latency_flag: true
+    environment: "HPC"
+
+  probe_connector:
+    host: "localhost"
+    port: 12345
+
+  exporter:
+    host: "0.0.0.0"
+    port: 8001
+    environment: "HPC"
+    node_aggregator:
+      socket_collector_config:
+        host: "localhost"
+        port: 12345
+        backlog: 30
+        bufsize: 4096
+      environment: "HPC"
+      query_method: "GET"
+      data_separator: "dot"
+      unit_conversion:
+        cpu:
+          usage:
+            milicpu: 1
+            cputime: 2
+            percentage: 3
+        gpu:
+          usage:
+            percentage: 1
+        mem:
+          Gb: 1
+          Mb: 2
+          Kb: 3
+        frequency:
+          GHz: 1
+          MHz: 2
