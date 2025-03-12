@@ -12,8 +12,10 @@ logging.getLogger("swiftclient").setLevel(logging.CRITICAL)
 
 @odop.task(
     name="upload_data_to_allas",
-    trigger="file_updated",
-    file_path="/users/anhdungn/pencil-code2/samples/gputest/data/proc0/var.dat",
+    trigger=odop.FileUpdated(
+        "/users/anhdungn/pencil-code2/samples/gputest/data/proc0/var.dat"
+    ),
+    cpus=4,
 )
 def upload_folder(filenames=None):
     options = {
@@ -28,7 +30,7 @@ def upload_folder(filenames=None):
         },
     }
 
-    bucket_name = "2009846-folder"
+    bucket_name = "odop-benchmark-round_robin"
     timestamp = int(time.time())
     with SwiftService(options=options) as swift:
         try:
@@ -41,7 +43,7 @@ def upload_folder(filenames=None):
         upload_objects = []
         folders = [
             f"/users/anhdungn/pencil-code2/samples/gputest/data/proc{i}"
-            for i in range(32)
+            for i in range(16)
         ]
         for folder in folders:
             for root, _, files in os.walk(folder):
@@ -63,7 +65,3 @@ def upload_folder(filenames=None):
         except SwiftError as e:
             print(f"Error during upload: {e.value}")
     print("---------------------- DONE --------------------")
-
-
-if __name__ == "__main__":
-    upload_folder()
