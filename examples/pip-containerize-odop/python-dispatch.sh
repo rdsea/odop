@@ -10,7 +10,7 @@
 #SBATCH --exclusive
 #SBATCH --mem=0
 
-ml cray-python
+export PATH=/projappl/project_462000509/odop-containerized/bin:${PATH}
 
 export OMP_NUM_THREADS=7
 export OMP_PROC_BIND=close,spread
@@ -36,6 +36,6 @@ CPU_BIND="${CPU_BIND},fe00000000,fe0000000000"
 export LD_PRELOAD=./src/libPC.so
 export ODOP_PATH=~/monitoring/odop/odop/odop_obs/
 
-srun --cpu-bind=${CPU_BIND} ./select_gpu /projappl/project_462000509/odop-containerized/bin/python call.py
+srun --cpu-bind=${CPU_BIND} ./select_gpu python call.py
 
 rm -rf ./select_gpu
