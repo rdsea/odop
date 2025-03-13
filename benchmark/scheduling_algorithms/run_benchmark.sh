@@ -46,7 +46,7 @@ done
 # 1 task data movement splitted
 for algo in "${algorithms[@]}"; do
   TASK_FOLDER="./opportunistic_task/1_task/data_movement_splitted"
-  CONFIG_FILE="/users/anhdungn/.odop/${algo}/1_task/odop_conf_1_task_data_movement_splitted_${algo}.yaml"
+  CONFIG_FILE="/users/anhdungn/.odop/${algo}/1_task/data_movement_splitted/odop_conf_1_task_data_movement_splitted_${algo}.yaml"
   BUCKET_NAME="odop-benchmark-1-task-splitted-${algo}"
 
   # Update the script file
@@ -84,3 +84,16 @@ for algo in "${algorithms[@]}"; do
   mv reduced_data "reduced_data_2_tasks_${algo}"
   mkdir reduced_data
 done
+
+# No optask
+echo "[No optask"
+TASK_FOLDER="./opportunistic_task/0_task"
+CONFIG_FILE="/users/anhdungn/.odop/no_optask.yaml"
+
+# Update the script file
+sed -i "s|task_folder=\"[^\"]*\"|task_folder=\"$TASK_FOLDER\"|" call.py
+sed -i "s|config_file=\"[^\"]*\"|config_file=\"$CONFIG_FILE\"|" call.py
+
+echo "Updated script"
+
+sbatch --wait python-dispatch.sh
