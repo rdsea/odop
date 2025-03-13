@@ -12,7 +12,7 @@ logging.getLogger("swiftclient").setLevel(logging.CRITICAL)
 
 def get_upload_folder(folder_name):
     @odop.task(
-        name="upload_data_to_allas",
+        name=f"upload_data_to_allas_{folder_name}",
         trigger=odop.FileUpdated(
             f"/users/anhdungn/pencil-code2/samples/gputest/data/{folder_name}/var.dat"
         ),
