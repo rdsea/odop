@@ -30,5 +30,5 @@ CMakeFiles
 CMakeCache.txt
 install_manifest.txt
 *.cmake
-
+**/*.ipynb
 .vscode/
