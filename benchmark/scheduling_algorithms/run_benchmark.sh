@@ -30,8 +30,8 @@ for algo in "${algorithms[@]}"; do
   BUCKET_NAME="odop-benchmark-1-task-${algo}"
 
   # Update the script file
-  sed -i "s|task_folder=\"[^\"]*\"|task_folder=\"$TASK_FOLDER\"|" call.py
-  sed -i "s|config_file=\"[^\"]*\"|config_file=\"$CONFIG_FILE\"|" call.py
+  sed -i "s|task_folder=\"[^\"]*\"|task_folder=\"$TASK_FOLDER\"|" call_splitted.py
+  sed -i "s|config_file=\"[^\"]*\"|config_file=\"$CONFIG_FILE\"|" call_splitted.py
 
   # Update bucket to move data to
   sed -i "s|bucket_name = \"[^\"]*\"|bucket_name = \"$BUCKET_NAME\"|" "${TASK_FOLDER}/upload_data.py"
