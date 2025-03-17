@@ -95,11 +95,6 @@ class TaskManager:
             else:
                 self.slurm_memory = 0
 
-            if "SLURM_CPU_BIND" in os.environ:
-                self.cpu_bind_command = "--cpu_bind=cores"
-            else:
-                self.cpu_bind_command = ""
-
     def format_mpi_command(self, command, placement):
         if "SLURM_JOB_ID" in os.environ:
             self.get_slurm_resources()
@@ -108,6 +103,11 @@ class TaskManager:
             nodes = len(placement.keys())
             ranks = node1["ranks"]
             cpus = len(node1["cpus"]) // ranks
+            if "SLURM_CPU_BIND" in os.environ:
+                cpu_list = ",".join(node1["cpus"])
+                self.cpu_bind_command = f"----cpu-bind=map_cpu:{cpu_list}"
+            else:
+                self.cpu_bind_command = ""
             run_command = f"srun --overlap {self.cpu_bind_command} --nice=20 -N {nodes} --mem={self.slurm_memory} --ntasks-per-node={ranks} --cpus-per-task={cpus} --nodelist {nodelist} {command}"
             return run_command
         else:
@@ -203,8 +203,8 @@ class TaskManager:
         """Run the task
 
         Parameters:
-        cpu_list: list
-            List of CPUs to run the task on
+        placement: dict
+            process placement information
         """
 
         try:
