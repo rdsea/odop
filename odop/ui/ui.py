@@ -6,9 +6,11 @@ import signal
 import sys
 import time
 
+import requests
+
 import odop
 import odop.scheduler as scheduler
-from odop.common import ODOP_PATH, ODOP_RUNS_PATH, create_logger
+from odop.common import ODOP_PATH, create_logger
 from odop.odop_obs import OdopObs
 from odop.ui import Status, read_config
 
@@ -188,7 +190,7 @@ class OdopRuntime:
                     )
                 run_name = runtime_config["run_name"]
 
-            self.run_folder = os.path.join(ODOP_RUNS_PATH, run_name)
+            self.run_folder = os.path.join(ODOP_PATH, "runs", run_name)
             os.makedirs(self.run_folder, exist_ok=True)
             self.status = Status(os.path.join(self.run_folder, "status"))
             self.status.reset()
@@ -213,7 +215,6 @@ class OdopRuntime:
 
             if self.is_global_master:
                 # create a status file
-                self.status["runtime_status"] = "running"
                 self.count_processes()
 
                 # create task folders and delete any contents
@@ -266,6 +267,10 @@ class OdopRuntime:
 
         signal.signal(signal.SIGTERM, handle_sigterm)
 
+        # Setup done. The global master notifies other processes
+        if self.is_global_master:
+            self.status["runtime_status"] = "running"
+
         # Periodically update the status file and wait for
         # a stop signal
         try:
@@ -311,6 +316,40 @@ def start(task_folder=".", config_file=None, run_name=None, debug=False):
     parent_conn.close()
     if message == "error":
         raise RuntimeError("Error starting the runtime")
+
+    # Before exiting, wait for the monitoring process to start
+    config = read_config(config_file)
+    obs_port = config.get("obs_port")
+    obs_started = False
+    for _ in range(5 * 60):
+        time.sleep(1)
+        my_hostname = os.uname().nodename
+        endpoint = f"http://{my_hostname}:{obs_port}/metrics"
+        try:
+            response = requests.get(endpoint)
+            if response.status_code == 200:
+                obs_started = True
+                break
+        except requests.exceptions.ConnectionError:
+            pass
+
+    if not obs_started:
+        raise RuntimeError(
+            f"Observability module did not start in 5 minutes on node {my_hostname}"
+        )
+
+    # Check that the global master process has finished setup
+    run_folder = os.path.join(ODOP_PATH, "runs", run_name)
+    status = Status(os.path.join(run_folder, "status"))
+    runtime_started = False
+    for _ in range(5 * 60):
+        if status.get("runtime_status") == "running":
+            runtime_started = True
+            break
+        time.sleep(1)
+
+    if not runtime_started:
+        raise RuntimeError("Runtime did not start in 5 minutes")
 
 
 @contextlib.contextmanager
