@@ -97,8 +97,12 @@ class Controller:
             task_dict["nodes"] = len(placement.keys())
             task_dict = self.engine.run(task.dict(), placement)
             task.status = StatusCode(task_dict["status"].lower())
-            task.task_id = task_dict["id"]
-            task.pid = task_dict["pid"]
+            if task.status == StatusCode.FAILED_TO_START:
+                task.status = StatusCode.FAILED
+                task.end_time = time.time()
+            else:
+                task.task_id = task_dict["id"]
+                task.pid = task_dict["pid"]
         except Exception:
             logger.info(f"Error executing task {task.name}")
             traceback.print_exc()
@@ -175,13 +179,13 @@ class Controller:
                 task.end_time = time.time()
             elif task.status == StatusCode.FAILED:
                 logger.info(f"Task {task.name} failed")
-                if (
-                    task.times_failed < 3
-                    and time.time() - task.end_time > self.resubmit_wait_time
-                ):
-                    task.times_failed += 1
-                    task.status = StatusCode.PENDING
-                    task.end_time = time.time()
+                if hasattr(task, "end_time"):
+                    if (
+                        task.times_failed < 3
+                        and time.time() - task.end_time > self.resubmit_wait_time
+                    ):
+                        task.times_failed += 1
+                        task.status = StatusCode.PENDING
             self.tasks[task_id] = task
 
     def start(

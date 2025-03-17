@@ -300,6 +300,7 @@ class TaskManager:
             logger.info(f"stdout: {self.stdout}")
             logger.info(f"stderr: {self.stderr}")
             self.status = StatusCode.FAILED
+            self.end_time = time.time()
         else:
             self.status = StatusCode.COMPLETED
 

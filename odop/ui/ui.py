@@ -209,6 +209,7 @@ class OdopRuntime:
                 is_master=self.is_local_master,
                 config=obs_config,
             )
+            print(obs_config)
             self.odop_obs.start()
             if self.is_global_master:
                 logger.info("Observability module")
@@ -319,6 +320,7 @@ def start(task_folder=".", config_file=None, run_name=None, debug=False):
 
     # Before exiting, wait for the monitoring process to start
     config = read_config(config_file)
+    config = config.get("runtime")
     obs_port = config.get("obs_port")
     obs_started = False
     for _ in range(5 * 60):
@@ -326,11 +328,14 @@ def start(task_folder=".", config_file=None, run_name=None, debug=False):
         my_hostname = os.uname().nodename
         endpoint = f"http://{my_hostname}:{obs_port}/metrics"
         try:
+            print(endpoint)
             response = requests.get(endpoint)
+            print(response, response.status_code)
             if response.status_code == 200:
                 obs_started = True
                 break
         except requests.exceptions.ConnectionError:
+            logger.info("Waiting for observability module to start")
             pass
 
     if not obs_started:
@@ -346,6 +351,7 @@ def start(task_folder=".", config_file=None, run_name=None, debug=False):
         if status.get("runtime_status") == "running":
             runtime_started = True
             break
+        logger.info("Waiting for the main runtime process")
         time.sleep(1)
 
     if not runtime_started:
