@@ -1,23 +1,32 @@
-import os, sys
-sys.path.append(os.path.abspath(os.path.join('..')))
-from transformer_algorithm import TransformerTaskAssignment
-import torch
-from torch.utils.data import DataLoader, TensorDataset
-from sklearn.model_selection import train_test_split
+import os
+import sys
 
+sys.path.append(os.path.abspath(os.path.join("..")))
+import torch
+from sklearn.model_selection import train_test_split
+from torch.utils.data import DataLoader, TensorDataset
+from transformer_algorithm import TransformerTaskAssignment
 
 # Parameters
 num_samples = 10000
-input_dim = 1 + 2 * 100  # 1 for time requirement, 2*100 for mem_sub and cpu_sub over 100 seconds
+input_dim = (
+    1 + 2 * 100
+)  # 1 for time requirement, 2*100 for mem_sub and cpu_sub over 100 seconds
 num_classes = 2
 batch_size = 32
 
 
 # Generate random data
-time_requirement = torch.randint(1, 2000, (num_samples, 1))  # Time requirement in seconds
-mem_available = torch.rand(num_samples, 100) * 10  # Available memory in GB over 100 seconds
+time_requirement = torch.randint(
+    1, 2000, (num_samples, 1)
+)  # Time requirement in seconds
+mem_available = (
+    torch.rand(num_samples, 100) * 10
+)  # Available memory in GB over 100 seconds
 mem_requirement = torch.rand(num_samples, 1) * 10  # Memory requirement in GB
-cpu_available = torch.randint(0, 129, (num_samples, 100))  # CPUs available over 100 seconds
+cpu_available = torch.randint(
+    0, 129, (num_samples, 100)
+)  # CPUs available over 100 seconds
 cpu_requirement = torch.randint(1, 129, (num_samples, 1))  # CPUs requirement [1-128]
 
 # Calculate mem_sub and cpu_sub
@@ -29,7 +38,11 @@ X = torch.cat((time_requirement, mem_sub, cpu_sub), dim=1)
 print(X.shape)
 
 # Create labels
-labels = (time_requirement < 1000) & (mem_sub.min(dim=1, keepdim=True)[0] > 0) & (cpu_sub.gt(0).sum(dim=1, keepdim=True) > 80)
+labels = (
+    (time_requirement < 1000)
+    & (mem_sub.min(dim=1, keepdim=True)[0] > 0)
+    & (cpu_sub.gt(0).sum(dim=1, keepdim=True) > 80)
+)
 y = labels.long().squeeze()
 
 # Ensure around 30% true labels (as 1)
@@ -55,20 +68,20 @@ train_dataloader = DataLoader(train_dataset, batch_size=batch_size, shuffle=True
 test_dataloader = DataLoader(test_dataset, batch_size=batch_size, shuffle=False)
 
 config_dict = {
-    'input_dim': input_dim,
-    'num_classes': num_classes,
-    'd_model': 128,
-    'nhead': 8,
-    'num_encoder_layers': 3,
-    'dim_feedforward': 512,
-    'dropout': 0.1,
-    'learning_rate': 0.001,
-    'num_epochs': 100,
-    'batch_size': 32
+    "input_dim": input_dim,
+    "num_classes": num_classes,
+    "d_model": 128,
+    "nhead": 8,
+    "num_encoder_layers": 3,
+    "dim_feedforward": 512,
+    "dropout": 0.1,
+    "learning_rate": 0.001,
+    "num_epochs": 100,
+    "batch_size": 32,
 }
 
 # Initialize the algorithm
 algorithm = TransformerTaskAssignment(config_dict)
 
 # train the algorithm
-algorithm.train(train_dataloader, epochs=config_dict['num_epochs'])
+algorithm.train(train_dataloader, epochs=config_dict["num_epochs"])

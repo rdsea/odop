@@ -150,7 +150,7 @@ def main():
     model.to(device)
     stop = time.time()
     if rank == 0:
-        print(f"Loading model and tokenizer took: {stop-start:.2f} seconds")
+        print(f"Loading model and tokenizer took: {stop - start:.2f} seconds")
 
     # #### Setting up the training configuration
     train_batch_size = 32  # This just about fits into the VRAM of a single MI250x GCD with 16-bit floats
@@ -264,9 +264,9 @@ def main():
 
         if rank == 0:
             print(
-                f'Perplexity on validation: {math.exp(eval_results["eval_loss"]):.2f}'
+                f"Perplexity on validation: {math.exp(eval_results['eval_loss']):.2f}"
             )
-            print(f'Perplexity on test: {math.exp(test_results["eval_loss"]):.2f}')
+            print(f"Perplexity on test: {math.exp(test_results['eval_loss']):.2f}")
 
     # Create a signal file to stop odop
     signal_file = os.path.join("signal", "stop")

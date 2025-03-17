@@ -5,7 +5,7 @@ import odop.task_definition
 
 # example 1
 parameters = json.read("run_params.json")
-step_a_memory = f"{parameters["grid_size"] * 10}"
+step_a_memory = f"{parameters['grid_size'] * 10}"
 
 
 @odop.task(
