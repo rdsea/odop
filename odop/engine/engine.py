@@ -108,7 +108,8 @@ class TaskManager:
             #    self.cpu_bind_command = f"--cpu-bind=map_cpu:{cpu_list}"
             # else:
             #    self.cpu_bind_command = ""
-            run_command = f"srun --overlap {self.cpu_bind_command} --nice=20 -N {nodes} --mem={self.slurm_memory} --ntasks-per-node={ranks} --cpus-per-task={cpus} --nodelist {nodelist} {command}"
+            # run_command = f"srun --overlap {self.cpu_bind_command} --nice=20 -N {nodes} --mem={self.slurm_memory} --ntasks-per-node={ranks} --cpus-per-task={cpus} --nodelist {nodelist} {command}"
+            run_command = f"srun --overlap --nice=20 -N {nodes} --mem={self.slurm_memory} --ntasks-per-node={ranks} --cpus-per-task={cpus} --nodelist {nodelist} {command}"
             return run_command
         else:
             os.makedirs(
