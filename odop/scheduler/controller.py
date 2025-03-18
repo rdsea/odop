@@ -143,6 +143,8 @@ class Controller:
         free_cpus = []
         usages = node_data[-1]["cpu"]["usage"]["value"].values()
         for cpu, usage in enumerate(usages):
+            if cpu in self.excluded_cpus:
+                continue
             if usage < self.cpu_free_threshhold:
                 free_cpus.append(cpu)
 
