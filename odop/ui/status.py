@@ -1,4 +1,5 @@
 import fcntl
+import time
 
 import yaml
 
@@ -14,12 +15,18 @@ class Status:
 
     def load(self):
         """Load the status file and return the full dictionary."""
-        try:
-            with open(self.path) as f:
-                status = yaml.safe_load(f)
-            return status
-        except FileNotFoundError:
-            return {}
+        for _ in range(5):
+            try:
+                with open(self.path) as f:
+                    status = yaml.safe_load(f)
+                return status
+            except FileNotFoundError:
+                return {}
+            except Exception as e:
+                print(f"Error loading status file: {e}")
+                print("Retrying...")
+                time.sleep(2)
+        raise Exception("Could not load status file.")
 
     def get(self, key, default=None):
         """Get a key from the status file with a default value."""
