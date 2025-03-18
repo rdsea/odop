@@ -276,7 +276,8 @@ class OdopRuntime:
         try:
             while not self.stop_event.is_set():
                 time.sleep(2)
-                self.count_processes()
+                if self.is_global_master:
+                    self.count_processes()
         except KeyboardInterrupt:
             # Exit the loop and stop the runtime
             pass
@@ -327,9 +328,7 @@ def start(task_folder=".", config_file=None, run_name=None, debug=False):
         my_hostname = os.uname().nodename
         endpoint = f"http://{my_hostname}:{obs_port}/metrics"
         try:
-            print(endpoint)
             response = requests.get(endpoint)
-            print(response, response.status_code)
             if response.status_code == 200:
                 obs_started = True
                 break
