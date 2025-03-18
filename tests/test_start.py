@@ -7,7 +7,6 @@ N = 500
 
 def test_start(runtime=5):
     odop.start(
-        run_name="test",
         config_file="tests/odop_conf.yaml",
         task_folder="examples/example_tasks",
     )

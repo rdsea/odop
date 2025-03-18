@@ -209,7 +209,6 @@ class OdopRuntime:
                 is_master=self.is_local_master,
                 config=obs_config,
             )
-            print(obs_config)
             self.odop_obs.start()
             if self.is_global_master:
                 logger.info("Observability module")
@@ -344,6 +343,8 @@ def start(task_folder=".", config_file=None, run_name=None, debug=False):
         )
 
     # Check that the global master process has finished setup
+    if run_name is None:
+        run_name = config["run_name"]
     run_folder = os.path.join(ODOP_PATH, "runs", run_name)
     status = Status(os.path.join(run_folder, "status"))
     runtime_started = False
