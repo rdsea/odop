@@ -5,6 +5,7 @@ import shutil
 import signal
 import sys
 import time
+import traceback
 
 import requests
 
@@ -98,9 +99,10 @@ class OdopRuntime:
 
     def count_processes(self):
         """Count processes on each node"""
-        for node in os.listdir(self.nodes_folder):
-            process_count = len(os.listdir(self.this_node_folder))
-            self.status.set_nested(["nodes", node], process_count)
+        if self.is_global_master:
+            for node in os.listdir(self.nodes_folder):
+                process_count = len(os.listdir(self.this_node_folder))
+                self.status.set_nested(["nodes", node], process_count)
 
     def get_global_information(self):
         """Choose a global master process. Read node names from the nodes folder
@@ -119,9 +121,6 @@ class OdopRuntime:
         sorted_by_time = sorted(zip(timestamps, nodes))
         self.main_node = sorted_by_time[0][1]
         self.is_global_master = self.main_node == self.hostname
-        if self.is_global_master:
-            self.status.set_nested(["main_node"], self.hostname)
-            self.main_pid = os.getpid()
 
     def clean_old_files(self, max_age=300):
         """Clean old process files. Removes files updated more than max_age
@@ -193,14 +192,16 @@ class OdopRuntime:
             self.run_folder = os.path.join(ODOP_PATH, "runs", run_name)
             os.makedirs(self.run_folder, exist_ok=True)
             self.status = Status(os.path.join(self.run_folder, "status"))
-            self.status.reset()
             self.setup_directories()
             self.clean_old_files()
             self.get_node_information()
             if self.is_local_master:
                 self.get_global_information()
             if self.is_global_master:
+                self.status.reset()
                 logger.info("ODOP STARTING")
+                self.status.set_nested(["main_node"], self.hostname)
+                self.main_pid = os.getpid()
 
             # all tasks start the observability module
             obs_config = self.config.get("odop_obs")
@@ -214,7 +215,6 @@ class OdopRuntime:
                 logger.info("Observability module")
 
             if self.is_global_master:
-                # create a status file
                 self.count_processes()
 
                 # create task folders and delete any contents
@@ -250,6 +250,7 @@ class OdopRuntime:
         except Exception as e:
             # Notify the parent process about the error
             logger.error(str(e))
+            logger.info(traceback.format_exc())
             pipe.send("error")
             pipe.close()
             raise e

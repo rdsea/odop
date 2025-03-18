@@ -1,7 +1,11 @@
 import fcntl
 import time
+import traceback
 
 import yaml
+from odop.common import ODOP_PATH, create_logger
+
+logger = create_logger("odop")
 
 
 class Status:
@@ -23,8 +27,9 @@ class Status:
             except FileNotFoundError:
                 return {}
             except Exception as e:
-                print(f"Error loading status file: {e}")
-                print("Retrying...")
+                logger.error(f"Error loading status file: {e}")
+                logger.info(traceback.format_exc())
+                logger.info("Retrying...")
                 time.sleep(2)
         raise Exception("Could not load status file.")
 
