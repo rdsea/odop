@@ -104,7 +104,7 @@ class TaskManager:
             ranks = node1["ranks"]
             cpus = len(node1["cpus"]) // ranks
             if "SLURM_CPU_BIND" in os.environ:
-                cpu_list = ",".join(node1["cpus"])
+                cpu_list = ",".join([str(c) for c in node1["cpus"]])
                 self.cpu_bind_command = f"----cpu-bind=map_cpu:{cpu_list}"
             else:
                 self.cpu_bind_command = ""
