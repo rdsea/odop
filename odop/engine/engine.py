@@ -105,7 +105,7 @@ class TaskManager:
             cpus = len(node1["cpus"]) // ranks
             if "SLURM_CPU_BIND" in os.environ:
                 cpu_list = ",".join([str(c) for c in node1["cpus"]])
-                self.cpu_bind_command = f"----cpu-bind=map_cpu:{cpu_list}"
+                self.cpu_bind_command = f"--cpu-bind=map_cpu:{cpu_list}"
             else:
                 self.cpu_bind_command = ""
             run_command = f"srun --overlap {self.cpu_bind_command} --nice=20 -N {nodes} --mem={self.slurm_memory} --ntasks-per-node={ranks} --cpus-per-task={cpus} --nodelist {nodelist} {command}"
