@@ -20,9 +20,6 @@ def main():
     )
 
     my_funcs.run_start()
-    start_time = time.time()
-    while time.time() - start_time < 480:
-        time.sleep(1)
     # print("End from python")
 
     odop.stop()
