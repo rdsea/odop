@@ -262,6 +262,13 @@ def generate(
             target = os.path.join(template_dir, "src", f.name)
             shutil.copy2(f, target)
 
+        f = os.path.join(sample_path, "src", "astaroth", "DSL", "local", "equations.h")
+        target = os.path.join(
+            template_dir, "src", "astaroth", "DSL", "local", "equations.h"
+        )
+        os.makedirs(os.path.dirname(target))
+        shutil.copy2(f, target)
+
         # Create the experiments
         for experiment in experiments:
             print(f"Creating experiment '{experiment.name}'")
