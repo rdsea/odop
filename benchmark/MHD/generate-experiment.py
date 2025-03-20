@@ -175,7 +175,7 @@ EXPERIMENT_GENERATORS = {
 def configure_cparams(cparams_file: pathlib.Path, experiment: Experiment):
     cparams = [
         f"integer, parameter :: ncpus={experiment.gpus}\n",
-        f"integer, parameter :: nprocx={experiment.nproc[0]},nprocy={experiment.nproc[1]},nprocz={experiment.nproc[1]}\n",
+        f"integer, parameter :: nprocx={experiment.nproc[0]},nprocy={experiment.nproc[1]},nprocz={experiment.nproc[2]}\n",
         f"integer, parameter :: nxgrid={experiment.ngrid[0]},nygrid={experiment.ngrid[1]},nzgrid={experiment.ngrid[2]}\n",
     ]
 
