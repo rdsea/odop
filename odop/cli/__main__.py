@@ -1,10 +1,13 @@
 import os
+import pathlib
+import sys
 
 import click
 import requests
 
 import odop
-from odop.common import ODOP_RUNS_PATH
+from odop.benchmark import BenchmarkRecord, get_benchmark_records
+from odop.common import ODOP_RUNS_PATH, get_runs
 from odop.ui import Status
 
 
@@ -54,6 +57,26 @@ def remove_task(run_name, task_name):
         print(f"Task {task_name} removed from run {run_name}")
     else:
         print(f"Task {task_name} not found in run {run_name}")
+
+
+@odop_cli.command()
+def list_runs():
+    """List all known runs and their statuts"""
+    runs: list[pathlib.Path] = get_runs()
+
+    run_name_len = 0
+    for run in runs:
+        if len(run.name) <= run_name_len:
+            continue
+        run_name_len = len(run.name)
+    run_name_len = min(run_name_len, 20)
+
+    print(f"{'': <2}\t{'RUN NAME': <{run_name_len}}\t{'STATUS': <8}")
+    for idx, run in enumerate(runs):
+        run_name = run.name
+        status: Status = get_status(run_name)
+
+        print(f"{idx: <2}\t{run_name: <{run_name_len}}\t{status['runtime_status']: <8}")
 
 
 @odop_cli.command()
@@ -137,6 +160,57 @@ def check_tasks(task_folder):
     print("Task folder:", task_folder)
 
     odop.scan_tasks_folder(task_folder, write=False)
+
+
+@odop_cli.group()
+def benchmark():
+    pass
+
+
+@benchmark.command("list")
+def benchmark_list():
+    """List known benchmark records."""
+    records: list[BenchmarkRecord] = get_benchmark_records()
+
+    run_name_len = 0
+    for record in records:
+        if len(record.run_name) <= run_name_len:
+            continue
+        run_name_len = len(record.run_name)
+    run_name_len = min(run_name_len, 20)
+
+    print(f"{'ID': <36}\t{'RUN NAME': <{run_name_len}}")
+    for record in records:
+        print(f"{record.id: <36}\t{record.run_name: <{run_name_len}}")
+
+
+@benchmark.command("save")
+@click.argument("run_id", type=click.IntRange(0), required=True)
+def benchmark_save(run_id: int):
+    """Convert an ODOP run into a benchmark record."""
+    # TODO: Add support for specifying using run name. Will require a prompt in case there are multiple runs with the
+    # same name.
+    runs: list[pathlib.Path] = get_runs()
+    if len(runs) == 0:
+        print("There are no runs to save. Aborting.")
+
+    if run_id > len(runs) - 1:
+        raise click.BadArgumentUsage(
+            f"Value {run_id} of 'run_id' is not valid. Use values from within the range <0, {len(runs) - 1}>."
+        )
+
+    selected_run: pathlib.Path = runs[run_id]
+    try:
+        record: BenchmarkRecord = BenchmarkRecord.from_run(selected_run)
+    except FileNotFoundError:
+        print(
+            f"Unexpected error: The run directory {selected_run} does not exist.",
+            file=sys.stderr,
+        )
+
+    print(
+        f"Created a new benchmark record of run {record.run_name} with ID {record.id}."
+    )
 
 
 if __name__ == "__main__":

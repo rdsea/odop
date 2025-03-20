@@ -17,6 +17,8 @@ def create_logger(name, level=logging.INFO):
 
 logger = create_logger("odop")
 
+ODOP_CONF_FILENAME = "odop_conf.yaml"
+
 try:
     ODOP_PATH = os.getenv("ODOP_PATH")
 except KeyError:
@@ -36,3 +38,21 @@ if not ODOP_PATH.is_dir():
 RUN_ID = os.getenv("RUN_ID")
 
 ODOP_RUNS_PATH = ODOP_PATH / "runs"
+
+def get_runs() -> list[Path]:
+    runs = []
+
+    logger.info(f"Collecting runs from {ODOP_RUNS_PATH}.")
+
+    if not ODOP_RUNS_PATH.is_dir():
+        logger.info("The runs directory does not exist.")
+        return runs
+
+    for path in ODOP_RUNS_PATH.iterdir():
+        if not path.is_dir():
+            logger.debug(f"{path} is not a directory. Ignoring it.")
+            continue
+
+        runs.append(path)
+
+    return sorted(runs)
