@@ -243,6 +243,15 @@ def parse_data(file_path: str):
             converted_system_data.append(converted_datapoint)
 
     print(json.dumps(converted_system_data, indent=" "))
+    # print(json.dumps(converted_process_data, indent=" "))
 
 
-parse_data("./fifo/1_task/reduce/metric_database/nid007959.csv")
+parse_data("./run_no_optask/metric_database/nid006496.csv")
+#  4.3557898E-06
+# 4.9284452E-06
+#  5.0301850E-06
+# 5.0380426E-06
+#
+# 5.0546559E-06
+# 5.0175728E-06
+# #
