@@ -44,10 +44,12 @@ def revert_unit(unit_conversion, converted_report: dict):
 
 
 def extract_data(data):
-    odop_obs_config = yaml.safe_load(open(f"{ODOP_PATH}/odop_conf.yaml"))
-    unit_conversion = odop_obs_config["odop_obs"]["exporter"]["node_aggregator"][
-        "unit_conversion"
-    ]
+    unit_conversion = {
+        "cpu": {"usage": {"milicpu": 1, "cputime": 2, "percentage": 3}},
+        "gpu": {"usage": {"percentage": 1}},
+        "mem": {"Gb": 1, "Mb": 2, "Kb": 3},
+        "frequency": {"GHz": 1, "MHz": 2},
+    }
     converted_process_data = {}
     converted_system_data = []
     for datapoint in data:
