@@ -19,7 +19,7 @@ def render_monitoring_data(file_path: str, file_name: str, folder_path: str):
     # plot_monitoring_data_window(axs, timestamps, cpu_values, allowed_cpu_values, 3)
     plot_monitoring_data(axs, timestamps, cpu_values, allowed_cpu_values)
     plt.tight_layout()
-    plt.savefig(f"./{folder_path}/{file_name}_busy.png", bbox_inches="tight", dpi=500)
+    plt.savefig(f"{folder_path}/{file_name}_busy.png", bbox_inches="tight", dpi=500)
 
 
 def process_folder(folder_path):
