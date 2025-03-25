@@ -178,6 +178,7 @@ class Controller:
                 task.status = StatusCode(enginetask["status"])
             elif task.status == StatusCode.COMPLETED:
                 logger.info(f"Task {task.name} completed")
+                del self.tasks[task_id]
                 task.end_time = time.time()
             elif task.status == StatusCode.FAILED:
                 logger.info(f"Task {task.name} failed")
