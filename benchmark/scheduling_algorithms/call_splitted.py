@@ -11,6 +11,9 @@ logging.getLogger("requests").setLevel(logging.CRITICAL)
 logging.getLogger("swiftclient").setLevel(logging.CRITICAL)
 
 
+NUM_NODE = 4
+
+
 def get_upload_folder(folder_name):
     @odop.task(
         name=f"upload_data_to_allas_{folder_name}",
@@ -32,7 +35,7 @@ def get_upload_folder(folder_name):
             },
         }
 
-        bucket_name = "2009846-folder"
+        bucket_name = "odop-benchmark-num_node--1-task-splitted-round_robin"
         timestamp = int(time.time())
         with SwiftService(options=options) as swift:
             try:
@@ -67,15 +70,15 @@ def get_upload_folder(folder_name):
     return upload_folder
 
 
-for proc_number in range(32):
+for proc_number in range(NUM_NODE * 8):
     get_upload_folder(f"proc{proc_number}")
 
 
 def main():
     os.environ["LD_PRELOAD"] = ""
     odop.start(
-        config_file="/users/anhdungn/.odop/fifo/1_task/data_movement_splitted/odop_conf_1_task_data_movement_splitted_fifo.yaml",
-        task_folder="./op-tasks",
+        config_file="/users/anhdungn/.odop/round_robin/1_task/data_movement_splitted/odop_conf_1_task_data_movement_splitted_round_robin.yaml",
+        task_folder="./opportunistic_task/1_task/data_movement_splitted",
     )
 
     so_file = "./src/libPC.so"
