@@ -170,16 +170,22 @@ class Controller:
         return resources
 
     def check_running_tasks(self):
-        for task_id in self.tasks.keys():
+        completed_tasks = []
+        for task_id in list(
+            self.tasks.keys()
+        ):  # Convert keys to list to avoid runtime modification issues
             task = self.tasks[task_id]
+
             if task.status == StatusCode.RUNNING:
                 enginetask = self.engine.get_task(task.id)
                 logger.info(f"Task {task.name} status: {enginetask['status']}")
                 task.status = StatusCode(enginetask["status"])
+
             elif task.status == StatusCode.COMPLETED:
                 logger.info(f"Task {task.name} completed")
-                del self.tasks[task_id]
                 task.end_time = time.time()
+                completed_tasks.append(task_id)  # Mark task for removal
+
             elif task.status == StatusCode.FAILED:
                 logger.info(f"Task {task.name} failed")
                 if hasattr(task, "end_time"):
@@ -189,7 +195,12 @@ class Controller:
                     ):
                         task.times_failed += 1
                         task.status = StatusCode.PENDING
+
             self.tasks[task_id] = task
+
+        # Remove completed tasks
+        for task_id in completed_tasks:
+            del self.tasks[task_id]
 
     def start(
         self,

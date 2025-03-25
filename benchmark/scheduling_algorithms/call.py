@@ -1,29 +1,20 @@
-import time
-
-# from odop.odop_obs import OdopObs
-# import odop.odop_obs
+import os
 from ctypes import CDLL
 
 import odop
 
-so_file = "./src/libPC.so"
-my_funcs = CDLL(so_file)
-
 
 def main():
-    # odop_obs = OdopObs()
-    # odop_obs.start()
-    # odop.start(task_folder="./tasks", config_file="/users/anhdungn/.odop/odop_conf_1_task_data_movement_round_robin.yaml")
-    odop.start(
-        task_folder="./tasks",
-        config_file="/users/anhdungn/.odop/odop_conf_1_task_data_movement_round_robin.yaml",
-    )
+    os.environ["LD_PRELOAD"] = ""
+    # odop.start(config_file="./odop_conf.yaml",task_folder="./empty-op-tasks")
+    odop.start(config_file="./no_optask.yaml", task_folder="./op-tasks")
+    # odop.start(config_file="./no_optask.yaml",task_folder="./opportunistic_task/0_task")
 
+    # time.sleep(20)
+    so_file = "./src/libPC.so"
+    my_funcs = CDLL(so_file)
     my_funcs.run_start()
-    # print("End from python")
-
     odop.stop()
-    # odop_obs.stop()
 
 
 if __name__ == "__main__":

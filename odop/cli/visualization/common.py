@@ -1,11 +1,8 @@
 from datetime import datetime
 
 import numpy as np
-import yaml
 from flatten_dict import unflatten
 from tinyflux import TinyFlux
-
-from odop.common import ODOP_PATH
 
 
 def revert_unit(unit_conversion, converted_report: dict):

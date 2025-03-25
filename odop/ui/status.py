@@ -3,7 +3,8 @@ import time
 import traceback
 
 import yaml
-from odop.common import ODOP_PATH, create_logger
+
+from odop.common import create_logger
 
 logger = create_logger("odop")
 

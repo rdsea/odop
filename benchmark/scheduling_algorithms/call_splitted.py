@@ -1,9 +1,6 @@
 import logging
 import os
 import time
-
-# from odop.odop_obs import OdopObs
-# import odop.odop_obs
 from ctypes import CDLL
 
 from swiftclient.service import SwiftError, SwiftService, SwiftUploadObject
@@ -18,7 +15,7 @@ def get_upload_folder(folder_name):
     @odop.task(
         name=f"upload_data_to_allas_{folder_name}",
         trigger=odop.FileUpdated(
-            f"/users/anhdungn/pencil-code2/samples/gputest/data/{folder_name}/var.dat"
+            f"/scratch/project_462000759/pencil-code2/samples/gputest/data/{folder_name}/var.dat"
         ),
         cpus=2,
     )
@@ -46,7 +43,7 @@ def get_upload_folder(folder_name):
                 return
 
             upload_objects = []
-            folder = f"/users/anhdungn/pencil-code2/samples/gputest/data/{folder_name}/var.dat"
+            folder = f"/scratch/project_462000759/pencil-code2/samples/gputest/data/{folder_name}"
             for root, _, files in os.walk(folder):
                 for file in files:
                     file_path = os.path.join(root, file)
@@ -70,27 +67,21 @@ def get_upload_folder(folder_name):
     return upload_folder
 
 
-for proc_number in range(16):
+for proc_number in range(32):
     get_upload_folder(f"proc{proc_number}")
-
-so_file = "./src/libPC.so"
-my_funcs = CDLL(so_file)
 
 
 def main():
-    # odop_obs = OdopObs()
-    # odop_obs.start()
-    # odop.start(task_folder="./tasks", config_file="/users/anhdungn/.odop/odop_conf_1_task_data_movement_round_robin.yaml")
+    os.environ["LD_PRELOAD"] = ""
     odop.start(
-        task_folder="./tasks",
-        config_file="/users/anhdungn/.odop/odop_conf_1_task_data_movement_round_robin.yaml",
+        config_file="/users/anhdungn/.odop/fifo/1_task/data_movement_splitted/odop_conf_1_task_data_movement_splitted_fifo.yaml",
+        task_folder="./op-tasks",
     )
 
+    so_file = "./src/libPC.so"
+    my_funcs = CDLL(so_file)
     my_funcs.run_start()
-    # print("End from python")
-
     odop.stop()
-    # odop_obs.stop()
 
 
 if __name__ == "__main__":

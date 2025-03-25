@@ -1,8 +1,6 @@
 import json
-import os
 from datetime import datetime
 
-import matplotlib.pyplot as plt
 import numpy as np
 from flatten_dict import unflatten
 from tinyflux import TinyFlux
