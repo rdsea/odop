@@ -95,12 +95,6 @@ class TaskManager:
             else:
                 self.slurm_memory = 0
 
-    def __cpu_list_to_mask(self, cpu_list):
-        mask = 0
-        for cpu in cpu_list:
-            mask |= 1 << cpu  # Set the corresponding bit
-        return hex(mask)
-
     def format_mpi_command(self, command, placement):
         if "SLURM_JOB_ID" in os.environ:
             self.get_slurm_resources()
@@ -113,9 +107,7 @@ class TaskManager:
             #    cpu_list = ",".join([str(c) for c in node1["cpus"]])
             #    self.cpu_bind_command = f"--cpu-bind=map_cpu:{cpu_list}"
             # else:
-            self.cpu_bind_command = (
-                f"--cpu-bind=mask_cpu:{self.__cpu_list_to_mask(node1['cpus'])}"
-            )
+            self.cpu_bind_command = "--cpu-bind=cores"
             run_command = f"srun --overlap {self.cpu_bind_command} --nice=20 -N {nodes} --mem={self.slurm_memory} --ntasks-per-node={ranks} --cpus-per-task={cpus} --nodelist {nodelist} {command}"
             return run_command
         else:
