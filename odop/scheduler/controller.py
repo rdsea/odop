@@ -150,7 +150,7 @@ class Controller:
 
         # Now calculate free CPU and memory
         memory_use = process_data[-1]["mem"]["usage"]["rss"]["value"]
-        memory = 8 * 1024 - memory_use
+        memory = 512 * 1024 - memory_use
 
         return {
             "free": node_free,

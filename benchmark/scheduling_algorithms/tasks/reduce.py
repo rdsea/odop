@@ -6,7 +6,7 @@ import odop
     trigger=odop.FileUpdated(
         "/users/anhdungn/pencil-code2/samples/gputest/data/proc0/var.dat"
     ),
-    cpus=6,
+    nodes=1,
 )
 def reduce_snapshot(filenames=None):
     import time

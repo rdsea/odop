@@ -4,6 +4,22 @@ NUM_NODE=4
 # Define your new values
 algorithms=("best_fit" "priority" "fifo" "round_robin")
 
+# 1 task simluation
+for algo in "${algorithms[@]}"; do
+  echo "[Processing pc_cpu task for algorithm: $algo"
+  TASK_FOLDER="./opportunistic_task/1_task/pc_cpu"
+  CONFIG_FILE="/users/anhdungn/.odop/${algo}/1_task/pc_cpu/odop_conf_1_task_pc_cpu_${algo}.yaml"
+
+  # Update the script file
+  sed -i "s|task_folder=\"[^\"]*\"|task_folder=\"$TASK_FOLDER\"|" call.py
+  sed -i "s|config_file=\"[^\"]*\"|config_file=\"$CONFIG_FILE\"|" call.py
+
+  echo "Updated script"
+
+  sbatch --wait python-dispatch.sh
+
+done
+
 # 1 task reduce task
 for algo in "${algorithms[@]}"; do
   echo "[Processing reduce task for algorithm: $algo"
@@ -26,6 +42,7 @@ done
 # 1 task data movement splitted
 #
 for algo in "${algorithms[@]}"; do
+  echo "[Processin data movement task for algorithm: $algo"
   TASK_FOLDER="./opportunistic_task/0_task/"
   CONFIG_FILE="/users/anhdungn/.odop/${algo}/1_task/data_movement_splitted/odop_conf_1_task_data_movement_splitted_${algo}.yaml"
   BUCKET_NAME="odop-benchmark-num_node-${NUM_NODE}-1-task-splitted-${algo}"

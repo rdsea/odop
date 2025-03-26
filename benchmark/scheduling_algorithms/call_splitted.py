@@ -20,7 +20,7 @@ def get_upload_folder(folder_name):
         trigger=odop.FileUpdated(
             f"/scratch/project_462000759/pencil-code2/samples/gputest/data/{folder_name}/var.dat"
         ),
-        cpus=2,
+        cpus=7,
     )
     def upload_folder(filenames=None):
         options = {
