@@ -11,7 +11,7 @@ from xmlrpc.server import SimpleXMLRPCRequestHandler, SimpleXMLRPCServer
 
 import requests
 
-from odop.common import create_logger
+from odop.common import ODOP_PATH, create_logger
 from odop.engine.engine import Engine, StatusCode
 from odop.scheduler.algorithms import Algorithm
 from odop.scheduler.api import start_api_server
@@ -316,11 +316,14 @@ class Controller:
         self.tasks = tasks
         self.start_rpc_server(self.controller_port)
         self.connect_engine()
+        average_mainloop_time = 0.0
+        counter = 0
 
         while not stop_event.is_set():
             try:
                 logger.info("main loop")
                 time.sleep(self.scheduling_interval)
+                start_time = time.time()
                 self.check_running_tasks()
 
                 resources = self.resources_available()
@@ -337,6 +340,12 @@ class Controller:
                     self.tasks[task_id].execution_timestamp = time.time()
                     self.tasks[task_id].execution_nodes = placement.keys()
                     self.queue.delete_id(task_id)
+
+                average_mainloop_time = (
+                    average_mainloop_time * counter + time.time() - start_time
+                ) / (counter + 1)
+                counter += 1
+                print(f"Main loop time taken {average_mainloop_time}")
 
             except KeyboardInterrupt:
                 logger.info("Keyboard interrupt")
